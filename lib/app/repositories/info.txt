@@ -1,0 +1,1 @@
+Ficam as classes de comunicação com os nossos dados como firebase, sqlite etc

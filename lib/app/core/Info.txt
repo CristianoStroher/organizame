@@ -1,0 +1,59 @@
+Modulo para guardar os utililários e componentes que são genérios na aplicação
+e que serão usados em todo app.
+
+Nota 01 -   Esta classe é uma fábrica de conexoes com o banco de dados sqlite que estará disponível para
+            toda a aplicação usamos o conceito de singleton para garantir que teremos apenas uma
+            instância dessa classe e evitar que tenhamos várias conexões abertas ao mesmo tempo consumindo
+            recursos do dispositivo e corrompendo o banco de dados.
+
+Nota 02 -   É uma classe static que permite que _instance seja uma propriedade de classe, ou seja,
+            pertence à classe e não a instâncias dela. Isso é crucial para o padrão Singleton, onde
+            você quer garantir que exista apenas uma única instância da classe.
+            Com static, _instance é compartilhada entre todas as instâncias da classe, garantindo que
+            todos os pontos de acesso à instância única da classe retornem a mesma instância. 
+
+Nota 03 -   Um construtor factory é usado normalmente para gerar uma regra antes de instanciar a classe.
+            Nesse caso ele vai verificar se não existe uma instancia da classe criada. Caso não tenha ele utiliza
+            o construtor privado contudo se ele ja existe uma instância criada.
+
+Nota 04 -   Criada duas propriedades para receber a versão e o nome do banco de dados que serão usado posteriormente.
+
+Nota 05 -   Método criado para abrir a conexao com o banco de dados onde usamos o path para encontrar o local e nome
+            nome do banco de dados no celular e concatenar. Ainda utilizamos o Lock para controlar as treds onde
+            quando existir uma conexão aberta e vier outra solicitação a mesma deve aguardar o termino desta para
+            iniciar a sua. Ainda nesse metodo inserimos as funções necessárias ao se conectar ao banco de dados.
+
+Nota 06 -   Um atributo para controlar o banco de dados e outro para controlar os multreds, ou seja, quando
+            um metodo tém varios pedidos e necessário administrar para ser usado um de cada vez.
+
+Nota 07 -   Classe responsável por estruturar as migration do banco de dados onde vai receber nos dispositivo
+            metodos principais a função create e o upgrade quando haver.
+
+Nota 08 -   Classe responsável por administrar toda conexão do banco de dados pelo app onde conforme o estado dele
+            deverá fechar ou manter aberto até que seja utiizado. casos de primeiro e segundo plano e assim
+            evitando consumir memória do celular.
+
+Nota 09 -   A pasta modules vai conter toda a estrutura de modulos o qual vai encapsular todas as dependências
+            da pagina para quando fechar a mesma suas depencias também serão fechadas. Dentro dela temos o
+            arquivo organizame_module que é base da criação do module e por isso a característica de abastrata.
+            Ao inves de toda hora adicionar os providers para alteração de estado e as rotas vamos unificar toda
+            nas paginas de modulo de cada pagina/modulo/função.
+
+Nota 10 -   Os Multiprovider é uma lista de SinglechildWidget e as Rotas é um mapa de String e WidgetBuider.
+        
+Nota 11 -   Esse um metodo que vamos adicionar dentro do MaterialApp inserindo as rotas juntamente com os provider.
+
+Nota 12 -   Nessa classe encapsulamos a rota trazendo junto a lista de provider que necessita na pagina.
+
+Nota 13 -   classe para configurar as cores, fontes e temas dos botoes.
+
+Nota 14 -   essa classe é uma extensão do BuildContext que tem como objetivo facilitar o acesso
+            a propriedades do tema da aplicação. Definimos até alguns títulos padrões.
+
+Nota 15 - Classe responsavel por criar o componente TextFormField que será usado por todo aplicativo
+
+Nota 16 - Classe responsavel por criar o componente ElevatedButton que será usado por todo aplicativo
+
+
+
+            
