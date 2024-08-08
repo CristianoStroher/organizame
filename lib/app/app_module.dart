@@ -19,7 +19,7 @@ class AppModule extends StatelessWidget {
           lazy: false,
         )
       ],
-      child: AppWidget(),
+      child: const AppWidget(),
     );
   }
 }
