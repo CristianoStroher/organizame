@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384865727065",
+    "project_id": "organizame-6649a",
+    "storage_bucket": "organizame-6649a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384865727065:android:baeac3b02fe9824b68f748",
+        "android_client_info": {
+          "package_name": "br.edu.upf.organizame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKIJSYJyRHgikLrjtz3Ywxf9qjR54ZgKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
