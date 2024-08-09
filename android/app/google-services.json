@@ -12,7 +12,20 @@
           "package_name": "br.edu.upf.organizame"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "384865727065-k00o03oj3anu4pqk0bqa56h4rdgum285.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.edu.upf.organizame",
+            "certificate_hash": "441fbfed6d22fb7e7b48c501db8ed3d33d006850"
+          }
+        },
+        {
+          "client_id": "384865727065-bmoctotgrd94hjl0r42scheec7ebdmt0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCKIJSYJyRHgikLrjtz3Ywxf9qjR54ZgKk"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384865727065-bmoctotgrd94hjl0r42scheec7ebdmt0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "384865727065-om8edbjjr8uecrtb3f79bgojd80jghmn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.edu.upf.organizame"
+              }
+            }
+          ]
         }
       }
     }
