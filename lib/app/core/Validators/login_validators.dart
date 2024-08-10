@@ -1,4 +1,4 @@
-class OrgaznizameValidation {
+class LoginValidators {
 
   bool isValidPassword(String password) {
     final RegExp hasUpperCase = RegExp(r'[A-Z]');

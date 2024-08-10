@@ -18,18 +18,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final _globalKey = GlobalKey<FormState>();
   // variáveis para controlar os campos de texto
-  final nomeEC = TextEditingController();
-  final emailEC = TextEditingController();
-  final passwordEC = TextEditingController();
-  final confirmPasswordEC = TextEditingController();
+  final _nomeEC = TextEditingController();
+  final _emailEC = TextEditingController();
+  final _passwordEC = TextEditingController();
+  final _confirmPasswordEC = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
-    nomeEC.dispose();
-    emailEC.dispose();
-    passwordEC.dispose();
-    confirmPasswordEC.dispose();
+    _nomeEC.dispose();
+    _emailEC.dispose();
+    _passwordEC.dispose();
+    _confirmPasswordEC.dispose();
   }
 
   @override
@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
               OrganizameTextformfield(
                 label: 'Nome',
                 obscureText: false,
-                controller: nomeEC,
+                controller: _nomeEC,
                 validator: Validatorless.multiple([
                   Validatorless.required('Campo obrigatório'),
                   Validatorless.min(3, 'Nome muito curto'),
@@ -87,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
               OrganizameTextformfield(
                 label: 'E-mail',
                 obscureText: false,
-                controller: emailEC,
+                controller: _emailEC,
                 validator: Validatorless.multiple([
                   Validatorless.required('Campo obrigatório'),
                   Validatorless.email('E-mail inválido'),
@@ -97,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
               OrganizameTextformfield(
                 label: 'Senha',
                 obscureText: true,
-                controller: passwordEC,
+                controller: _passwordEC,
                 validator: (value) {
                 if (value == null || value.isEmpty) return 'Campo obrigatório';
                 final password = value;
@@ -118,19 +118,17 @@ class _RegisterPageState extends State<RegisterPage> {
               OrganizameTextformfield(
                 label: 'Confirmar Senha',
                 obscureText: true,
-                controller: confirmPasswordEC,
+                controller: _confirmPasswordEC,
                 validator: Validatorless.multiple([
                   Validatorless.required('Campo obrigatório'),
-                  Validatorless.compare(passwordEC, 'Senhas não conferem'),
+                  Validatorless.compare(_passwordEC, 'Senhas não conferem'),
                 ]),
                 ),
               const SizedBox(height: 30),
               OrganizameElevatedButton(
                 label: 'Cadastrar',
                 onPressed: () {
-                  if (_globalKey.currentState!.validate()) {
-                    // Chamar o método de cadastro
-                  }
+                  final formValid = _globalKey.currentState?.validate() ?? false;
                 },
               )
             ],

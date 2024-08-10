@@ -1,22 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:organizame/app/core/Widget/orgaznizame_validation.dart';
+import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
 import './user_service.dart';
 
 class UserServiceImpl extends UserService {
 
   final UserRepository _userRepository;
-  final OrgaznizameValidation _organizameValidation;
+  final LoginValidators _loginValidators;
 
   UserServiceImpl({
     required UserRepository userRepository,
-    required OrgaznizameValidation organizameValidation})
+    required LoginValidators loginValidators})
       : _userRepository = userRepository,
-        _organizameValidation = organizameValidation;
+        _loginValidators = loginValidators;
    
   @override
   Future<User?> register(String email, String password) async {
-    if (!_organizameValidation.isValidPassword(password)) {
+    if (!_loginValidators.isValidPassword(password)) {
       throw Exception('Password does not meet the requirements.');
     }
     return _userRepository.register(email, password);
