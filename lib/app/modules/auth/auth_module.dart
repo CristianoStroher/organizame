@@ -12,7 +12,7 @@ class AuthModule extends OrganizameModule {
           bindings: [
             ChangeNotifierProvider(create: (_) => LoginController(), //injetando o controller da tela de login
             ),
-            ChangeNotifierProvider(create: (_) => RegisterController(), //injetando o controller da tela de login
+            ChangeNotifierProvider(create: (context) => RegisterController(userService: context.read()), //injetando o controller da tela de login
             ),
           ],
           router: {
