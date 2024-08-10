@@ -1,0 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:organizame/app/repositories/user/user_repository.dart';
+import 'package:organizame/app/repositories/user/user_repository_impl.dart';
+
+import './user_service.dart';
+
+class UserServiceImpl extends UserService {
+
+  final UserRepository _userRepository;
+
+  UserServiceImpl({required UserRepository userRepository})
+   : _userRepository = userRepository;
+
+  @override
+  Future<User?> register(String email, String password) => _userRepository.register(email, password);
+
+
+}
