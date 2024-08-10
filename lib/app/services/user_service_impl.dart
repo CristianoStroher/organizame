@@ -16,12 +16,12 @@ class UserServiceImpl extends UserService {
    
   @override
   Future<User?> register(String email, String password) async {
-    if (!_loginValidators.isValidPassword(password)) {
-      throw Exception('Password does not meet the requirements.');
+    final errorMessage = _loginValidators.validatePassword(password);
+    if (errorMessage.isNotEmpty) {
+      throw Exception(errorMessage);
     }
     return _userRepository.register(email, password);
   }
-
 
 }
 

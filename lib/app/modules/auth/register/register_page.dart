@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo.dart';
 import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
@@ -22,6 +23,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailEC = TextEditingController();
   final _passwordEC = TextEditingController();
   final _confirmPasswordEC = TextEditingController();
+  // instância da classe LoginValidators
+  final _loginValidators = LoginValidators.instance;
 
   @override
   void dispose() {
@@ -99,20 +102,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 obscureText: true,
                 controller: _passwordEC,
                 validator: (value) {
-                if (value == null || value.isEmpty) return 'Campo obrigatório';
-                final password = value;
-                final hasUpperCase = RegExp(r'[A-Z]').hasMatch(password);
-                final hasDigits = RegExp(r'\d').hasMatch(password);
-                final hasSpecialCharacters = RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
-                
-                if (password.length < 6) return 'Senha muito curta';
-                if (password.length > 12) return 'Senha muito longa';
-                if (!hasUpperCase) return 'Deve conter uma letra maiúscula';
-                if (!hasDigits) return 'Deve conter um número';
-                if (!hasSpecialCharacters) return 'Deve conter um caractere especial';
-                
-                return null;
-              },
+                  if (value == null || value.isEmpty) {
+                    return 'Campo obrigatório';
+                  }
+                  final errorMessage = _loginValidators.validatePassword(value);
+                  return errorMessage.isEmpty ? null : errorMessage;
+                },
                 ),
               const SizedBox(height: 20),
               OrganizameTextformfield(
