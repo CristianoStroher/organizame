@@ -3,6 +3,7 @@ import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo.dart';
 import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
+import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/auth/register/register_controller.dart';
 import 'package:provider/provider.dart';
@@ -28,39 +29,24 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    // Obtém a instância do RegisterController
-    _registerController = context.read<RegisterController>();
-
-    // Adiciona o listener para o RegisterController
-    _registerController?.addListener(_onRegisterControllerChange);
+    final defaultListener = DefautListenerNotifier (changeNotifier: context.read<RegisterController>());
+    defaultListener.listener(
+      context: context,
+      sucessCallback: (notifier, listenerInstance) {
+        listenerInstance.removeListener();
+        Navigator.of(context).pop();
+      } );
+    
   }
 
   @override
   void dispose() {
     // Remove o listener diretamente, sem usar o context
-    _registerController?.removeListener(_onRegisterControllerChange);
     _nomeEC.dispose();
     _emailEC.dispose();
     _passwordEC.dispose();
     _confirmPasswordEC.dispose();
     super.dispose();
-  }
-
-  // Método chamado toda vez que o RegisterController sofrer alterações
-  void _onRegisterControllerChange() {
-    final controller = _registerController;
-    if (controller == null) return;
-
-    if (controller.sucess) {
-      Navigator.of(context).pop();
-    } else if (controller.error != null && controller.error!.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(controller.error!),
-          backgroundColor: context.errorColor,
-        ),
-      );
-    }
   }
 
   @override
