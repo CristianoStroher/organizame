@@ -22,52 +22,73 @@ class SqliteConnectionFactory {
 
   /* Nota 3*/
   factory SqliteConnectionFactory() {
-    if (_instance == null) {
-      _instance = SqliteConnectionFactory._();
-    }
+    _instance ??= SqliteConnectionFactory._();
     return _instance!;
   }
 
   /* Nota 5*/
-  Future<Database> openConnection() async {
-    var databasePath = await getDatabasesPath();
-    var databasePathFinal = join(databasePath, _databaseName);
-    if (_db != null) {
-      await _lock.synchronized(() async {
-        _db ??= await openDatabase(
+   Future<Database> openConnection() async {
+    await _lock.synchronized(() async {
+      if (_db == null) {
+        final databasePath = await getDatabasesPath();
+        final databasePathFinal = join(databasePath, _databaseName);
+        _db = await openDatabase(
           databasePathFinal,
           version: _databaseVersion,
           onConfigure: _onConfigure,
           onCreate: _onCreate,
           onUpgrade: _onUpgrade,
           onDowngrade: _onDowngrade,
-      );
-      });
-    }
+        );
+      }
+    });
     return _db!;
   }
 
   Future<void> closeConnection() async {
-    await _db!.close();
-    _db = null;
+    await _lock.synchronized(() async {
+      if (_db != null) {
+        await _db!.close();
+        _db = null;
+      }
+    });
   }
 
   Future<void> _onConfigure(Database db) async {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
+  // Future<void> _onCreate(Database db, int version) async {
+  //   final batch = db.batch();
+  //   final migrations = SqliteMigrationFactory().getCreateMigrations();
+  //   migrations.forEach((m) => m.create(batch));
+  //   batch.commit();
+  // }
+
   Future<void> _onCreate(Database db, int version) async {
     final batch = db.batch();
     final migrations = SqliteMigrationFactory().getCreateMigrations();
-    migrations.forEach((m) => m.create(batch));
-    batch.commit();
-
+    for (var migration in migrations) {
+      migration.create(batch);
+    }
+    await batch.commit();
   }
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+
+
+  /* Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     final batch = db.batch();
     final migrations = SqliteMigrationFactory().getUpgradeMigrations(oldVersion);
     migrations.forEach((m) => m.update(batch));
     batch.commit();
+  } */
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    final batch = db.batch();
+    final migrations = SqliteMigrationFactory().getUpgradeMigrations(oldVersion);
+    for (var migration in migrations) {
+      migration.update(batch);
+    }
+    await batch.commit();
   }
 
   Future<void> _onDowngrade(Database db, int oldVersion, int newVersion) async {}

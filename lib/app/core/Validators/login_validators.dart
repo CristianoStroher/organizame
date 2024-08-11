@@ -1,8 +1,9 @@
 class LoginValidators {
 
+  static final LoginValidators instance = LoginValidators._();
+  
   LoginValidators._();
 
-  static final LoginValidators instance = LoginValidators._();
 
   String getPasswordCriteriaMessage() {
     return 'A senha deve atender aos seguintes critérios:\n'

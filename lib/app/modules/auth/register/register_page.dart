@@ -4,11 +4,11 @@ import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo.dart';
 import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/modules/auth/register/register_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class RegisterPage extends StatefulWidget {
-
-  
   const RegisterPage({super.key});
 
   @override
@@ -16,23 +16,51 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   final _globalKey = GlobalKey<FormState>();
-  // variáveis para controlar os campos de texto
   final _nomeEC = TextEditingController();
   final _emailEC = TextEditingController();
   final _passwordEC = TextEditingController();
   final _confirmPasswordEC = TextEditingController();
-  // instância da classe LoginValidators
   final _loginValidators = LoginValidators.instance;
+
+  RegisterController? _registerController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Obtém a instância do RegisterController
+    _registerController = context.read<RegisterController>();
+
+    // Adiciona o listener para o RegisterController
+    _registerController?.addListener(_onRegisterControllerChange);
+  }
 
   @override
   void dispose() {
-    super.dispose();
+    // Remove o listener diretamente, sem usar o context
+    _registerController?.removeListener(_onRegisterControllerChange);
     _nomeEC.dispose();
     _emailEC.dispose();
     _passwordEC.dispose();
     _confirmPasswordEC.dispose();
+    super.dispose();
+  }
+
+  // Método chamado toda vez que o RegisterController sofrer alterações
+  void _onRegisterControllerChange() {
+    final controller = _registerController;
+    if (controller == null) return;
+
+    if (controller.sucess) {
+      Navigator.of(context).pop();
+    } else if (controller.error != null && controller.error!.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(controller.error!),
+          backgroundColor: context.errorColor,
+        ),
+      );
+    }
   }
 
   @override
@@ -40,11 +68,11 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: context.scaffoldBackgroundColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Retirar o botão de voltar
+        automaticallyImplyLeading: false,
         backgroundColor: context.scaffoldBackgroundColor,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context); // Voltar à tela anterior
+            Navigator.pop(context);
           },
           icon: ClipOval(
             child: Container(
@@ -63,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       body: Form(
-        key: _globalKey,        
+        key: _globalKey,
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           child: Column(
@@ -85,7 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Validatorless.required('Campo obrigatório'),
                   Validatorless.min(3, 'Nome muito curto'),
                 ]),
-                ),
+              ),
               const SizedBox(height: 20),
               OrganizameTextformfield(
                 label: 'E-mail',
@@ -95,7 +123,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Validatorless.required('Campo obrigatório'),
                   Validatorless.email('E-mail inválido'),
                 ]),
-                ),
+              ),
               const SizedBox(height: 20),
               OrganizameTextformfield(
                 label: 'Senha',
@@ -108,7 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   final errorMessage = _loginValidators.validatePassword(value);
                   return errorMessage.isEmpty ? null : errorMessage;
                 },
-                ),
+              ),
               const SizedBox(height: 20),
               OrganizameTextformfield(
                 label: 'Confirmar Senha',
@@ -118,12 +146,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   Validatorless.required('Campo obrigatório'),
                   Validatorless.compare(_passwordEC, 'Senhas não conferem'),
                 ]),
-                ),
+              ),
               const SizedBox(height: 30),
               OrganizameElevatedButton(
                 label: 'Cadastrar',
                 onPressed: () {
-                  final formValid = _globalKey.currentState?.validate() ?? false;
+                  final formValid =
+                      _globalKey.currentState?.validate() ?? false;
+                  if (formValid) {
+                    final email = _emailEC.text;
+                    final password = _passwordEC.text;
+                    context
+                        .read<RegisterController>()
+                        .registerUser(email, password);
+                  }
                 },
               )
             ],

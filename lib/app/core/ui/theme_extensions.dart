@@ -9,6 +9,7 @@ extension ThemeExtensions on BuildContext {
   Color get secondaryColor => Theme.of(this).colorScheme.secondary;
   Color get buttonColor => Theme.of(this).colorScheme.primary;
   Color get scaffoldBackgroundColor => Theme.of(this).scaffoldBackgroundColor;
+  Color get errorColor => Theme.of(this).colorScheme.error;
   TextTheme get textTheme => Theme.of(this).textTheme;
 
   TextStyle get titleBig => TextStyle(

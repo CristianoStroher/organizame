@@ -14,6 +14,7 @@ class DesingUi {
     primaryColorLight: const Color(0xFFFFCCE2),
     colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: const Color(0xFF7F82B9), // Definindo cor secundária, se necessário
+      error: const Color(0xFFE63946), // Definindo cor de erro
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
