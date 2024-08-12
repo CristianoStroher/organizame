@@ -1,12 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo.dart';
 import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
+import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
+import 'package:organizame/app/modules/auth/login/login_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:validatorless/validatorless.dart';
 
-
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailEC = TextEditingController();
+  final _passwordEC = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    DefautListenerNotifier(
+      changeNotifier: context.read<LoginController>(),
+    ).listener(
+      context: context,
+      sucessCallback: (notifier, listenerInstance) {
+        listenerInstance.removeListener();
+        Navigator.of(context).pushNamed('/home');
+        Logger().i('Usuário logado');
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,29 +57,55 @@ class LoginPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 20),
                     child: Form(
+                        key: _formKey,
                         child: Column(
-                      children: [
-                        OrganizameTextformfield(label: 'E-mail', obscureText: false,),
-                        const SizedBox(height: 20),
-                        OrganizameTextformfield(label: 'Senha', obscureText: true,),
-                        const SizedBox(height: 30),
-                        OrganizameElevatedButton(
-                            label: 'Entrar',
-                            onPressed: () {},
-                          ),
-                        const SizedBox(height: 10),
-                        TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            foregroundColor : Theme.of(context).colorScheme.secondary,
-                          ),
-                          child: const Text(
-                            'Esqueceu a sua senha?',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    )),
+                          children: [
+                            OrganizameTextformfield(
+                              label: 'E-mail',
+                              controller: _emailEC,
+                              validator: Validatorless.multiple([
+                                Validatorless.required('Campo obrigatório'),
+                                Validatorless.email('E-mail inválido'),
+                              ]),
+                              obscureText: false,
+                            ),
+                            const SizedBox(height: 20),
+                            OrganizameTextformfield(
+                              label: 'Senha',
+                              controller: _passwordEC,
+                              validator: Validatorless.multiple([
+                                Validatorless.required('Campo obrigatório'),
+                                Validatorless.min(6, 'Senha muito curta'),
+                                Validatorless.max(12, 'Senha muito longa'),
+                              ]),
+                              obscureText: true,
+                            ),
+                            const SizedBox(height: 30),
+                            OrganizameElevatedButton(
+                              label: 'Entrar',
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<LoginController>().login(
+                                        _emailEC.text,
+                                        _passwordEC.text,
+                                      );
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            TextButton(
+                              onPressed: () {},
+                              style: TextButton.styleFrom(
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.secondary,
+                              ),
+                              child: const Text(
+                                'Esqueceu a sua senha?',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        )),
                   ),
                   Expanded(
                     child: Container(
@@ -66,15 +120,17 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          const SizedBox(height: 20,),
+                          const SizedBox(
+                            height: 20,
+                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: SizedBox(
-                              width: double.infinity, // Define a largura como infinita para ocupar o máximo possível
+                              width: double
+                                  .infinity, // Define a largura como infinita para ocupar o máximo possível
                               child: SignInButton(
                                 Buttons.Google,
                                 text: 'Continue com o Google',
-                                
                                 padding: const EdgeInsets.all(5),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(3),
@@ -83,7 +139,9 @@ class LoginPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10,),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -93,7 +151,8 @@ class LoginPage extends StatelessWidget {
                                   Navigator.of(context).pushNamed('/register');
                                 },
                                 style: TextButton.styleFrom(
-                                  foregroundColor : Theme.of(context).colorScheme.secondary,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 child: const Text('Cadastre-se'),
                               ),

@@ -22,6 +22,9 @@ class UserServiceImpl extends UserService {
     }
     return _userRepository.register(email, password);
   }
+  
+  @override
+  Future<User?> login(String email, String password)  => _userRepository.login(email, password);
 
 }
 

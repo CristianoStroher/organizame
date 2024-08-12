@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo.dart';
@@ -36,6 +39,9 @@ class _RegisterPageState extends State<RegisterPage> {
         listenerInstance.removeListener();
         Navigator.of(context).pop();
       } );
+      ErrorCallback: (notifier, listenerInstance) {
+        Logger().e('Erro ao cadastrar usuário');
+      };
     
   }
 
