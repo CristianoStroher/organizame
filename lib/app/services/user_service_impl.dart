@@ -15,12 +15,12 @@ class UserServiceImpl extends UserService {
         _loginValidators = loginValidators;
    
   @override
-  Future<User?> register(String email, String password) async {
+  Future<User?> register(String email, String password, String nome) async {
     final errorMessage = _loginValidators.validatePassword(password);
     if (errorMessage.isNotEmpty) {
       throw Exception(errorMessage);
     }
-    return _userRepository.register(email, password);
+    return _userRepository.register(email, password, nome);
   }
   
   @override

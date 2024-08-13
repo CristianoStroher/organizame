@@ -5,7 +5,6 @@ import 'package:organizame/app/modules/auth/login/login_controller.dart';
 import 'package:organizame/app/modules/auth/login/login_page.dart';
 import 'package:organizame/app/modules/auth/register/register_controller.dart';
 import 'package:organizame/app/modules/auth/register/register_page.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class AuthModule extends OrganizameModule {

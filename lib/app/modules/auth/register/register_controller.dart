@@ -10,12 +10,12 @@ class RegisterController extends DefautChangeNotifer {
   RegisterController({required UserService userService})
       : _userService = userService;
 
-  Future<void> registerUser(String email, String password) async {
+  Future<void> registerUser(String email, String password, String nome) async { // adicionado
     try {
       showLoadingAndReset();
       notifyListeners();
 
-      final user = await _userService.register(email, password);
+      final user = await _userService.register(email, password, nome); // adicionado
       if (user != null) {
         sucess();
         Logger().i('Usuário cadastrado com sucesso');
