@@ -5,6 +5,7 @@ import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo.dart';
 import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
 import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/modules/auth/login/login_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
@@ -20,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailEC = TextEditingController();
   final _passwordEC = TextEditingController();
+  final _emailFN = FocusNode();
 
   @override
   void initState() {
@@ -28,9 +30,16 @@ class _LoginPageState extends State<LoginPage> {
       changeNotifier: context.read<LoginController>(),
     ).listener(
       context: context,
+      everCallback: (notifier, listenerInstance) {
+        if (notifier is LoginController) {
+          if (notifier.hasInfo) {
+            Messages.of(context).showInfo(notifier.infoMessage!);
+          }
+        }        
+      },
       sucessCallback: (notifier, listenerInstance) {
-        listenerInstance.removeListener();
-        Navigator.of(context).pushNamed('/home');
+        // listenerInstance.removeListener();
+        // Navigator.of(context).pushNamed('/home');
         Logger().i('Usuário logado');
       },
     );
@@ -63,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                             OrganizameTextformfield(
                               label: 'E-mail',
                               controller: _emailEC,
+                              focusNode: _emailFN,
                               validator: Validatorless.multiple([
                                 Validatorless.required('Campo obrigatório'),
                                 Validatorless.email('E-mail inválido'),
@@ -94,7 +104,18 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             const SizedBox(height: 10),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (_emailEC.text.isNotEmpty) {
+                                  context
+                                      .read<LoginController>()
+                                      .resetPassword(_emailEC.text);
+                                } else {
+                                  _emailFN.requestFocus(); // Foca no campo de e-mail
+                                  Messages.of(context).showError(
+                                    'Informe o e-mail para recuperação',
+                                  );
+                                }
+                              },
                               style: TextButton.styleFrom(
                                 foregroundColor:
                                     Theme.of(context).colorScheme.secondary,

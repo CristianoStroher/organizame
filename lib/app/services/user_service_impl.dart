@@ -25,6 +25,9 @@ class UserServiceImpl extends UserService {
   
   @override
   Future<User?> login(String email, String password)  => _userRepository.login(email, password);
+  
+  @override
+  Future<void> resetPassword(String email)  => _userRepository.resetPassword(email);
 
 }
 

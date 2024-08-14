@@ -9,6 +9,7 @@ class OrganizameTextformfield extends StatelessWidget {
   final ValueNotifier<bool> obscureTextVN;
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
+  final FocusNode? focusNode;
 
   OrganizameTextformfield({
     super.key,
@@ -17,6 +18,7 @@ class OrganizameTextformfield extends StatelessWidget {
     this.suffixIconButton,
     this.controller,
     this.validator,
+    this.focusNode,
   })  : assert(obscureText == true ? suffixIconButton == null : true,
             'ObscureText não pode ser enviado em conjunto com suffixIconButton'),
         obscureTextVN = ValueNotifier(
@@ -30,6 +32,7 @@ class OrganizameTextformfield extends StatelessWidget {
         return TextFormField(
           controller: controller,
           validator: validator,
+          focusNode: focusNode,
           decoration: InputDecoration(
             labelText: label,
             labelStyle: TextStyle(
