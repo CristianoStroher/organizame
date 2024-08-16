@@ -101,50 +101,38 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<User?> googleLogin() async {
-    final googleSignIn = GoogleSignIn(); // Instancia o GoogleSignIn
-    final googleUser =
-        await googleSignIn.signIn(); // Abre a tela de login do Google
-
-    if (googleUser != null) {
-      try {
-        final email = googleUser.email; // Obtém o e-mail do usuário
-
-        // Verifica se o e-mail já está cadastrado no Firestore
-        final userDoc = await _firestore
-            .collection('users')
-            .where('email', isEqualTo: email)
-            .get();
-
-        if (userDoc.docs.isNotEmpty) {
+    List<String> loginMethods;
+    try {
+      final googleSignIn = GoogleSignIn(); // Instancia o GoogleSignIn
+      final googleUser =
+          await googleSignIn.signIn(); // Abre a tela de login do Google
+      if (googleUser != null) {
+        // Verifica se o usuário não cancelou o login
+        loginMethods = await _firebaseAuth.fetchSignInMethodsForEmail(
+            googleUser.email); // Verifica se o e-mail já está cadastrado
+        if (loginMethods.contains('password')) {
+          // Verifica se o e-mail já está cadastrado com senha
           throw AuthException(
-              message:
-                  'O e-mail já está cadastrado com outro método de login.');
+              message: 'O e-mail já está cadastrado com outra forma de login.');
+        } else {
+          final googleAuth = await googleUser.authentication;
+          final credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+
+          final userCredential =
+              await _firebaseAuth.signInWithCredential(credential);
+          return userCredential.user;
         }
-
-        final googleAuth = await googleUser.authentication;
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        final userCredential =
-            await _firebaseAuth.signInWithCredential(credential);
-
-        // Após o login, você pode criar ou atualizar o documento do usuário no Firestore
-        final user = userCredential.user;
-        if (user != null) {
-          await _firestore.collection('users').doc(user.uid).set({
-            'email': email,
-            'name': googleUser.displayName,
-            'loginGoogle': true,
-            // Outros campos que você deseja armazenar
-          });
-        }
-
-        return user;
-      } on FirebaseAuthException catch (e, s) {
-        Logger().e(e.message);
-        Logger().e(s.toString());
+      }
+    } on FirebaseAuthException catch (e, s) {
+      Logger().e(e.message);
+      Logger().e(s.toString());
+      if (e.code == 'account-exists-with-different-credential') {
+        throw AuthException(
+            message: 'O e-mail já está cadastrado com outra forma de login.');
+      } else {
         throw AuthException(message: 'Erro ao fazer login com o Google.');
       }
     }
@@ -158,5 +146,5 @@ class UserRepositoryImpl extends UserRepository {
     await _firebaseAuth.signOut();
   }
 
-
+  
 }

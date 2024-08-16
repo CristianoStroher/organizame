@@ -22,7 +22,7 @@ class MigrationV1 implements Migration {
         nome VARCHAR(255) NOT NULL,
         total_metragem DOUBLE,
         telefone VARCHAR(20),
-        endereco VARCHAR(255),             
+        endereco VARCHAR(255)             
     ''');
     
      batch.execute('''
