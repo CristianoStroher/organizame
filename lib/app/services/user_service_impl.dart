@@ -28,6 +28,13 @@ class UserServiceImpl extends UserService {
   
   @override
   Future<void> resetPassword(String email)  => _userRepository.resetPassword(email);
+  
+  @override
+  Future<User?> googleLogin()  => _userRepository.googleLogin();
+  
+  @override
+  Future<void> logout() => _userRepository.logout();
+  
 
 }
 

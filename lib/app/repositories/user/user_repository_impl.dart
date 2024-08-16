@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:logger/logger.dart';
 
@@ -85,7 +86,7 @@ class UserRepositoryImpl extends UserRepository {
           .collection("users")
           .where("email", isEqualTo: email)
           .get(); //verifica se o email existe
-      
+
       if (checkEmail.docs.isEmpty) {
         throw AuthException(message: 'E-mail não cadastrado.');
       } else {
@@ -98,5 +99,64 @@ class UserRepositoryImpl extends UserRepository {
     }
   }
 
- 
+  @override
+  Future<User?> googleLogin() async {
+    final googleSignIn = GoogleSignIn(); // Instancia o GoogleSignIn
+    final googleUser =
+        await googleSignIn.signIn(); // Abre a tela de login do Google
+
+    if (googleUser != null) {
+      try {
+        final email = googleUser.email; // Obtém o e-mail do usuário
+
+        // Verifica se o e-mail já está cadastrado no Firestore
+        final userDoc = await _firestore
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .get();
+
+        if (userDoc.docs.isNotEmpty) {
+          throw AuthException(
+              message:
+                  'O e-mail já está cadastrado com outro método de login.');
+        }
+
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        final userCredential =
+            await _firebaseAuth.signInWithCredential(credential);
+
+        // Após o login, você pode criar ou atualizar o documento do usuário no Firestore
+        final user = userCredential.user;
+        if (user != null) {
+          await _firestore.collection('users').doc(user.uid).set({
+            'email': email,
+            'name': googleUser.displayName,
+            'loginGoogle': true,
+            // Outros campos que você deseja armazenar
+          });
+        }
+
+        return user;
+      } on FirebaseAuthException catch (e, s) {
+        Logger().e(e.message);
+        Logger().e(s.toString());
+        throw AuthException(message: 'Erro ao fazer login com o Google.');
+      }
+    }
+
+    return null;
+  }
+
+  @override
+  Future<void> logout() async {
+    await GoogleSignIn().signOut();
+    await _firebaseAuth.signOut();
+  }
+
+
 }

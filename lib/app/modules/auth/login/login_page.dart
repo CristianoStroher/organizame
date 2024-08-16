@@ -156,7 +156,9 @@ class _LoginPageState extends State<LoginPage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(3),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.read<LoginController>().loginGoogle();
+                                },
                               ),
                             ),
                           ),
