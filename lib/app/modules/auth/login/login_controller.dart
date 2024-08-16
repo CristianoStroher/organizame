@@ -3,6 +3,7 @@ import 'package:organizame/app/core/exception/auth_exception.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/services/user_service.dart';
 
+
 class LoginController extends DefautChangeNotifer {
   final UserService _userService;
   String? infoMessage; // variável para exibir mensagem de erro
@@ -36,20 +37,31 @@ class LoginController extends DefautChangeNotifer {
     }
   }
 
+
   Future<void> resetPassword(String email) async {
-    try {
-      showLoadingAndReset();
-      infoMessage = null;
-      notifyListeners();
-      await _userService.resetPassword(email);
-      infoMessage = 'E-mail enviado para redefinição de senha';
-    } on AuthException catch (e) {
-      setError(e.message);
-    } catch (e) {
-      setError('Erro ao resetar a senha');
-    } finally {
-      hideLoading();
-      notifyListeners();
-    }
+  try {
+    Logger().i('Iniciando reset de senha para: $email');
+    showLoadingAndReset();
+    infoMessage = null;
+    notifyListeners();
+    await _userService.resetPassword(email);
+    infoMessage = 'E-mail enviado para redefinição de senha';
+    sucess();
+    
+    Logger().i(infoMessage);
+  } on AuthException catch (e) {
+    Logger().e('Erro específico de autenticação: ${e.message}');
+    setError(e.message);
+  } catch (e, s) {
+    Logger().e('Erro genérico ao resetar a senha $e $s');
+    Logger().e(s.toString());
+    setError('Erro ao resetar a senha');
+  } finally {
+    hideLoading();
+    notifyListeners();
   }
+}
+
+
+
 }

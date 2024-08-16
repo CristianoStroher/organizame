@@ -3,11 +3,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+
 import 'package:logger/logger.dart';
 
 import 'package:organizame/app/core/Widget/organizame_logger.dart';
 import 'package:organizame/app/core/exception/auth_exception.dart';
-import './user_repository.dart';
+import 'package:organizame/app/repositories/user/user_repository.dart';
 
 class UserRepositoryImpl extends UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -77,39 +78,25 @@ class UserRepositoryImpl extends UserRepository {
     }
   }
 
-
-//   @override
-// Future<void> resetPassword(String email) async {
-//   try {
-//     // final loginMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email);
-//     final loginMethods = await _firebaseAuth.sendPasswordResetEmail(email: email);
-
-//     if (loginMethods.contains('password')) {
-//       await _firebaseAuth.sendPasswordResetEmail(email: email);
-//     } else if (loginMethods.contains('google')) {
-//       throw AuthException(message: 'E-mail cadastrado com o Google. Redefinição de senha não disponível.');
-//     } else {
-//       throw AuthException(message: 'E-mail não cadastrado.');
-//     }
-//   } on PlatformException catch (e, s) {
-//     Logger().e(e.message);
-//     Logger().e(s);
-//     throw AuthException(message: 'Erro ao resetar a senha.');
-//   }
-// }
-@override
+  @override
   Future<void> resetPassword(String email) async {
     try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
-      // Informe o usuário que um e-mail foi enviado
-      // Nota: Por razões de segurança, não especifique se o e-mail está registrado
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        throw AuthException(message: 'Erro ao resetar a senha.');
+      final checkEmail = await _firestore
+          .collection("users")
+          .where("email", isEqualTo: email)
+          .get(); //verifica se o email existe
+      
+      if (checkEmail.docs.isEmpty) {
+        throw AuthException(message: 'E-mail não cadastrado.');
       } else {
-        throw AuthException(message: 'Erro inesperado ao resetar a senha.');
+        await _firebaseAuth.sendPasswordResetEmail(email: email);
       }
+    } on PlatformException catch (e, s) {
+      Logger().e(e.message);
+      Logger().e(s.toString());
+      throw AuthException(message: e.message ?? 'Erro ao recuperar senha');
     }
   }
 
+ 
 }
