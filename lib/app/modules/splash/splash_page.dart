@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/Widget/organizame_logo.dart';
+import 'package:organizame/app/core/Widget/organizame_logo_branco.dart';
+import 'package:organizame/app/core/ui/theme_extensions.dart';
 
 class SplashPage extends StatelessWidget {
 
@@ -7,8 +10,10 @@ class SplashPage extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
        return Scaffold(
-           appBar: AppBar(title: const Text(''),),
-           body: Container(),
+        backgroundColor: context.primaryColor,
+            body: const Center(
+            child: OrganizameLogoBranco(),
+           ),
        );
   }
 }
