@@ -33,14 +33,16 @@ class _LoginPageState extends State<LoginPage> {
       everCallback: (notifier, listenerInstance) {
         if (notifier is LoginController) {
           if (notifier.hasInfo) {
-            Messages.of(context).showInfo(notifier.infoMessage!);
+            if(mounted) {
+              Messages.of(context).showInfo(notifier.infoMessage!);
+            }
           }
         }        
       },
       sucessCallback: (notifier, listenerInstance) {
-        // listenerInstance.removeListener();
-        // Navigator.of(context).pushNamed('/home');
-        Logger().i('Usuário logado');
+        if(mounted) {
+        Logger().i('Usuário logado');          
+        }
       },
     );
   }

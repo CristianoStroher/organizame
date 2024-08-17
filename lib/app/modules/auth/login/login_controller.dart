@@ -63,7 +63,7 @@ class LoginController extends DefautChangeNotifer {
 }
 
 Future<void> loginGoogle() async {
-  await _userService.logout();
+  
   showLoadingAndReset();
   infoMessage = null;
   notifyListeners();
@@ -87,9 +87,6 @@ Future<void> loginGoogle() async {
   }
 
 }
-
-
-
 
 
 }

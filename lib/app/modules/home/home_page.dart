@@ -9,12 +9,13 @@ class HomePage extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
        return Scaffold(
+        appBar: AppBar( title: const Text('Home')),
            body: Center(
             child: TextButton(
               onPressed: () {
                 context.read<AuthProvider>().logout();
               },
-              child: const Text('Ir para a tela de login'),
+              child: const Text('Logout'),
             ),
            ),
        );

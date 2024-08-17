@@ -4,7 +4,7 @@ import 'package:organizame/app/core/database/sqlite_adm_connection.dart';
 import 'package:organizame/app/core/navigator/organizame_navigator.dart';
 import 'package:organizame/app/core/ui/desing_ui.dart';
 import 'package:organizame/app/modules/auth/auth_module.dart';
-import 'package:organizame/app/modules/auth/login/login_page.dart';
+
 import 'package:organizame/app/modules/home/home_module.dart';
 import 'package:organizame/app/modules/splash/splash_page.dart';
 
