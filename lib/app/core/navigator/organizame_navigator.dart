@@ -8,7 +8,7 @@ class OrganizameNavigator {
   static final navigatorKey = GlobalKey<NavigatorState>();
 
   // é uma forma de acessar o navigator de qualquer lugar da aplicação
-  static NavigatorState? get navigator => navigatorKey.currentState;
+  static NavigatorState get to => navigatorKey.currentState!;
 
 
   

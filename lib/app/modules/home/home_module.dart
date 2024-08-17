@@ -4,7 +4,7 @@ import 'package:organizame/app/modules/home/home_page.dart';
 class HomeModule extends OrganizameModule {
   HomeModule()
       : super(
-          bindings: [],
+          /* bindings: [], */
           router: {
             '/home': (context) => const HomePage(),
           },
