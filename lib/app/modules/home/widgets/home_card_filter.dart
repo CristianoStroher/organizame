@@ -14,6 +14,7 @@ class HomeCardFilter extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.primaryColorLight,
         borderRadius: BorderRadius.circular(3),
+        border: Border.all(color: Colors.grey.withOpacity(.8)),
       ),
       margin: const EdgeInsets.only(right: 15),
       padding: const EdgeInsets.all(10),
