@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/auth/auth_provider.dart';
+import 'package:organizame/app/modules/home/widgets/home_drawer.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,6 +11,7 @@ class HomePage extends StatelessWidget {
    Widget build(BuildContext context) {
        return Scaffold(
         appBar: AppBar( title: const Text('Home')),
+        drawer: const HomeDrawer(),
            body: Center(
             child: TextButton(
               onPressed: () {
