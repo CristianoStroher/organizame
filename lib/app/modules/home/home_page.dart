@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
    Widget build(BuildContext context) {
        return Scaffold(
         appBar: AppBar( title: const Text('Home')),
-        drawer: const HomeDrawer(),
+        drawer: HomeDrawer(),
            body: Center(
             child: TextButton(
               onPressed: () {
