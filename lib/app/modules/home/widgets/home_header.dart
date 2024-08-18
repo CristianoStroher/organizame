@@ -13,9 +13,12 @@ class HomeHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '${context.watch<AuthProvider>().user?.displayName?.split(' ').first ?? 'Visitante'}, seja bem-vindo!',
-            style: context.titleMedium,
+          Selector(
+            selector: (_, AuthProvider authProvider) => authProvider.user,
+            builder: (context, value, child) => Text(
+              '${value?.displayName?.split(' ').first ?? 'Visitante'}, seja bem-vindo!',
+              style: context.titleMedium,
+            ),
           ),
           const SizedBox(height: 5),
           Text('Confira suas tarefas agendadas e esteja preparado para o dia.',
