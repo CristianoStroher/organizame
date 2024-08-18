@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/ui/organizame_icons.dart';
 
 
 /* Nota 14 */
@@ -14,6 +15,7 @@ extension ThemeExtensions on BuildContext {
 
   TextStyle get titleBig => TextStyle(
     fontSize: 30,
+    fontFamily: 'Kanit',
     fontWeight: FontWeight.bold,
     color: primaryColor,
     );

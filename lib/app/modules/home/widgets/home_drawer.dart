@@ -76,11 +76,11 @@ class HomeDrawer extends StatelessWidget {
               )),
           const SizedBox(height: 20),
           ListTile(
-            title: Text('Alterar Nome',
+            title: Text('Alterar nome',
                 style: TextStyle(color: context.primaryColor)),
             onTap: () {
               showDialog(context: context, builder: (_) => AlertDialog(
-                title: Text('Alterar Nome', style: context.titleMedium),
+                title: Text('Alterar nome', style: context.titleMedium),
                 content: TextField(
                   onChanged: (value) => nameVN.value = value,
                   decoration: InputDecoration(
@@ -118,8 +118,9 @@ class HomeDrawer extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   decoration: BoxDecoration(
-                    color: context.primaryColorLight.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(5),
+                    color: context.primaryColorLight,
+                    borderRadius: BorderRadius.circular(2),
+                    border: Border.all(color: context.primaryColor),
                   ),
                   child: Text(
                     'Sair',

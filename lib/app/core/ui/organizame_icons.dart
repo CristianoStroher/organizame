@@ -18,13 +18,15 @@
 ///         Homepage:  http://fortawesome.github.com/Font-Awesome/
 ///
 import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
 
-class Organizeicons {
-  Organizeicons._();
+class OrganizameIcons {
+  OrganizameIcons._();
 
-  static const _kFontFam = 'Organizeicons';
+  static const _kFontFam = 'OrganizameIcons';
   static const String? _kFontPkg = null;
 
   static const IconData eye = IconData(0xf06e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData eye_slash = IconData(0xf070, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData eyeSlash = IconData(0xf070, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData filter = IconData(0xf0b0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

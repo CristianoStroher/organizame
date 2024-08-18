@@ -71,8 +71,8 @@ class OrganizameTextformfield extends StatelessWidget {
                         },
                         icon: Icon(
                             !obscureTextVN.value
-                                ? Organizeicons.eye_slash
-                                : Organizeicons.eye,
+                                ? OrganizameIcons.eyeSlash
+                                : OrganizameIcons.eye,
                             size: 13,
                             color: context.secondaryColor),
                       )
