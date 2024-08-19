@@ -18,7 +18,7 @@
 ///         Homepage:  http://fortawesome.github.com/Font-Awesome/
 ///
 import 'package:flutter/widgets.dart';
-import 'package:path/path.dart';
+
 
 class OrganizameIcons {
   OrganizameIcons._();

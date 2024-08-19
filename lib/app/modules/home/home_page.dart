@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/Widget/Organizame_heart.dart';
-import 'package:organizame/app/core/auth/auth_provider.dart';
+import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
+
 import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/home/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/home/widgets/home_filters.dart';
 import 'package:organizame/app/modules/home/widgets/home_header.dart';
-import 'package:path/path.dart';
-import 'package:provider/provider.dart';
+import 'package:organizame/app/modules/home/widgets/home_task.dart';
+import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,31 +24,12 @@ class _HomePageState extends State<HomePage> {
       drawer: HomeDrawer(),
       appBar: AppBar(
         backgroundColor: context.primaryColorLight,
-        title: Row(
+        title: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                      text: 'Organiz',
-                      style: TextStyle(
-                          color: context.primaryColor,
-                          fontSize: 30,
-                          fontFamily: 'Kanit',
-                          fontWeight: FontWeight.w600)),
-                  TextSpan(
-                      text: 'Ame',
-                      style: TextStyle(
-                          color: context.scaffoldBackgroundColor,
-                          fontSize: 30,
-                          fontFamily: 'Kanit',
-                          fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ),
-            const SizedBox(width: 5),
-            const OrganizameHeart()
+            OrganizameLogoMovie(),
+            SizedBox(width: 5),
+            OrganizameHeart(),
           ],
         ),
         actions: [
@@ -83,6 +65,9 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       HomeHeader(),
                       HomeFilters(),
+                      HomeWeekFilter(),
+                      HomeTask(),
+
                     ],
                   ),
                 ),

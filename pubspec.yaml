@@ -49,6 +49,7 @@ dependencies:
   cloud_firestore: ^5.2.1
   google_sign_in: ^6.2.1
   lints: ^3.0.0
+  date_picker_timeline: ^1.2.6
 
 dev_dependencies:
   flutter_test:
