@@ -54,6 +54,23 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: context.primaryColor,
         child: Icon(Icons.add, color: context.primaryColorLight),
         ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: context.primaryColorLight,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Tarefas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Visitas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.price_change_rounded),
+            label: 'Orçamentos',
+          ),
+        ],
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
