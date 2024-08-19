@@ -49,6 +49,11 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        backgroundColor: context.primaryColor,
+        child: Icon(Icons.add, color: context.primaryColorLight),
+        ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
