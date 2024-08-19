@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 
 class Task extends StatelessWidget {
@@ -46,9 +47,9 @@ class Task extends StatelessWidget {
               onPressed: () {
                 // Ação para excluir a tarefa
                 // Adicione a lógica para excluir a tarefa aqui
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Tarefa excluída')),
-                );
+                Messages.of(context).showInfo('Tarefa excluída com sucesso!');
+                  
+                
               },
             ),
           ),
