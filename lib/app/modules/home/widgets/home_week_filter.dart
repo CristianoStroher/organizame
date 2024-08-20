@@ -26,6 +26,18 @@ class HomeWeekFilter extends StatelessWidget {
               selectionColor: context.primaryColor,
               selectedTextColor: context.scaffoldBackgroundColor,
               daysCount: 7,
+              dayTextStyle: TextStyle(
+                color: context.primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 12),
+              monthTextStyle: TextStyle(
+                color: context.primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 12),
+              dateTextStyle: TextStyle(
+                color: context.primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 22)
               ),
               
           ),
