@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:organizame/app/core/Widget/Organizame_heart.dart';
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
-
 import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/home/widgets/home_drawer.dart';
@@ -9,6 +7,7 @@ import 'package:organizame/app/modules/home/widgets/home_filters.dart';
 import 'package:organizame/app/modules/home/widgets/home_header.dart';
 import 'package:organizame/app/modules/home/widgets/home_task.dart';
 import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,7 +28,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             OrganizameLogoMovie(),
             SizedBox(width: 5),
-            OrganizameHeart(),
+            
           ],
         ),
         actions: [
