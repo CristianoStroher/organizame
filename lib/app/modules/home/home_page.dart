@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
+import 'package:organizame/app/core/Widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/home/widgets/home_drawer.dart';
@@ -53,23 +54,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: context.primaryColor,
         child: Icon(Icons.add, color: context.primaryColorLight),
         ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: context.primaryColorLight,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Tarefas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
-            label: 'Visitas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.price_change_rounded),
-            label: 'Orçamentos',
-          ),
-        ],
-      ),
+      bottomNavigationBar: const OrganizameNavigatorbar(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
