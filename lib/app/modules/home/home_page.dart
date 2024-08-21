@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/Widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/core/ui/organizame_icons.dart';
@@ -8,13 +9,32 @@ import 'package:organizame/app/modules/home/widgets/home_filters.dart';
 import 'package:organizame/app/modules/home/widgets/home_header.dart';
 import 'package:organizame/app/modules/home/widgets/home_task.dart';
 import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
+import 'package:organizame/app/modules/task/task_module.dart';
 
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   void _goToTaskPage(BuildContext context) {
-    Navigator.of(context).pushNamed('/task');
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 600),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          animation = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeInQuad,
+          );
+          return ScaleTransition(
+            scale: animation,
+            alignment: Alignment.bottomRight,
+            child: child,
+          );
+        },
+        pageBuilder: (context, animation, secondaryAnimation) {
+        return TaskModule().getPage('/task', context);
+      },
+      ),
+    );
   }
 
   @override
@@ -28,12 +48,15 @@ class _HomePageState extends State<HomePage> {
       drawer: HomeDrawer(),
       appBar: AppBar(
         backgroundColor: context.primaryColorLight,
-        title: const Row(
+        title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            OrganizameLogoMovie(),
-            SizedBox(width: 5),
-            
+            OrganizameLogoMovie(
+              text: 'OrganizAme',
+              part1Color: context.primaryColor,
+              part2Color: context.scaffoldBackgroundColor,
+            ),
+            const SizedBox(width: 5),
           ],
         ),
         actions: [
@@ -57,7 +80,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () => widget._goToTaskPage(context),
         backgroundColor: context.primaryColor,
         child: Icon(Icons.add, color: context.primaryColorLight),
-        ),
+      ),
       bottomNavigationBar: const OrganizameNavigatorbar(),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -77,7 +100,6 @@ class _HomePageState extends State<HomePage> {
                       HomeFilters(),
                       HomeWeekFilter(),
                       HomeTask(),
-
                     ],
                   ),
                 ),

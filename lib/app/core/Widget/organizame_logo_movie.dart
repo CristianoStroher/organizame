@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'dart:math';
 
 class OrganizameLogoMovie extends StatefulWidget {
-  const OrganizameLogoMovie({super.key});
+  final String text; // Adiciona um parâmetro para a palavra a ser animada
+  final Color part1Color; // Cor da primeira parte da palavra
+  final Color part2Color; // Cor da segunda parte da palavra
+  final int splitIndex; // Índice onde a palavra será dividida
+
+  const OrganizameLogoMovie(
+      {super.key,
+      required this.text,
+      required this.part1Color,
+      required this.part2Color,
+      this.splitIndex = 7});
 
   @override
   State<OrganizameLogoMovie> createState() => _OrganizameLogoMovieState();
@@ -11,18 +20,19 @@ class OrganizameLogoMovie extends StatefulWidget {
 
 class _OrganizameLogoMovieState extends State<OrganizameLogoMovie>
     with SingleTickerProviderStateMixin {
-  
+
   late AnimationController _controller;
   late Animation<int> _animation;
   late List<String> _permutations;
-  String _currentText = "OrganizAme";
+  String _currentText = ''; // Valor inicial
   bool _disposed = false;
 
   @override
   void initState() {
     super.initState();
 
-    _permutations = _generatePermutations("OrganizAme");
+    _permutations = _generatePermutations(widget.text); // Gera permutações
+    _currentText = widget.text; // Inicializa com a palavra original
 
     _controller = AnimationController(
       duration: const Duration(seconds: 3),
@@ -72,25 +82,26 @@ class _OrganizameLogoMovieState extends State<OrganizameLogoMovie>
 
   @override
   Widget build(BuildContext context) {
-    String organizPart = _currentText.substring(0, 7);
-    String amePart = _currentText.substring(7);
+    // Divide a palavra em duas partes usando o índice fornecido
+    String part1 = _currentText.substring(0, widget.splitIndex);
+    String part2 = _currentText.substring(widget.splitIndex);
 
     return RichText(
       text: TextSpan(
         children: [
           TextSpan(
-            text: organizPart,
+            text: part1,
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: widget.part1Color,
               fontSize: 30,
               fontFamily: 'Kanit',
               fontWeight: FontWeight.w600,
             ),
           ),
           TextSpan(
-            text: amePart,
+            text: part2,
             style: TextStyle(
-              color: context.scaffoldBackgroundColor,
+              color: widget.part2Color,
               fontSize: 30,
               fontFamily: 'Kanit',
               fontWeight: FontWeight.w600,

@@ -9,11 +9,11 @@ class OrganizamePage extends StatelessWidget {
   final List<SingleChildWidget>? _bindings;
   final WidgetBuilder _page;
 
-  OrganizamePage({
-    Key? key,
+  const OrganizamePage({
+    super.key,
     List<SingleChildWidget>? bindings,
     required WidgetBuilder page,
-  }) : _bindings = bindings, _page = page, super(key: key);
+  }) : _bindings = bindings, _page = page;
  
 
    @override

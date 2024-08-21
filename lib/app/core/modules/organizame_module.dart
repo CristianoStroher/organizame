@@ -30,4 +30,17 @@ abstract class OrganizameModule {
     );
   }
 
+//metodo para pegar a pagina atraves do path
+Widget getPage(String path, BuildContext context) {
+    final pageBuilder = _routers[path];
+    if (pageBuilder != null) {
+      return OrganizamePage(
+        bindings: _bindings,
+        page: pageBuilder,
+      );
+    }
+    throw Exception('Rota não encontrada');
+  }
+
+
 }
