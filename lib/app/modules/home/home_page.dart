@@ -13,6 +13,10 @@ import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  void _goToTaskPage(BuildContext context) {
+    Navigator.of(context).pushNamed('/task');
+  }
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -50,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () => widget._goToTaskPage(context),
         backgroundColor: context.primaryColor,
         child: Icon(Icons.add, color: context.primaryColorLight),
         ),
