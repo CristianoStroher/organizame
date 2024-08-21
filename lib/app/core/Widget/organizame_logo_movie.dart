@@ -51,11 +51,13 @@ class _OrganizameLogoMovieState extends State<OrganizameLogoMovie>
 
     _controller.forward();
 
-    _controller.addStatusListener((status) async {
+      _controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed && !_disposed) {
         await Future.delayed(const Duration(seconds: 5));
-        _controller.reset();
-        _controller.forward();
+        if (!_disposed) {
+          _controller.reset();
+          _controller.forward();
+        }
       }
     });
   }
