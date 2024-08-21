@@ -21,7 +21,7 @@ class HomeHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          Text('Confira suas tarefas agendadas para o dia.',
+          Text('Confira suas tarefas agendadas.',
               style: TextStyle(fontSize: 16, color: context.primaryColor)),
         ],
       ),
