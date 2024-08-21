@@ -6,6 +6,7 @@ import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
+import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
 
 class TaskPage extends StatelessWidget {
   final TaskController _controller;
@@ -59,8 +60,8 @@ class TaskPage extends StatelessWidget {
                     // Colocando Data e Hora numa única linha
                     Row(
                       children: [
-                        Expanded(
-                          child: OrganizameTextformfield(label: 'Data'),
+                        const Expanded(
+                          child: OrganizameCalendarButton(),
                         ),
                         const SizedBox(width: 20),
                         Expanded(
