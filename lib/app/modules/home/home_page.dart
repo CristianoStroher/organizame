@@ -12,7 +12,7 @@ import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   void _goToTaskPage(BuildContext context) {
@@ -38,11 +38,6 @@ class HomePage extends StatefulWidget {
     );
   }
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +73,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => widget._goToTaskPage(context),
+        onPressed: () => _goToTaskPage(context),
         backgroundColor: context.primaryColor,
         child: Icon(Icons.add, color: context.primaryColorLight),
       ),

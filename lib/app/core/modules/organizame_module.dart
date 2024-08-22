@@ -12,8 +12,8 @@ abstract class OrganizameModule {
 
   OrganizameModule({
     List<SingleChildWidget>? bindings,
-    required Map<String, WidgetBuilder> router,
-  })  : _routers = router,
+    required Map<String, WidgetBuilder> routers,
+  })  : _routers = routers,
         _bindings = bindings;
 
 
@@ -32,11 +32,11 @@ abstract class OrganizameModule {
 
 //metodo para pegar a pagina atraves do path
 Widget getPage(String path, BuildContext context) {
-    final pageBuilder = _routers[path];
-    if (pageBuilder != null) {
+    final widgetBuilder = _routers[path];
+    if (widgetBuilder != null) {
       return OrganizamePage(
+        page: widgetBuilder,
         bindings: _bindings,
-        page: pageBuilder,
       );
     }
     throw Exception('Rota não encontrada');

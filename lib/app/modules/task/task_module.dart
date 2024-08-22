@@ -19,9 +19,7 @@ class TaskModule extends OrganizameModule {
           ChangeNotifierProvider(
             create: (context) => TaskController(tasksService: context.read()),
           ),
-        ], router: {
-          '/task/create': (context) => TaskCreatePage(
-                controller: context.read(),
-              ),
+        ], routers: {
+          '/task/create': (context) => TaskCreatePage(controller: context.read(),),
         });
 }

@@ -17,7 +17,7 @@ class AuthModule extends OrganizameModule {
             ChangeNotifierProvider(create: (context) => RegisterController(userService: context.read()), //injetando o controller da tela de login
             ),
           ],
-          router: {
+          routers: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegisterPage(),
           },

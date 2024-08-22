@@ -5,8 +5,9 @@ class HomeModule extends OrganizameModule {
   HomeModule()
       : super(
           /* bindings: [], */
-          router: {
+          routers: {
             '/home': (context) => const HomePage(),
+            
           },
         );
 }
