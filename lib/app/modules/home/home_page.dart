@@ -31,7 +31,8 @@ class HomePage extends StatefulWidget {
           );
         },
         pageBuilder: (context, animation, secondaryAnimation) {
-        return TaskModule().getPage('/task/create', context);
+        // return TaskModule().getPage('/task/create', context);
+          return TaskModule().getPage('/task/create', context);
       },
       ),
     );

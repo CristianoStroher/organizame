@@ -10,19 +10,28 @@ import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.d
 import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
 import 'package:validatorless/validatorless.dart';
 
-class TaskCreatePage extends StatelessWidget {
+class TaskCreatePage extends StatefulWidget {
   final TaskController _controller;
-  final descriptionEC = TextEditingController();
-  final dateEC = TextEditingController();
-  final hourEC = TextEditingController();
-  final observationsEC = TextEditingController();
 
-  TaskCreatePage({super.key, required TaskController controller})
+  const TaskCreatePage({super.key, required TaskController controller})
       : _controller = controller;
 
   @override
+  State<TaskCreatePage> createState() => _TaskCreatePageState();
+}
+
+class _TaskCreatePageState extends State<TaskCreatePage> {
+  final descriptionEC = TextEditingController();
+
+  final dateEC = TextEditingController();
+
+  final hourEC = TextEditingController();
+
+  final observationsEC = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    print('TaskController is: $_controller');
+    print('TaskController is: ${widget._controller}');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.primaryColorLight,

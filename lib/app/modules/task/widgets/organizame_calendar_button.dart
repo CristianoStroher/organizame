@@ -30,9 +30,9 @@ class OrganizameCalendarButton extends StatelessWidget {
           lastDate: lastdate,
         );
 
-        // if (selectedDate != null && context.mounted) {
-        //   context.read<TaskController>().selectedDate = selectedDate;
-        // }
+        
+        context.read<TaskController>().setSelectedDate = selectedDate;
+       
        
       },
       child: Container(
