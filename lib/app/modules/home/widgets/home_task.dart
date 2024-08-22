@@ -3,6 +3,7 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/home/widgets/task.dart';
 
 class HomeTask extends StatelessWidget {
+
   const HomeTask({super.key});
 
   @override

@@ -6,7 +6,6 @@ import 'package:organizame/app/core/ui/desing_ui.dart';
 import 'package:organizame/app/modules/auth/auth_module.dart';
 
 import 'package:organizame/app/modules/home/home_module.dart';
-import 'package:organizame/app/modules/home/widgets/task.dart';
 import 'package:organizame/app/modules/splash/splash_page.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 
