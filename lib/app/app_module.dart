@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/app_widget.dart';
 import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
+import 'package:organizame/app/modules/task/task_controller.dart';
+import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
+import 'package:organizame/app/repositories/tasks/tasks_repository_impl.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
 import 'package:organizame/app/repositories/user/user_repository_impl.dart';
+import 'package:organizame/app/services/tasks/tasks_service.dart';
+import 'package:organizame/app/services/tasks/tasks_service_impl.dart';
 import 'package:organizame/app/services/user_service.dart';
 import 'package:organizame/app/services/user_service_impl.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +54,15 @@ class AppModule extends StatelessWidget {
           )..loadListener(),
           lazy: false, //logo que inicializado ja chama a função
         ),
+        Provider<TasksRepository>(
+              create: (context) =>
+                  TasksRepositoryImpl(sqLiteConnectionFactory: context.read())),
+          Provider<TasksService>(
+              create: (context) =>
+                  TasksServiceImpl(tasksRepository: context.read())),
+          ChangeNotifierProvider<TaskController>(
+            create: (context) => TaskController(tasksService: context.read()),
+          ),
       ],
       child: const AppWidget(),
     );

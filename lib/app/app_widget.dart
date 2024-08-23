@@ -47,7 +47,7 @@ class _AppWidgetState extends State<AppWidget> {
       routes: {
         ...AuthModule().routers,
         ...HomeModule().routers,
-        ...TaskModule().routers,
+        ...TaskModule(context).routers,
       },
       home: const SplashPage(),
     );

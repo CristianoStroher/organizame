@@ -8,15 +8,15 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
+import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class TaskCreatePage extends StatefulWidget {
 
   final TaskController _controller;
 
-  const TaskCreatePage({Key? key, required TaskController controller})
-      : _controller = controller,
-        super(key: key);
+  const TaskCreatePage({super.key, required TaskController controller})
+      : _controller = controller;
 
   @override
   State<TaskCreatePage> createState() => _TaskCreatePageState();
@@ -56,74 +56,74 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
           ),
         ],
       ),
-      // body: Form(
-      //   child: LayoutBuilder(
-      //     builder: (context, constraints) => SingleChildScrollView(
-      //       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      //       child: ConstrainedBox(
-      //         constraints: BoxConstraints(
-      //           minHeight: constraints.maxHeight,
-      //           minWidth: constraints.maxWidth,
-      //         ),
-      //         child: IntrinsicHeight(
-      //           child: Column(
-      //             crossAxisAlignment: CrossAxisAlignment.start,
-      //             mainAxisSize: MainAxisSize.min,
-      //             children: [
-      //               Text('NOVA TAREFA', style: context.titleDefaut),
-      //               const SizedBox(height: 20),
-      //               OrganizameTextformfield(
-      //                 validator: Validatorless.multiple([
-      //                   Validatorless.required('Campo obrigatório'),
-      //                   Validatorless.max(50, 'Nome muito longo'),
-      //                 ]),
-      //                 label: 'Descrição',
-      //                 controller: descriptionEC,
-      //               ),
-      //               const SizedBox(height: 20),
-      //               // Colocando Data e Hora numa única linha
-      //               Row(
-      //                 children: [
-      //                   Expanded(
-      //                     child: OrganizameCalendarButton(
-      //                       controller: dateEC,
+      body: Form(
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+                minWidth: constraints.maxWidth,
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('NOVA TAREFA', style: context.titleDefaut),
+                    const SizedBox(height: 20),
+                    OrganizameTextformfield(
+                      validator: Validatorless.multiple([
+                        Validatorless.required('Campo obrigatório'),
+                        Validatorless.max(50, 'Nome muito longo'),
+                      ]),
+                      label: 'Descrição',
+                      controller: descriptionEC,
+                    ),
+                    const SizedBox(height: 20),
+                    // Colocando Data e Hora numa única linha
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OrganizameCalendarButton(
+                            controller: dateEC,
                             
-      //                     ),
-      //                   ),
-      //                   const SizedBox(width: 20),
-      //                   Expanded(
-      //                     child: OrganizameTimeButton(
-      //                       controller: hourEC,
-      //                       label: 'Hora',
-      //                     ),                         
-      //                   ),
-      //                 ],
-      //               ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: OrganizameTimeButton(
+                            controller: hourEC,
+                            label: 'Hora',
+                          ),                         
+                        ),
+                      ],
+                    ),
 
-      //               const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-      //               // Caixa de texto de Observações com altura de 3 linhas
-      //               SizedBox(
-      //                 height: 120, // Ajusta a altura total
-      //                 child: OrganizameTextField(
-      //                     controller: observationsEC,
-      //                     label: 'Observações',
-      //                     maxLines: 4),
-      //               ),
-      //               const SizedBox(height: 20),
-      //               OrganizameElevatedButton(
-      //                 label: 'Salvar',
-      //                 onPressed: () {
-      //                   // Implementar ação do botão
-      //                 },
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
+                    // Caixa de texto de Observações com altura de 3 linhas
+                    SizedBox(
+                      height: 120, // Ajusta a altura total
+                      child: OrganizameTextField(
+                          controller: observationsEC,
+                          label: 'Observações',
+                          maxLines: 4),
+                    ),
+                    const SizedBox(height: 20),
+                    OrganizameElevatedButton(
+                      label: 'Salvar',
+                      onPressed: () {
+                        // Implementar ação do botão
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

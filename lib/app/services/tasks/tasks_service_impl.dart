@@ -3,6 +3,7 @@ import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
 import './tasks_service.dart';
 
 class TasksServiceImpl extends TasksService {
+  
   final TasksRepository _tasksRepository;
 
   TasksServiceImpl({required TasksRepository tasksRepository})

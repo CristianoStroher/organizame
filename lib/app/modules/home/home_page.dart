@@ -11,12 +11,11 @@ import 'package:organizame/app/modules/home/widgets/home_task.dart';
 import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  void _goToTaskPage(BuildContext context) {
-    Navigator.of(context).push(
+  void _goToTaskPage(BuildContext appContext) {
+    Navigator.of(appContext).push(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 600),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -31,9 +30,11 @@ class HomePage extends StatelessWidget {
           );
         },
         pageBuilder: (context, animation, secondaryAnimation) {
-        // return TaskModule().getPage('/task/create', context);
-          return TaskModule().getPage('/task/create', context);
-      },
+          // return TaskModule().getPage('/task/create', context);
+          TaskModule taskModule = TaskModule(appContext);
+
+          return taskModule.getPage('/task/create', appContext);
+        },
       ),
     );
   }

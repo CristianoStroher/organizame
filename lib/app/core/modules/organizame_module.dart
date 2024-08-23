@@ -9,8 +9,9 @@ abstract class OrganizameModule {
   /* nota 10 */
   final Map<String, WidgetBuilder> _routers; // Mapa de rotas do módulo
   final List<SingleChildWidget>? _bindings; // Lista de injeção de dependências do módulo.
-
+  final BuildContext? context;
   OrganizameModule({
+    this.context,
     List<SingleChildWidget>? bindings,
     required Map<String, WidgetBuilder> routers,
   })  : _routers = routers,
@@ -35,6 +36,7 @@ Widget getPage(String path, BuildContext context) {
     final widgetBuilder = _routers[path];
     if (widgetBuilder != null) {
       return OrganizamePage(
+        appContext: this.context,
         page: widgetBuilder,
         bindings: _bindings,
       );

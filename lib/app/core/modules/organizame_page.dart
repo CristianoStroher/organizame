@@ -8,9 +8,10 @@ class OrganizamePage extends StatelessWidget {
 
   final List<SingleChildWidget>? _bindings;
   final WidgetBuilder _page;
-
+  final BuildContext? appContext;
   const OrganizamePage({
     super.key,
+    this.appContext,
     List<SingleChildWidget>? bindings,
     required WidgetBuilder page,
   }) : _bindings = bindings, _page = page;
@@ -18,9 +19,11 @@ class OrganizamePage extends StatelessWidget {
 
    @override
    Widget build(BuildContext context) {
+    print("bindings => ${_bindings?.length}");
+     print("appcontext => ${appContext == null}");
     return MultiProvider(
       providers: _bindings ?? [ Provider(create: (_) => Object())],
-      child: Builder(builder: (context) => _page(context)),
+      child: _page(appContext?? context)
     );       
   }
 }
