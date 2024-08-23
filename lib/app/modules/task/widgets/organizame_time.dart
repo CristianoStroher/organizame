@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:provider/provider.dart';
 
 class OrganizameTimeButton extends StatelessWidget {
+
+  final timeFormat = DateFormat('HH:mm');
+  
   final double? height;
   final String? label;
   final TextEditingController controller;
 
-  const OrganizameTimeButton({
+  OrganizameTimeButton({
     super.key,
     this.height,
     this.label,
@@ -50,10 +54,22 @@ class OrganizameTimeButton extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             if (label != null)
-              Text(
-                label!,
-                style: TextStyle(color: context.primaryColor, fontSize: 16),
-              ),
+            Selector<TaskController, DateTime?>(
+              selector: (context, controller) => controller.getSelectedTime,
+              builder: (context, selectedTime, child) {
+                if (selectedTime == null) {
+                  return Text(
+                    label!,
+                    style: TextStyle(color: context.primaryColor, fontSize: 16),
+                  );
+                } else {
+                  return Text(
+                    timeFormat.format(selectedTime),
+                    style: TextStyle(color: context.primaryColor, fontSize: 16),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),

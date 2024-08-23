@@ -19,8 +19,7 @@ class OrganizamePage extends StatelessWidget {
 
    @override
    Widget build(BuildContext context) {
-    print("bindings => ${_bindings?.length}");
-     print("appcontext => ${appContext == null}");
+    
     return MultiProvider(
       providers: _bindings ?? [ Provider(create: (_) => Object())],
       child: _page(appContext?? context)

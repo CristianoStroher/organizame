@@ -3,16 +3,14 @@ import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/Widget/organizame_textfield.dart';
 import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
-
+import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
-import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class TaskCreatePage extends StatefulWidget {
-
   final TaskController _controller;
 
   const TaskCreatePage({super.key, required TaskController controller})
@@ -23,17 +21,34 @@ class TaskCreatePage extends StatefulWidget {
 }
 
 class _TaskCreatePageState extends State<TaskCreatePage> {
+  final _globalKey = GlobalKey<FormState>();
   final descriptionEC = TextEditingController();
-
   final dateEC = TextEditingController();
-
-  final hourEC = TextEditingController();
-
+  final timeEC = TextEditingController();
   final observationsEC = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    DefautListenerNotifier(
+      changeNotifier: widget._controller,
+    ).listener(context: context, sucessCallback: (notifier, listenerInstance) {
+      listenerInstance.removeListener();
+      Navigator.pop(context);
+    });
+  }
+
+  @override
+  void dispose() {
+    descriptionEC.dispose();
+    dateEC.dispose();
+    timeEC.dispose();
+    observationsEC.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.primaryColorLight,
@@ -57,6 +72,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
         ],
       ),
       body: Form(
+        key: _globalKey,
         child: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -87,34 +103,41 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                         Expanded(
                           child: OrganizameCalendarButton(
                             controller: dateEC,
-                            
                           ),
                         ),
                         const SizedBox(width: 20),
                         Expanded(
                           child: OrganizameTimeButton(
-                            controller: hourEC,
+                            controller: timeEC,
                             label: 'Hora',
-                          ),                         
+                          ),
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 20),
-
                     // Caixa de texto de Observações com altura de 3 linhas
                     SizedBox(
                       height: 120, // Ajusta a altura total
                       child: OrganizameTextField(
-                          controller: observationsEC,
-                          label: 'Observações',
-                          maxLines: 4),
+                        controller: observationsEC,
+                        label: 'Observações',
+                        maxLines: 4,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     OrganizameElevatedButton(
                       label: 'Salvar',
                       onPressed: () {
-                        // Implementar ação do botão
+                        final formValid = _globalKey.currentState?.validate() ?? false;
+                        if (formValid) {
+                          widget._controller.saveTask(
+                            description: descriptionEC.text,
+                            date: dateEC.text,
+                            time: timeEC.text,
+                            observations: observationsEC.text,
+                          );
+                          Navigator.of(context).pop();
+                        }
                       },
                     ),
                   ],
