@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:organizame/app/core/database/sqlite_adm_connection.dart';
 import 'package:organizame/app/core/navigator/organizame_navigator.dart';
 import 'package:organizame/app/core/ui/desing_ui.dart';
@@ -44,6 +45,16 @@ class _AppWidgetState extends State<AppWidget> {
       title: 'Organizame',
       theme: DesingUi.theme,
       navigatorKey: OrganizameNavigator.navigatorKey,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+
+      ],
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+        
+      ],
       routes: {
         ...AuthModule().routers,
         ...HomeModule().routers,

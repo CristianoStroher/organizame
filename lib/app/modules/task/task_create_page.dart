@@ -131,12 +131,12 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                         final formValid = _globalKey.currentState?.validate() ?? false;
                         if (formValid) {
                           widget._controller.saveTask(
-                            description: descriptionEC.text,
-                            date: dateEC.text,
-                            time: timeEC.text,
-                            observations: observationsEC.text,
+                            descriptionEC.text,
+                            dateEC.text,
+                            timeEC.text,
+                            observationsEC.text,
                           );
-                          Navigator.of(context).pop();
+                          Navigator.pop(context);
                         }
                       },
                     ),
