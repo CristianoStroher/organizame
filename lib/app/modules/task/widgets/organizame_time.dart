@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class OrganizameTimeButton extends StatelessWidget {
 
   final timeFormat = DateFormat('HH:mm');
-  
+  final ValueChanged<DateTime>? onDateSelected;
   final double? height;
   final String? label;
   final TextEditingController controller;
@@ -17,6 +17,7 @@ class OrganizameTimeButton extends StatelessWidget {
     this.height,
     this.label,
     required this.controller,
+    this.onDateSelected,
   });
 
   @override
@@ -31,11 +32,15 @@ class OrganizameTimeButton extends StatelessWidget {
 
         if (selectedTime != null) {
           final now = DateTime.now();
-          final dateTime = DateTime(now.year, now.month, now.day,
-              selectedTime.hour, selectedTime.minute);
-          context.read<TaskController>().setSelectedTime = dateTime;
-        }
+          final selectedDateTime = DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute);
 
+          // Atualiza o controlador e o campo de texto com a hora selecionada
+          controller.text = timeFormat.format(selectedDateTime);
+          context.read<TaskController>().setSelectedTime = selectedDateTime;
+
+          // // Invoca o callback se definido
+          // onDateSelected?.call(selectedDateTime);
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(5),
@@ -54,22 +59,22 @@ class OrganizameTimeButton extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             if (label != null)
-            Selector<TaskController, DateTime?>(
-              selector: (context, controller) => controller.getSelectedTime,
-              builder: (context, selectedTime, child) {
-                if (selectedTime == null) {
-                  return Text(
-                    label!,
-                    style: TextStyle(color: context.primaryColor, fontSize: 16),
-                  );
-                } else {
-                  return Text(
-                    timeFormat.format(selectedTime),
-                    style: TextStyle(color: context.primaryColor, fontSize: 16),
-                  );
-                }
-              },
-            ),
+              Selector<TaskController, DateTime?>(
+                selector: (context, controller) => controller.getSelectedTime,
+                builder: (context, selectedTime, child) {
+                  if (selectedTime == null) {
+                    return Text(
+                      label!,
+                      style: TextStyle(color: context.primaryColor, fontSize: 16),
+                    );
+                  } else {
+                    return Text(
+                      timeFormat.format(selectedTime),
+                      style: TextStyle(color: context.primaryColor, fontSize: 16),
+                    );
+                  }
+                },
+              ),
           ],
         ),
       ),

@@ -1,4 +1,3 @@
-import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
@@ -14,15 +13,14 @@ class TaskController extends DefautChangeNotifer {
   }) : _tasksService = tasksService;
 
   set setSelectedDate(DateTime? selectedDate) {
-    resetState();
-    
     _selectedDate = selectedDate;
+    resetState();
     notifyListeners();
   }
 
   set setSelectedTime(DateTime? selectedTime) {
-    resetState();
     _selectedTime = selectedTime;
+    resetState();
     notifyListeners();
   }
 
@@ -35,8 +33,7 @@ class TaskController extends DefautChangeNotifer {
   // Getter para a hora selecionada
   DateTime? get selectedTime => _selectedTime;
 
-  Future<void> saveTask(String description, String date, String time,
-      String observationsEC) async {
+  Future<void> saveTask(String description, String date, String time, String observationsEC) async {
     try {
       showLoadingAndReset();
       notifyListeners();
@@ -49,12 +46,13 @@ class TaskController extends DefautChangeNotifer {
           description,
           observations: observationsEC,
         );
-        sucess();                      
+        sucess();
+        setSelectedDate = null;
+        setSelectedTime = null;                      
                      
       } else {
         setError('Data e hora são obrigatórios');
       }
-
       hideLoading();
     } catch (e, s) {
       setError('Erro ao salvar tarefa');
@@ -67,3 +65,4 @@ class TaskController extends DefautChangeNotifer {
     }
   }
 }
+

@@ -23,18 +23,20 @@ class DefautListenerNotifier {
       if (everCallback != null) {
         everCallback(changeNotifier, this);
       }
-      if (changeNotifier.isLoading) {
+      print('isLoading: ${changeNotifier.isLoading}');
+      if (changeNotifier?.isLoading == true) {
         Loader.show(context);
       } else {
         Loader.hide();
       }
-
-      if (changeNotifier.hasError) {
+      print('hasError: ${changeNotifier.hasError}');
+      if (changeNotifier?.hasError == true) {
         if (errorCallback != null) {
           errorCallback(changeNotifier, this);
         }
         Messages.of(context).showError(changeNotifier.error ?? 'Erro Interno');
-      } else if (changeNotifier.isSucess) {
+      } else if (changeNotifier?.isSucess == true) {
+          print('isSucess: ${changeNotifier.isSucess}');
           sucessCallback(changeNotifier, this);
         }
         

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class OrganizameCalendarButton extends StatelessWidget {
   final dateFormat = DateFormat('dd/MM/yyyy');
-
+  final ValueChanged<DateTime>? onDateSelected;
   final double? height;
   final TextEditingController controller;
 
@@ -14,6 +14,7 @@ class OrganizameCalendarButton extends StatelessWidget {
     super.key,
     this.height,
     required this.controller,
+    this.onDateSelected,
   });
 
   @override
@@ -30,9 +31,16 @@ class OrganizameCalendarButton extends StatelessWidget {
           lastDate: lastdate,
         );
 
+        if (selectedDate != null) {
+          // Atualiza o controlador e o campo de texto com a data selecionada
+          controller.text = dateFormat.format(selectedDate);
+          context.read<TaskController>().setSelectedDate = selectedDate;
+
+          // Invoca o callback se definido
+          onDateSelected?.call(selectedDate);
+        }
         
-        context.read<TaskController>().setSelectedDate = selectedDate;
-       
+             
        
       },
       child: Container(

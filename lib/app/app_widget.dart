@@ -53,7 +53,7 @@ class _AppWidgetState extends State<AppWidget> {
       ],
       supportedLocales: const [
         Locale('pt', 'BR'),
-        
+                
       ],
       routes: {
         ...AuthModule().routers,
