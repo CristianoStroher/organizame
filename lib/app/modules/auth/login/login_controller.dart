@@ -17,13 +17,13 @@ class LoginController extends DefautChangeNotifer {
 
   Future<void> login(String email, String password) async {
     try {
-      showLoadingAndReset();
+      showLoadingAndResetState();
       infoMessage = null;
       notifyListeners();
       final user = await _userService.login(email, password);
       if (user != null) {
         Logger().i('Usuário logado: ${user.email}');
-        sucess();
+        success();
       } else {
         Logger().e('Erro ao fazer login');
         setError('Erro ao fazer login');
@@ -41,12 +41,12 @@ class LoginController extends DefautChangeNotifer {
   Future<void> resetPassword(String email) async {
   try {
     Logger().i('Iniciando reset de senha para: $email');
-    showLoadingAndReset();
+    showLoadingAndResetState();
     infoMessage = null;
     notifyListeners();
     await _userService.resetPassword(email);
     infoMessage = 'E-mail enviado para redefinição de senha';
-    sucess();
+    success();
     
     Logger().i(infoMessage);
   } on AuthException catch (e) {
@@ -64,14 +64,14 @@ class LoginController extends DefautChangeNotifer {
 
 Future<void> loginGoogle() async {
   
-  showLoadingAndReset();
+  showLoadingAndResetState();
   infoMessage = null;
   notifyListeners();
   try {
     final user = await _userService.googleLogin();
     if (user != null) {
       Logger().i('Usuário logado: ${user.email}');
-      sucess();
+      success();
     } else {
       Logger().e('Erro ao fazer login');
       setError('Erro ao fazer login');

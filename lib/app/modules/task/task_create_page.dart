@@ -32,10 +32,10 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
   @override
   void initState() {
     super.initState();
-    DefautListenerNotifier(
+    DefaultListenerNotifier(
       changeNotifier: widget._controller,
     ).listener(context: context, sucessCallback: (notifier, listenerInstance) {
-      listenerInstance.removeListener();
+      listenerInstance.dispose();
       Navigator.pop(context);
     });
   }

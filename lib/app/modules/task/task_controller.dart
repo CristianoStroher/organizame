@@ -35,7 +35,7 @@ class TaskController extends DefautChangeNotifer {
 
   Future<void> saveTask(String description, String date, String time, String observationsEC) async {
     try {
-      showLoadingAndReset();
+      showLoadingAndResetState();
       notifyListeners();
       if (_selectedDate != null ||
           _selectedTime != null ||
@@ -46,7 +46,7 @@ class TaskController extends DefautChangeNotifer {
           description,
           observations: observationsEC,
         );
-        sucess();
+        success();
         setSelectedDate = null;
         setSelectedTime = null;                      
                      
