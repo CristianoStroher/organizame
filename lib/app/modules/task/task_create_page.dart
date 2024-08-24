@@ -12,6 +12,7 @@ import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
 import 'package:validatorless/validatorless.dart';
 
 class TaskCreatePage extends StatefulWidget {
+  
   final TaskController _controller;
 
   const TaskCreatePage({super.key, required TaskController controller})
@@ -33,10 +34,12 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
     super.initState();
     DefautListenerNotifier(
       changeNotifier: widget._controller,
-    ).listener(context: context, sucessCallback: (notifier, listenerInstance) {
-      listenerInstance.removeListener();
-      Navigator.pop(context);
-    });
+    ).listener(
+        context: context,
+        sucessCallback: (notifier, listenerInstance) {
+          listenerInstance.removeListener();
+          Navigator.pop(context);
+        });
   }
 
   @override
@@ -129,14 +132,15 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                     OrganizameElevatedButton(
                       label: 'Salvar',
                       onPressed: () {
-                        final formValid = _globalKey.currentState?.validate() ?? false;
+                        final formValid =
+                            _globalKey.currentState?.validate() ?? false;
                         if (formValid) {
                           widget._controller.saveTask(
                             descriptionEC.text,
                             dateEC.text,
                             timeEC.text,
                             observationsEC.text,
-                          );                          
+                          );
                         }
                       },
                     ),

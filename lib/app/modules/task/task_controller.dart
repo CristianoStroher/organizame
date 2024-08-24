@@ -15,6 +15,7 @@ class TaskController extends DefautChangeNotifer {
 
   set setSelectedDate(DateTime? selectedDate) {
     resetState();
+    
     _selectedDate = selectedDate;
     notifyListeners();
   }
@@ -48,8 +49,8 @@ class TaskController extends DefautChangeNotifer {
           description,
           observations: observationsEC,
         );
-        sucess();
-        
+        sucess();                      
+                     
       } else {
         setError('Data e hora são obrigatórios');
       }
@@ -62,6 +63,7 @@ class TaskController extends DefautChangeNotifer {
     } finally {
       hideLoading();
       notifyListeners();
+      
     }
   }
 }

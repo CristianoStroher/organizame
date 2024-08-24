@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/home/widgets/home_card_filter.dart';
 
-class HomeFilters extends StatefulWidget {
+class HomeFilters extends StatelessWidget {
   const HomeFilters({super.key});
 
-  @override
-  State<HomeFilters> createState() => _HomeFiltersState();
-}
-
-class _HomeFiltersState extends State<HomeFilters> {
   @override
   Widget build(BuildContext context) {
     return Column(

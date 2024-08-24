@@ -22,7 +22,7 @@ class DefautChangeNotifer extends ChangeNotifier {
   }
 
   void resetState() {
-    _error = null;
+    setError(null);
     _sucess = false;
   }
 
