@@ -4,6 +4,7 @@ import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/Widget/organizame_textfield.dart';
 import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
 import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
@@ -135,8 +136,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                             dateEC.text,
                             timeEC.text,
                             observationsEC.text,
-                          );
-                          Navigator.pop(context);
+                          );                          
                         }
                       },
                     ),
