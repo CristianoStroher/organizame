@@ -135,6 +135,10 @@ class UserRepositoryImpl extends UserRepository {
       } else {
         throw AuthException(message: 'Erro ao fazer login com o Google.');
       }
+    } catch (e, s) {
+      Logger().e(e.toString());
+      Logger().e(s.toString());
+     // throw AuthException(message: 'Erro inesperado ao fazer login com o Google.');
     }
 
     return null;
