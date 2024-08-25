@@ -25,9 +25,10 @@ void listener({
       if(everCallback != null) {//se o callback de sempre não for nulo
         everCallback(changeNotifier, this);//chama o callback de sempre}
       if(changeNotifier.isSuccess){//se o loading for verdadeiro
-        Loader.show(context);//mostra o loader
+            Loader.hide();//esconde o loader
+
     }else {
-      Loader.hide();//esconde o loader
+        Loader.show(context);//mostra o loader
     }
 
     if(changeNotifier.hasError){//se tiver erro
