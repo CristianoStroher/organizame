@@ -5,4 +5,7 @@ abstract class TasksRepository {
       {String? observations});
 
   Future<List<TaskObject>> findByPeriod(DateTime start, DateTime end);
+
+  Future<void> deleteTask(TaskObject task);
+  
 }

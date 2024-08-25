@@ -46,4 +46,11 @@ class TasksServiceImpl extends TasksService {
     return TaskWeekObject(
         startDate: startFilter, endDate: endFilter, tasks: task);
   }
+  
+  @override
+  Future<void> deleteTask(TaskObject task) async {
+    await _tasksRepository.deleteTask(task);    
+  }
+
+  
 }

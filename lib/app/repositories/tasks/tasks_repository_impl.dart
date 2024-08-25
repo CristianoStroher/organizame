@@ -29,21 +29,26 @@ class TasksRepositoryImpl extends TasksRepository {
     final endFilter = DateTime(end.year, end.month, end.day, 23, 59, 59);
 
     final conn = await _sqLiteConnectionFactory.openConnection();
-    final result = await conn.rawQuery('''
+    final result = await conn.rawQuery(
+      '''
         SELECT * FROM
         compromisso
         WHERE data BETWEEN ? AND ?
         ORDER BY data''',
-      [startfilter.toIso8601String(),
-      endFilter.toIso8601String()],
+      [startfilter.toIso8601String(), endFilter.toIso8601String()],
     );
-    
+
     return result.map((e) => TaskObject.fromMap(e)).toList();
   }
 
-  
+  @override
+  Future<void> deleteTask(TaskObject task) {
+    final conn = _sqLiteConnectionFactory.openConnection();
 
-
+    return conn.then((value) => value.delete('''
+        compromisso',
+        where: 'id = ?
+        ''',
+        whereArgs: [task.id]));
+  }
 }
-
-
