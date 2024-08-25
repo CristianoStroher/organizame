@@ -38,17 +38,14 @@ class _RegisterPageState extends State<RegisterPage> {
       context: context,
       sucessCallback: (notifier, listenerInstance) {
         listenerInstance.dispose();
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop(); // trocado visto a alteração do auth_provider
       } );
-      ErrorCallback: (notifier, listenerInstance) {
-        Logger().e('Erro ao cadastrar usuário');
-      };
+      
     
   }
 
   @override
-  void dispose() {
-    // Remove o listener diretamente, sem usar o context
+  void dispose() {    
     _nomeEC.dispose();
     _emailEC.dispose();
     _passwordEC.dispose();

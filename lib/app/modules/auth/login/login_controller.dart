@@ -72,7 +72,7 @@ Future<void> loginGoogle() async {
     if (user != null) {
       Logger().i('Usuário logado: ${user.email}');
       success();
-    } else {
+      } else {
       Logger().e('Erro ao fazer login');
       setError('Erro ao fazer login');
       _userService.logout();
