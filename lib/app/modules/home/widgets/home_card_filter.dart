@@ -2,7 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 
 class HomeCardFilter extends StatelessWidget {
-  const HomeCardFilter({super.key});
+
+  final String label;
+  final Color color;
+  final Color borderColor;
+  final Color textColor;
+  final Color linearProgress;
+  final Color value;
+  
+  const HomeCardFilter({
+    super.key,
+    required this.label,
+    required this.color,
+    required this.borderColor,
+    required this.textColor,
+    required this.linearProgress,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +28,9 @@ class HomeCardFilter extends StatelessWidget {
         maxWidth: 150,
       ),
       decoration: BoxDecoration(
-        color: context.primaryColor,
+        color: color,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withOpacity(.8), width: 1),
+        border: Border.all(color: borderColor, width: 1),
       ),
       margin: const EdgeInsets.only(right: 10),
       padding: const EdgeInsets.all(10),
@@ -24,20 +40,20 @@ class HomeCardFilter extends StatelessWidget {
           Text(
             '10 TAREFAS',
             style: TextStyle(
-              color: context.scaffoldBackgroundColor,
+              color: textColor,
               fontSize: 10),
           ),
           Text(
-            'HOJE',
+            label,
             style: TextStyle(
-                color: context.scaffoldBackgroundColor,
+                color: textColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold),
           ),
           LinearProgressIndicator(
             value: .5,
-            backgroundColor: context.primaryColorLight.withOpacity(.8),
-            valueColor: const AlwaysStoppedAnimation(Colors.white),
+            backgroundColor: linearProgress.withOpacity(.8),
+            valueColor: AlwaysStoppedAnimation(value),
           ),
         ],
       ),

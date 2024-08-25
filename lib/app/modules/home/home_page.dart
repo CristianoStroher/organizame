@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             OrganizameLogoMovie(
-              text: 'OrganizAme',
+              text: 'OrganizaMe',
               part1Color: context.primaryColor,
               part2Color: context.scaffoldBackgroundColor,
             ),

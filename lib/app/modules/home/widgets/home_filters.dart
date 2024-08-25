@@ -15,13 +15,34 @@ class HomeFilters extends StatelessWidget {
           style: context.titleDefaut,
         ),
         const SizedBox(height: 10),
-        const SingleChildScrollView(
+        SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              HomeCardFilter(),
-              HomeCardFilter(),
-              HomeCardFilter(),
+              HomeCardFilter(
+                label: 'HOJE',
+                color: context.primaryColor,
+                borderColor: context.primaryColor,
+                textColor: context.scaffoldBackgroundColor,
+                linearProgress: context.primaryColorLight,
+                value: Colors.white,
+              ),
+              const HomeCardFilter(
+                label: 'AMANHÃ',
+                color: Color(0xFFFAFFC5),
+                borderColor: Color.fromARGB(255, 185, 193, 52),
+                textColor: Color.fromARGB(255, 185, 193, 52),
+                value: Color.fromARGB(255, 185, 193, 52),
+                linearProgress: Colors.white,
+              ),
+              const HomeCardFilter(
+                label: 'SEMANA',
+                color: Color(0xFFDDFFCC),
+                borderColor: Color.fromARGB(255, 93, 130, 75),
+                textColor: Color.fromARGB(255, 93, 130, 75),
+                value: Color.fromARGB(255, 93, 130, 75),
+                linearProgress: Colors.white,
+              ),
             ],
           ),
         ),
