@@ -1,1 +1,0 @@
-Responsável por guardar as classes e objetos utilizados pelo app
