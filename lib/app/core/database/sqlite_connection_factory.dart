@@ -58,14 +58,7 @@ class SqliteConnectionFactory {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-  // Future<void> _onCreate(Database db, int version) async {
-  //   final batch = db.batch();
-  //   final migrations = SqliteMigrationFactory().getCreateMigrations();
-  //   migrations.forEach((m) => m.create(batch));
-  //   batch.commit();
-  // }
-
-  Future<void> _onCreate(Database db, int version) async {
+   Future<void> _onCreate(Database db, int version) async {
     final batch = db.batch();
     final migrations = SqliteMigrationFactory().getCreateMigrations();
     for (var migration in migrations) {
@@ -74,13 +67,6 @@ class SqliteConnectionFactory {
     await batch.commit();
   }
 
-
-  /* Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    final batch = db.batch();
-    final migrations = SqliteMigrationFactory().getUpgradeMigrations(oldVersion);
-    migrations.forEach((m) => m.update(batch));
-    batch.commit();
-  } */
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     final batch = db.batch();
