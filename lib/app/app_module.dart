@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/app_widget.dart';
 import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
+import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository_impl.dart';
@@ -29,13 +30,17 @@ class AppModule extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<LoginValidators>(
-            create: (_) => LoginValidators.instance), //injetando a instância da classe de validação de login
+            create: (_) => LoginValidators
+                .instance), //injetando a instância da classe de validação de login
         Provider(
-            create: (_) => FirebaseAuth.instance), //injetando a instância do firebase)
+            create: (_) =>
+                FirebaseAuth.instance), //injetando a instância do firebase)
         Provider(
-            create: (_) => FirebaseFirestore.instance), //injetando a instância do firestore
+            create: (_) => FirebaseFirestore
+                .instance), //injetando a instância do firestore
         Provider(
-          create: (_) => SqliteConnectionFactory(), //injetando a conexão com o banco de dados
+          create: (_) =>
+              SqliteConnectionFactory(), //injetando a conexão com o banco de dados
           lazy: false, //sempre que for chamado ele vai criar uma nova instância
         ),
         Provider<UserRepository>(
@@ -55,14 +60,17 @@ class AppModule extends StatelessWidget {
           lazy: false, //logo que inicializado ja chama a função
         ),
         Provider<TasksRepository>(
-              create: (context) =>
-                  TasksRepositoryImpl(sqLiteConnectionFactory: context.read())),
-          Provider<TasksService>(
-              create: (context) =>
-                  TasksServiceImpl(tasksRepository: context.read())),
-          ChangeNotifierProvider<TaskController>(
-            create: (context) => TaskController(tasksService: context.read()),
-          ),
+            create: (context) =>
+                TasksRepositoryImpl(sqLiteConnectionFactory: context.read())),
+        Provider<TasksService>(
+            create: (context) =>
+                TasksServiceImpl(tasksRepository: context.read())),
+        ChangeNotifierProvider<TaskController>(
+          create: (context) => TaskController(tasksService: context.read()),
+        ),
+
+        ChangeNotifierProvider(
+            create: (context) => HomeController(tasksService: context.read())),
       ],
       child: const AppWidget(),
     );

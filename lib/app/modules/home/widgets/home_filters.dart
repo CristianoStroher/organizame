@@ -27,7 +27,7 @@ class HomeFilters extends StatelessWidget {
               HomeCardFilter(
                 isSelected: context.select<HomeController, TaskFilterEnum>((value) => value.filterSelected) == TaskFilterEnum.today,
                 taskFilterEnum: TaskFilterEnum.today,
-                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.todayTotalTasks),
+                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.todayTotalTasks == null ? TaskTotalFilter(totalTasks: 0, totalTasksFinished: 0) : controller.todayTotalTasks!),
                 label: 'HOJE',
                 color: context.primaryColor,
                 borderColor: context.primaryColor,
@@ -38,7 +38,7 @@ class HomeFilters extends StatelessWidget {
               HomeCardFilter(
                 isSelected: context.select<HomeController, TaskFilterEnum>((value) => value.filterSelected) == TaskFilterEnum.tomorrow,
                 taskFilterEnum: TaskFilterEnum.tomorrow,
-                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.tomorrowTotalTasks),
+                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.tomorrowTotalTasks == null ? TaskTotalFilter(totalTasks: 0, totalTasksFinished: 0) : controller.tomorrowTotalTasks!),
                 label: 'AMANHÃ',
                 color: const Color(0xFFFAFFC5),
                 borderColor:context.primaryColor,
@@ -49,7 +49,7 @@ class HomeFilters extends StatelessWidget {
               HomeCardFilter(
                 isSelected: context.select<HomeController, TaskFilterEnum>((value) => value.filterSelected) == TaskFilterEnum.week,
                 taskFilterEnum: TaskFilterEnum.week,
-                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.weekTotalTasks),
+                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.weekTotalTasks == null ? TaskTotalFilter(totalTasks: 0, totalTasksFinished: 0) : controller.weekTotalTasks!),
                 label: 'SEMANA',
                 color: const Color(0xFFDDFFCC),
                 borderColor: context.primaryColor,

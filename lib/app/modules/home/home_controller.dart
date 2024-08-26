@@ -48,11 +48,10 @@ class HomeController extends DefautChangeNotifer {
 
     notifyListeners();
 
+    //  
+
     }
 
   }
 
-  // HomeController() { iago colocou isso aqui
-  //   hideLoading();
-  // }
 
