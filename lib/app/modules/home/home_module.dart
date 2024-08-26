@@ -8,7 +8,7 @@ class HomeModule extends OrganizameModule {
       : super(
           bindings: [
             ChangeNotifierProvider(
-              create: (context) => HomeController(),
+              create: (context) => HomeController(tasksService: context.read()),
             ),
           ],
           routers: {

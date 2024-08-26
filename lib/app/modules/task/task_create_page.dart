@@ -53,6 +53,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: context.primaryColorLight,
         automaticallyImplyLeading: false,
         title: OrganizameLogoMovie(
