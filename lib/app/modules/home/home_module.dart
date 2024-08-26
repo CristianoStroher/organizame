@@ -12,7 +12,7 @@ class HomeModule extends OrganizameModule {
             ),
           ],
           routers: {
-            '/home': (context) => const HomePage(),
+            '/home': (context) => HomePage(homeController: context.read()),
             
           },
         );

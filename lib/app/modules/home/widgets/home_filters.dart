@@ -27,7 +27,7 @@ class HomeFilters extends StatelessWidget {
               HomeCardFilter(
                 isSelected: context.select<HomeController, TaskFilterEnum>((value) => value.filterSelected) == TaskFilterEnum.today,
                 taskFilterEnum: TaskFilterEnum.today,
-                taskTotalFilter: TaskTotalFilter(totalTasks: 20, totalTasksFinished: 5),
+                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.todayTotalTasks),
                 label: 'HOJE',
                 color: context.primaryColor,
                 borderColor: context.primaryColor,
@@ -38,7 +38,7 @@ class HomeFilters extends StatelessWidget {
               HomeCardFilter(
                 isSelected: context.select<HomeController, TaskFilterEnum>((value) => value.filterSelected) == TaskFilterEnum.tomorrow,
                 taskFilterEnum: TaskFilterEnum.tomorrow,
-                taskTotalFilter: TaskTotalFilter(totalTasks: 10, totalTasksFinished: 5),
+                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.tomorrowTotalTasks),
                 label: 'AMANHÃ',
                 color: const Color(0xFFFAFFC5),
                 borderColor:context.primaryColor,
@@ -49,7 +49,7 @@ class HomeFilters extends StatelessWidget {
               HomeCardFilter(
                 isSelected: context.select<HomeController, TaskFilterEnum>((value) => value.filterSelected) == TaskFilterEnum.week,
                 taskFilterEnum: TaskFilterEnum.week,
-                taskTotalFilter: TaskTotalFilter(totalTasks: 10, totalTasksFinished: 5),
+                taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.weekTotalTasks),
                 label: 'SEMANA',
                 color: const Color(0xFFDDFFCC),
                 borderColor: context.primaryColor,

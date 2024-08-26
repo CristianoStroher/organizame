@@ -1,9 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/Widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/home/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/home/widgets/home_filters.dart';
 import 'package:organizame/app/modules/home/widgets/home_header.dart';
@@ -11,8 +13,33 @@ import 'package:organizame/app/modules/home/widgets/home_task.dart';
 import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+
+  final HomeController _homeController;
+
+  const HomePage({
+    super.key,
+    required HomeController homeController,
+  }) : _homeController = homeController;
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+@override
+  void initState() {
+    super.initState();
+    widget._homeController.loadAllTasks();
+
+  }
+
+@override
+  void dispose() {
+    
+    super.dispose();
+  }
 
   void _goToTaskPage(BuildContext appContext) {
     Navigator.of(appContext).push(
