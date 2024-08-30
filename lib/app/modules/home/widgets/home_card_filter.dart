@@ -47,6 +47,7 @@ class HomeCardFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => context.read<HomeController>().findFilter(filter: taskFilterEnum),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
         constraints: const BoxConstraints(
           minHeight: 100,
