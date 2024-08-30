@@ -15,10 +15,8 @@ class HomeController extends DefautChangeNotifer {
   List<TaskObject> alltasks = [];
   List<TaskObject> filteredTasks = [];
 
-  
-
   HomeController({
-    required  TasksService tasksService,
+    required TasksService tasksService,
   }) : _tasksService = tasksService;
 
   var filterSelected = TaskFilterEnum.today;
@@ -32,57 +30,56 @@ class HomeController extends DefautChangeNotifer {
 
     final todayTasks = allTasks[0] as List<TaskObject>;
     final tomorrowTasks = allTasks[1] as List<TaskObject>;
-    final weekTasks = allTasks[2] as TaskWeekObject; 
+    final weekTasks = allTasks[2] as TaskWeekObject;
 
     todayTotalTasks = TaskTotalFilter(
       totalTasks: todayTasks.length,
-      totalTasksFinished: todayTasks.where((element) => element.finalizado).length,
+      totalTasksFinished:
+          todayTasks.where((element) => element.finalizado).length,
     );
 
     tomorrowTotalTasks = TaskTotalFilter(
       totalTasks: tomorrowTasks.length,
-      totalTasksFinished: tomorrowTasks.where((element) => element.finalizado).length,
+      totalTasksFinished:
+          tomorrowTasks.where((element) => element.finalizado).length,
     );
 
     weekTotalTasks = TaskTotalFilter(
       totalTasks: weekTasks.tasks.length,
-      totalTasksFinished: weekTasks.tasks.where((element) => element.finalizado).length,
+      totalTasksFinished:
+          weekTasks.tasks.where((element) => element.finalizado).length,
     );
 
     notifyListeners();
 
-    //  
+    //
+  }
 
+  Future<void> findFilter({required TaskFilterEnum filter}) async {
+    filterSelected = filter;
+    showLoading();
+    notifyListeners();
+    List<TaskObject> tasks;
+
+    switch (filter) {
+      case TaskFilterEnum.today:
+        tasks = await _tasksService.getToday();
+        break;
+      case TaskFilterEnum.tomorrow:
+        tasks = await _tasksService.getTomorrow();
+        break;
+      case TaskFilterEnum.week:
+        final weekObjet = await _tasksService.getWeek();
+        tasks = weekObjet.tasks;
+        break;
     }
 
-    Future<void> findFilter({required TaskFilterEnum filter}) async {
-      filterSelected = filter;
-      showLoading();
-      notifyListeners();
-      List<TaskObject> tasks;
+    filteredTasks = tasks;
+    alltasks = tasks;
 
-      switch (filter) {
-        case TaskFilterEnum.today:
-          tasks = await _tasksService.getToday();
-          break;
-        case TaskFilterEnum.tomorrow:
-          tasks = await _tasksService.getTomorrow();
-          break;
-        case TaskFilterEnum.week:
-          final weekObjet = await _tasksService.getWeek();
-          tasks = weekObjet.tasks;
-          break;
-      }
-
-      filteredTasks = tasks;
-      alltasks = tasks;
-
-      hideLoading();
-      notifyListeners();
-
-
-      
-    }
+    hideLoading();
+    notifyListeners();
+  }
 
   Future<void> refreshPage() async {
     await findFilter(filter: filterSelected);
@@ -91,6 +88,4 @@ class HomeController extends DefautChangeNotifer {
 
   }
 
-  }
-
-
+}

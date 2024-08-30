@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       },
     );
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       widget._homeController.loadAllTasks();
       widget._homeController.findFilter(filter: TaskFilterEnum.today);
     });
@@ -66,13 +66,12 @@ class _HomePageState extends State<HomePage> {
           widget._homeController.refreshPage();
         },
         pageBuilder: (context, animation, secondaryAnimation) {
-          // return TaskModule().getPage('/task/create', context);
-          TaskModule taskModule = TaskModule(appContext);
-
-          return taskModule.getPage('/task/create', appContext);
+          return TaskModule(context).getPage('/task/create', context);
         },
       ),
     );
+
+    widget._homeController.refreshPage();
   }
 
   @override
