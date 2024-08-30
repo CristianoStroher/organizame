@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/models/task_filter_enum.dart';
+import 'package:organizame/app/models/task_object.dart';
+import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/home/widgets/task.dart';
+import 'package:provider/provider.dart';
 
 class HomeTask extends StatelessWidget {
-
   const HomeTask({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Text(
-          'TAREFAS DE HOJE',
-          style: context.titleDefaut,
+        Selector<HomeController, String>(
+          selector: (context, controller) =>
+              controller.filterSelected.description,
+          builder: (context, value, child) {
+            return Text(
+              'TAREFAS $value',
+              style: context.titleDefaut,
+            );
+          },
         ),
         const SizedBox(height: 10),
-        const Column(
-          children: [
-            Task(),
-            Task(),
-            Task(),
-            Task(),
-          ],
+        Column(
+          children: context
+              .select<HomeController, List<TaskObject>>(
+                  (controller) => controller.filteredTasks)
+              .map((t) => Task( object: t))
+              .toList(),
         )
       ],
     ));

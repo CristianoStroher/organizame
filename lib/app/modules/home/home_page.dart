@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/Widget/organizame_navigatorbar.dart';
+import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
 import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/home/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/home/widgets/home_filters.dart';
@@ -14,7 +16,6 @@ import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 
 class HomePage extends StatefulWidget {
-
   final HomeController _homeController;
 
   const HomePage({
@@ -27,22 +28,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-@override
+  @override
   void initState() {
     super.initState();
-    widget._homeController.loadAllTasks();
+    DefaultListenerNotifier(changeNotifier: widget._homeController).listener(
+      context: context,
+      sucessCallback: (notifier, listenerInstance) {
+        listenerInstance.dispose();
+      },
+    );
 
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      widget._homeController.loadAllTasks();
+      widget._homeController.findFilter(filter: TaskFilterEnum.today);
+    });
   }
 
-@override
+  @override
   void dispose() {
-    
     super.dispose();
   }
 
-  void _goToTaskPage(BuildContext appContext) {
-    Navigator.of(appContext).push(
+  Future<void> _goToTaskPage(BuildContext appContext) async {
+    await Navigator.of(appContext).push(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 600),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -55,6 +63,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.bottomRight,
             child: child,
           );
+          widget._homeController.refreshPage();
         },
         pageBuilder: (context, animation, secondaryAnimation) {
           // return TaskModule().getPage('/task/create', context);
