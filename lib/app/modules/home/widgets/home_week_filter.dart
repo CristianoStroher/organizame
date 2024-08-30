@@ -1,14 +1,20 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:organizame/app/app_module.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/models/task_filter_enum.dart';
+import 'package:organizame/app/modules/home/home_controller.dart';
+import 'package:provider/provider.dart';
 
 class HomeWeekFilter extends StatelessWidget {
+  const HomeWeekFilter({super.key});
 
-  const HomeWeekFilter({ super.key });
-
-   @override
-   Widget build(BuildContext context) {
-       return Column(
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: context.select<HomeController, bool>(
+          (controller) => controller.filterSelected == TaskFilterEnum.week),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
@@ -19,32 +25,27 @@ class HomeWeekFilter extends StatelessWidget {
           const SizedBox(height: 10),
           SizedBox(
             height: 95,
-            child: DatePicker(
-              DateTime.now(),
-              locale: 'pt_BR',
-              initialSelectedDate: DateTime.now(),
-              selectionColor: context.primaryColor,
-              selectedTextColor: context.scaffoldBackgroundColor,
-              daysCount: 7,
-              dayTextStyle: TextStyle(
-                color: context.primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12),
-              monthTextStyle: TextStyle(
-                color: context.primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12),
-              dateTextStyle: TextStyle(
-                color: context.primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 22)
-              ),
-              
+            child: DatePicker(DateTime.now(),
+                locale: 'pt_BR',
+                initialSelectedDate: DateTime.now(),
+                selectionColor: context.primaryColor,
+                selectedTextColor: context.scaffoldBackgroundColor,
+                daysCount: 7,
+                dayTextStyle: TextStyle(
+                    color: context.primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
+                monthTextStyle: TextStyle(
+                    color: context.primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
+                dateTextStyle: TextStyle(
+                    color: context.primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22)),
           ),
-                 
-
         ],
-
-       );
+      ),
+    );
   }
 }

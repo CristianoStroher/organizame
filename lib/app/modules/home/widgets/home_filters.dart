@@ -29,7 +29,7 @@ class HomeFilters extends StatelessWidget {
                 taskFilterEnum: TaskFilterEnum.today,
                 taskTotalFilter: context.select<HomeController, TaskTotalFilter>((controller) => controller.todayTotalTasks == null ? TaskTotalFilter(totalTasks: 0, totalTasksFinished: 0) : controller.todayTotalTasks!),
                 label: 'HOJE',
-                color: context.primaryColor,
+                color: context.primaryColorLight,
                 borderColor: context.primaryColor,
                 textColor: context.primaryColor,
                 linearProgress: context.scaffoldBackgroundColor,

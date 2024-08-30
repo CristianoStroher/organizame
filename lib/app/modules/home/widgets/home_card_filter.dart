@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+
 import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/models/task_total_filter.dart';
+import 'package:organizame/app/modules/home/home_controller.dart';
+import 'package:provider/provider.dart';
 
 class HomeCardFilter extends StatelessWidget {
   final String label;
@@ -43,54 +45,57 @@ class HomeCardFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(
-        minHeight: 100,
-        maxWidth: 150,
-      ),
-      decoration: BoxDecoration(
-        color: isSelected ? context.primaryColor : color,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: isSelected ? color : context.primaryColor,
-          width: 1
-          ),
-      ),
-      margin: const EdgeInsets.only(right: 10),
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${taskTotalFilter?.totalTasks ?? 0} TAREFAS',
-            style: TextStyle(
-              color: isSelected ? context.scaffoldBackgroundColor : textColor,
-              fontSize: 10
+    return InkWell(
+      onTap: () => context.read<HomeController>().findFilter(filter: taskFilterEnum),
+      child: Container(
+        constraints: const BoxConstraints(
+          minHeight: 100,
+          maxWidth: 150,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? context.primaryColor : color,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? color : context.primaryColor,
+            width: 1
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            label,
-            style: TextStyle(
+        ),
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${taskTotalFilter?.totalTasks ?? 0} TAREFAS',
+              style: TextStyle(
                 color: isSelected ? context.scaffoldBackgroundColor : textColor,
-                fontSize: 20,
-                fontWeight: FontWeight.bold
+                fontSize: 10
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          TweenAnimationBuilder<double>(
-            tween: Tween(
-              begin: 0.0,
-              end: _getPercentFinished(),
+            const SizedBox(height: 10),
+            Text(
+              label,
+              style: TextStyle(
+                  color: isSelected ? context.scaffoldBackgroundColor : textColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold
+              ),
             ),
-            duration: const Duration(seconds: 1),
-            builder: (context, double value, child) => LinearProgressIndicator(
-              value: value,
-              backgroundColor: isSelected ? context.scaffoldBackgroundColor : linearProgress,
-              valueColor: AlwaysStoppedAnimation(isSelected ? context.primaryColorLight : valueColor,),
+            const SizedBox(height: 10),
+            TweenAnimationBuilder<double>(
+              tween: Tween(
+                begin: 0.0,
+                end: _getPercentFinished(),
+              ),
+              duration: const Duration(seconds: 1),
+              builder: (context, double value, child) => LinearProgressIndicator(
+                value: value,
+                backgroundColor: isSelected ? context.scaffoldBackgroundColor : linearProgress,
+                valueColor: AlwaysStoppedAnimation(isSelected ? context.primaryColorLight : valueColor,),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

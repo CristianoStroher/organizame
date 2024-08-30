@@ -52,6 +52,11 @@ class HomeController extends DefautChangeNotifer {
 
     }
 
+    Future<void> findFilter({required TaskFilterEnum filter}) async {
+      filterSelected = filter;
+      notifyListeners();
+    }
+
   }
 
 
