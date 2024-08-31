@@ -53,7 +53,7 @@ class TasksServiceImpl extends TasksService {
   }
   
   @override
-  Future<void> findTask(TaskObject task) {
+  Future<TaskObject?> findTask(TaskObject task) {
     return _tasksRepository.findTask(task);
   }
   

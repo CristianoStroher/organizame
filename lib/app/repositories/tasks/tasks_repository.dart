@@ -7,5 +7,6 @@ abstract class TasksRepository {
   Future<List<TaskObject>> findByPeriod(DateTime start, DateTime end);
   Future<bool> deleteTask(TaskObject task);
   Future<void> updateTask(TaskObject task);
-  Future<void> findTask(TaskObject task);
+  Future<TaskObject?> findTask(TaskObject task);
+  Future<void> finishTask(TaskObject task);
 }

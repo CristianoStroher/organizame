@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
@@ -19,9 +20,7 @@ class TaskCreatePage extends StatefulWidget {
   final TaskObject? task;
 
   const TaskCreatePage(
-      {super.key,
-      required TaskController controller,
-      this.task})
+      {super.key, required TaskController controller, this.task})
       : _controller = controller;
 
   @override
@@ -38,16 +37,23 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
   @override
   void initState() {
     super.initState();
-    
-    
+
     if (widget.task != null) {
       final task = widget.task!;
       descriptionEC.text = task.descricao;
       dateEC.text = DateFormat('dd/MM/yyyy').format(task.data);
       timeEC.text = DateFormat('HH:mm').format(task.hora);
-      observationsEC.text = task.observacao ?? '';  // Assuming 'observacoes' is nullable
+      observationsEC.text = task.observacao ?? '';
+
+      // Logs de depuração
+      Logger().i('Inicializando com tarefa:');
+      Logger().i('Descrição: ${task.descricao}');
+      Logger().i('Data: ${task.data}');
+      Logger().i('Hora: ${task.hora}');
+      Logger().i('Observações: ${task.observacao}');
+      
     }
-    
+
     DefaultListenerNotifier(
       changeNotifier: widget._controller,
     ).listener(
