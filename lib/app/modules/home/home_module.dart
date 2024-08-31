@@ -20,6 +20,8 @@ class HomeModule extends OrganizameModule {
             ChangeNotifierProvider(
               create: (context) => HomeController(tasksService: context.read()),
             ),
+
+            
           ],
           routers: {
             '/home': (context) => HomePage(homeController: context.read()),

@@ -76,6 +76,7 @@ class HomeController extends DefautChangeNotifer {
       case TaskFilterEnum.week:
         final weekObjet = await _tasksService.getWeek();
         tasks = weekObjet.tasks;
+        // initialDateOfWeek = weekObjet.startDate;
         break;
     }
 

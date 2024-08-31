@@ -24,7 +24,8 @@ class HomePage extends StatefulWidget {
   }) : _homeController = homeController;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  // State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       },
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       widget._homeController.loadAllTasks().then((_) {
         widget._homeController.findFilter(filter: TaskFilterEnum.today);
       });
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.bottomRight,
             child: child,
           );
-          // widget._homeController.refreshPage();
+              
         },
         pageBuilder: (context, animation, secondaryAnimation) {
           return TaskModule(context).getPage('/task/create', context);
