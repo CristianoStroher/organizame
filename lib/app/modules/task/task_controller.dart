@@ -1,16 +1,24 @@
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
+import 'package:organizame/app/models/task_object.dart';
+import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 
 class TaskController extends DefautChangeNotifer {
   final TasksService _tasksService;
+  
+  
 
   DateTime? _selectedDate;
   DateTime? _selectedTime;
 
-  TaskController({
+  TaskController( {
     required TasksService tasksService,
-  }) : _tasksService = tasksService;
+  }) : _tasksService = tasksService,
+       super() {
+    resetState();
+  }
+
 
   set setSelectedDate(DateTime? selectedDate) {
     _selectedDate = selectedDate;
@@ -46,6 +54,7 @@ class TaskController extends DefautChangeNotifer {
           description,
           observations: observationsEC,
         );
+        // await _homeController.refreshPage();
         success();
         setSelectedDate = null;
         setSelectedTime = null;                      
@@ -53,7 +62,7 @@ class TaskController extends DefautChangeNotifer {
       } else {
         setError('Data e hora são obrigatórios');
       }
-      hideLoading();
+      // hideLoading(); // acho que não precisa
     } catch (e, s) {
       setError('Erro ao salvar tarefa');
       Logger().e(e);
@@ -63,6 +72,31 @@ class TaskController extends DefautChangeNotifer {
       notifyListeners();
       
     }
+  }
+
+   Future<bool> deleteTask(TaskObject task) async {
+    try {
+      showLoadingAndResetState();
+      notifyListeners();
+      final result = await _tasksService.deleteTask(task);
+      if (result) {
+        // await _homeController.refreshPage();
+        success();
+        return true;
+      } else {
+        setError('Erro ao deletar tarefa');
+        return false;
+      }
+    } catch (e, s) {
+      setError('Erro ao deletar tarefa');
+      Logger().e(e);
+      Logger().e(s);
+      return false;
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  
   }
 }
 

@@ -1,5 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
+
 import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/models/task_total_filter.dart';
@@ -9,6 +9,7 @@ import 'package:organizame/app/services/tasks/tasks_service.dart';
 class HomeController extends DefautChangeNotifer {
 
   final TasksService _tasksService;
+
   TaskTotalFilter? todayTotalTasks;
   TaskTotalFilter? tomorrowTotalTasks;
   TaskTotalFilter? weekTotalTasks;
@@ -28,9 +29,14 @@ class HomeController extends DefautChangeNotifer {
       _tasksService.getWeek(),
     ]);
 
-    final todayTasks = allTasks[0] as List<TaskObject>;
-    final tomorrowTasks = allTasks[1] as List<TaskObject>;
+    final todayTasks = (allTasks[0] as List<TaskObject>)
+      ..sort((a, b) => _combineDateTime(a).compareTo(_combineDateTime(b)));
+    final tomorrowTasks = (allTasks[1] as List<TaskObject>)
+      ..sort((a, b) => _combineDateTime(a).compareTo(_combineDateTime(b)));
     final weekTasks = allTasks[2] as TaskWeekObject;
+
+    weekTasks.tasks
+        .sort((a, b) => _combineDateTime(a).compareTo(_combineDateTime(b)));
 
     todayTotalTasks = TaskTotalFilter(
       totalTasks: todayTasks.length,
@@ -51,8 +57,7 @@ class HomeController extends DefautChangeNotifer {
     );
 
     notifyListeners();
-
-    //
+    
   }
 
   Future<void> findFilter({required TaskFilterEnum filter}) async {
@@ -74,6 +79,9 @@ class HomeController extends DefautChangeNotifer {
         break;
     }
 
+    // Ordena as tarefas por data e hora combinadas
+    tasks.sort((a, b) => _combineDateTime(a).compareTo(_combineDateTime(b)));
+
     filteredTasks = tasks;
     alltasks = tasks;
 
@@ -81,9 +89,21 @@ class HomeController extends DefautChangeNotifer {
     notifyListeners();
   }
 
+  // Função auxiliar para combinar data e hora
+  DateTime _combineDateTime(TaskObject task) {
+    return DateTime(
+      task.data.year,
+      task.data.month,
+      task.data.day,
+      task.hora.hour,
+      task.hora.minute,
+    );
+  }
+
   Future<void> refreshPage() async {
-    await findFilter(filter: filterSelected);
     await loadAllTasks();
+    await findFilter(filter: filterSelected);
+    
     notifyListeners();
 
   }

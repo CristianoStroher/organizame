@@ -48,8 +48,8 @@ class TasksServiceImpl extends TasksService {
   }
   
   @override
-  Future<void> deleteTask(TaskObject task) async {
-    await _tasksRepository.deleteTask(task);    
+  Future<bool> deleteTask(TaskObject task) async {
+    return _tasksRepository.deleteTask(task);  
   }
 
   

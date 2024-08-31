@@ -4,6 +4,7 @@ import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/home/widgets/task.dart';
+import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:provider/provider.dart';
 
 class HomeTask extends StatelessWidget {
@@ -31,7 +32,7 @@ class HomeTask extends StatelessWidget {
           children: context
               .select<HomeController, List<TaskObject>>(
                   (controller) => controller.filteredTasks)
-              .map((t) => Task( object: t))
+              .map((t) => Task( object: t, controller: context.read<TaskController>()))
               .toList(),
         )
       ],

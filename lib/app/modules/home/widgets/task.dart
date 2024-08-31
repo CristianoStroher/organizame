@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:intl/intl.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/task_object.dart';
+import 'package:organizame/app/modules/task/task_controller.dart';
+import 'package:organizame/app/services/tasks/tasks_service.dart';
 
 class Task extends StatelessWidget {
+  final TaskController controller;
+
   final TaskObject object;
   final dateFormatData = DateFormat('dd/MM/yyyy');
   final dateFormatHora = DateFormat('HH:mm');
 
-  Task({super.key, required this.object});
+  Task({
+    super.key,
+    required this.object,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        print ('abrir a tarefa e alterar');
+      onTap: () {
+        print('abrir a tarefa e alterar');
       },
       child: SizedBox(
         child: Column(
@@ -30,7 +39,7 @@ class Task extends StatelessWidget {
               leading: Checkbox(
                 checkColor: context.primaryColor,
                 activeColor: context.primaryColorLight,
-                fillColor: WidgetStatePropertyAll(context.primaryColorLight),
+                fillColor: MaterialStateProperty.all(context.primaryColorLight),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.finalizado,
                 onChanged: (value) {},
@@ -38,7 +47,8 @@ class Task extends StatelessWidget {
               title: Text(
                 object.descricao.toUpperCase(),
                 style: TextStyle(
-                  decoration: object.finalizado ? TextDecoration.lineThrough : null,
+                  decoration:
+                      object.finalizado ? TextDecoration.lineThrough : null,
                   fontFamily: context.titleDefaut.fontFamily,
                   fontWeight: FontWeight.bold,
                   color: context.primaryColor,
@@ -49,7 +59,6 @@ class Task extends StatelessWidget {
                   Text(
                     dateFormatData.format(object.data),
                     style: TextStyle(
-                      decoration: false ? TextDecoration.lineThrough : null,
                       fontFamily: context.titleDefaut.fontFamily,
                       color: context.secondaryColor,
                     ),
@@ -58,7 +67,6 @@ class Task extends StatelessWidget {
                   Text(
                     dateFormatHora.format(object.hora),
                     style: TextStyle(
-                      decoration: false ? TextDecoration.lineThrough : null,
                       fontFamily: context.titleDefaut.fontFamily,
                       color: context.secondaryColor,
                     ),
@@ -67,10 +75,47 @@ class Task extends StatelessWidget {
               ),
               trailing: IconButton(
                 icon: Icon(Icons.delete, color: context.secondaryColor),
-                onPressed: () {
-                  // Ação para excluir a tarefa
-                  // Adicione a lógica para excluir a tarefa aqui
-                  Messages.of(context).showInfo('Tarefa excluída com sucesso!');
+                onPressed: () async {
+                  final bool? confirmDelete = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Excluir tarefa', style: context.titleMedium),
+                      content: Text(
+                          'Deseja excluir a tarefa ${object.descricao}?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text('Cancelar', style: context.titleDefaut),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text(
+                            'Excluir',
+                            style: TextStyle(
+                                color: context.primaryColor, fontSize: 16),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirmDelete == true) {
+                    Loader.show(context);
+                    try {
+                      final result = await controller.deleteTask(object);
+                      Loader.hide();
+                      if (result) {
+                        Messages.of(context)
+                            .showInfo('Tarefa excluída com sucesso');
+                      } else {
+                        Messages.of(context)
+                            .showError('Erro ao excluir tarefa');
+                      }
+                    } catch (e) {
+                      Loader.hide();
+                      Messages.of(context).showError('Erro ao excluir tarefa');
+                    }
+                  }
                 },
               ),
             ),

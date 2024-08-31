@@ -66,7 +66,9 @@ class AppModule extends StatelessWidget {
             create: (context) =>
                 TasksServiceImpl(tasksRepository: context.read())),
         ChangeNotifierProvider<TaskController>(
-          create: (context) => TaskController(tasksService: context.read()),
+          create: (context) => TaskController(
+            tasksService: context.read(),           
+          ),
         ),
 
         ChangeNotifierProvider(

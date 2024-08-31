@@ -42,13 +42,17 @@ class TasksRepositoryImpl extends TasksRepository {
   }
 
   @override
-  Future<void> deleteTask(TaskObject task) {
+  Future<bool> deleteTask(TaskObject task) {
     final conn = _sqLiteConnectionFactory.openConnection();
 
-    return conn.then((value) => value.delete('''
-        compromisso',
-        where: 'id = ?
-        ''',
-        whereArgs: [task.id]));
+    return conn.then((value) async {
+      final result = await value.delete(
+        'compromisso',
+        where: 'id = ?',
+        whereArgs: [task.id],
+      );
+
+      return result > 0;
+    });
   }
 }
