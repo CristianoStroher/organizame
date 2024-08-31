@@ -55,4 +55,30 @@ class TasksRepositoryImpl extends TasksRepository {
       return result > 0;
     });
   }
+  
+  @override
+  Future<void> findTask(TaskObject task) async {
+  final conn = _sqLiteConnectionFactory.openConnection();
+  final result = conn.then((value) async {
+    final result = await value.query(
+      'compromisso',
+      where: 'id = ?',
+      whereArgs: [task.id],
+    );
+    return result.isNotEmpty ? TaskObject.fromMap(result.first) : null;
+  });
+  }
+  
+  @override
+  Future<void> updateTask(TaskObject task)async {
+    final conn = _sqLiteConnectionFactory.openConnection();
+    // return conn.then((value) async {
+    //   await value.update(
+    //     'compromisso',
+    //     task.toMap(),
+    //     where: 'id = ?',
+    //     whereArgs: [task.id],
+    //   );
+    // });
+  }
 }

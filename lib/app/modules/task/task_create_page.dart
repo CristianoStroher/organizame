@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
@@ -7,6 +8,7 @@ import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
 import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
 
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
@@ -14,8 +16,12 @@ import 'package:validatorless/validatorless.dart';
 
 class TaskCreatePage extends StatefulWidget {
   final TaskController _controller;
+  final TaskObject? task;
 
-  const TaskCreatePage({super.key, required TaskController controller})
+  const TaskCreatePage(
+      {super.key,
+      required TaskController controller,
+      this.task})
       : _controller = controller;
 
   @override
@@ -32,12 +38,24 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
   @override
   void initState() {
     super.initState();
+    
+    
+    if (widget.task != null) {
+      final task = widget.task!;
+      descriptionEC.text = task.descricao;
+      dateEC.text = DateFormat('dd/MM/yyyy').format(task.data);
+      timeEC.text = DateFormat('HH:mm').format(task.hora);
+      observationsEC.text = task.observacao ?? '';  // Assuming 'observacoes' is nullable
+    }
+    
     DefaultListenerNotifier(
       changeNotifier: widget._controller,
-    ).listener(context: context, sucessCallback: (notifier, listenerInstance) {
-      listenerInstance.dispose();
-      Navigator.pop(context);
-    });
+    ).listener(
+        context: context,
+        sucessCallback: (notifier, listenerInstance) {
+          listenerInstance.dispose();
+          Navigator.pop(context);
+        });
   }
 
   @override
@@ -131,7 +149,8 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                     OrganizameElevatedButton(
                       label: 'Salvar',
                       onPressed: () {
-                        final formValid = _globalKey.currentState?.validate() ?? false;
+                        final formValid =
+                            _globalKey.currentState?.validate() ?? false;
                         if (formValid) {
                           widget._controller.saveTask(
                             descriptionEC.text,
@@ -140,8 +159,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                             observationsEC.text,
                           );
                           Navigator.pop(context);
-                         
-                          
                         }
                       },
                     ),

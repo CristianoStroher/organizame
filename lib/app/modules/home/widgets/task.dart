@@ -5,6 +5,7 @@ import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
+import 'package:organizame/app/modules/task/task_create_page.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 
 class Task extends StatelessWidget {
@@ -24,7 +25,17 @@ class Task extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print('abrir a tarefa e alterar');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TaskCreatePage(
+              controller: controller,
+              task: object,       
+              
+            ),
+          ),
+        );
+        
       },
       child: SizedBox(
         child: Column(

@@ -51,6 +51,16 @@ class TasksServiceImpl extends TasksService {
   Future<bool> deleteTask(TaskObject task) async {
     return _tasksRepository.deleteTask(task);  
   }
+  
+  @override
+  Future<void> findTask(TaskObject task) {
+    return _tasksRepository.findTask(task);
+  }
+  
+  @override
+  Future<void> updateTask(TaskObject task) {
+    return _tasksRepository.updateTask(task);
+  }
 
   
 }

@@ -98,5 +98,39 @@ class TaskController extends DefautChangeNotifer {
     }
   
   }
+
+  Future<void> updateTask(TaskObject task) async {
+    try {
+      showLoadingAndResetState();
+      notifyListeners();
+      await _tasksService.updateTask(task);
+      // await _homeController.refreshPage();
+      success();
+    } catch (e, s) {
+      setError('Erro ao atualizar tarefa');
+      Logger().e(e);
+      Logger().e(s);
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  }
+
+  Future<void> findTask(TaskObject task) async {
+    try {
+      showLoadingAndResetState();
+      notifyListeners();
+      await _tasksService.findTask(task);
+      // await _homeController.refreshPage();
+      success();
+    } catch (e, s) {
+      setError('Erro ao buscar tarefa');
+      Logger().e(e);
+      Logger().e(s);
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  }
 }
 
