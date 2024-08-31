@@ -39,8 +39,9 @@ class _HomePageState extends State<HomePage> {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      widget._homeController.loadAllTasks();
-      widget._homeController.findFilter(filter: TaskFilterEnum.today);
+      widget._homeController.loadAllTasks().then((_) {
+        widget._homeController.findFilter(filter: TaskFilterEnum.today);
+      });
     });
   }
 
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.bottomRight,
             child: child,
           );
-          widget._homeController.refreshPage();
+          // widget._homeController.refreshPage();
         },
         pageBuilder: (context, animation, secondaryAnimation) {
           return TaskModule(context).getPage('/task/create', context);
@@ -99,7 +100,19 @@ class _HomePageState extends State<HomePage> {
               return [
                 PopupMenuItem<bool>(
                   child: Text(
-                    'Mostrar tarefas concluídas',
+                    'Tarefas concluídas',
+                    style: TextStyle(color: context.primaryColor),
+                  ),
+                ),
+                PopupMenuItem<bool>(
+                  child: Text(
+                    'Tarefas atrasadas',
+                    style: TextStyle(color: context.primaryColor),
+                  ),
+                ),
+                PopupMenuItem<bool>(
+                  child: Text(
+                    'Tarefas antigas',
                     style: TextStyle(color: context.primaryColor),
                   ),
                 ),

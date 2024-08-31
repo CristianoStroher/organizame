@@ -103,7 +103,6 @@ class HomeController extends DefautChangeNotifer {
   Future<void> refreshPage() async {
     await loadAllTasks();
     await findFilter(filter: filterSelected);
-    
     notifyListeners();
 
   }
