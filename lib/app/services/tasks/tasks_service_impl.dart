@@ -61,6 +61,11 @@ class TasksServiceImpl extends TasksService {
   Future<void> updateTask(TaskObject task) {
     return _tasksRepository.updateTask(task);
   }
+  
+  @override
+  Future<void> finishTask(TaskObject task) {
+    return _tasksRepository.finishTask(task);
+  }
 
   
 }

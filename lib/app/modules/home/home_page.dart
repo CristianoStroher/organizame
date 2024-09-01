@@ -97,11 +97,13 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton(
             icon: Icon(OrganizameIcons.filter,
                 size: 20, color: context.primaryColor),
+            onSelected: (bool value) =>widget._homeController.showOrHideFinishingTasks(),
             itemBuilder: (context) {
               return [
                 PopupMenuItem<bool>(
+                  value: true,
                   child: Text(
-                    'Tarefas concluídas',
+                    '${widget._homeController.showFinishingTasks ? 'Esconder' : 'Mostrar'} tarefas finalizadas',
                     style: TextStyle(color: context.primaryColor),
                   ),
                 ),

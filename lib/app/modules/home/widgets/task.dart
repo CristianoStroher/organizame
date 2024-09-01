@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:intl/intl.dart';
+import 'package:organizame/app/app_module.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/task_object.dart';
+import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/task_create_page.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
+import 'package:provider/provider.dart';
 
 class Task extends StatelessWidget {
   final TaskController controller;
@@ -53,7 +56,8 @@ class Task extends StatelessWidget {
                 fillColor: MaterialStateProperty.all(context.primaryColorLight),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.finalizado,
-                onChanged: (value) {},
+                onChanged: (value) => context.read<HomeController>().finishTask(object),
+                
               ),
               title: Text(
                 object.descricao.toUpperCase(),

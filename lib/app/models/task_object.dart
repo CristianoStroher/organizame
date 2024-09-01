@@ -53,4 +53,22 @@ class TaskObject {
       'finalizado': finalizado ? 1 : 0,
     };
   }
+
+  TaskObject copyWith({
+    int? id,
+    String? descricao,
+    DateTime? data,
+    DateTime? hora,
+    String? observacao,
+    bool? finalizado,
+  }) {
+    return TaskObject(
+      id: id ?? this.id,
+      descricao: descricao ?? this.descricao,
+      data: data ?? this.data,
+      hora: hora ?? this.hora,
+      observacao: observacao ?? this.observacao,
+      finalizado: finalizado ?? this.finalizado,
+    );
+  }
 }

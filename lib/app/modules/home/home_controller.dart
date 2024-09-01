@@ -7,7 +7,6 @@ import 'package:organizame/app/models/task_week_object.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 
 class HomeController extends DefautChangeNotifer {
-
   final TasksService _tasksService;
 
   TaskTotalFilter? todayTotalTasks;
@@ -17,6 +16,8 @@ class HomeController extends DefautChangeNotifer {
   List<TaskObject> filteredTasks = [];
   DateTime? initialDateOfWeek;
   DateTime? selectedDate;
+  bool showFinishingTasks = false;
+
 
   HomeController({
     required TasksService tasksService,
@@ -59,7 +60,6 @@ class HomeController extends DefautChangeNotifer {
     );
 
     notifyListeners();
-    
   }
 
   Future<void> findFilter({required TaskFilterEnum filter}) async {
@@ -88,14 +88,18 @@ class HomeController extends DefautChangeNotifer {
     filteredTasks = tasks;
     alltasks = tasks;
 
-    if(filter == TaskFilterEnum.week){
-      if(selectedDate != null){
+    if (filter == TaskFilterEnum.week) {
+      if (selectedDate != null) {
         filterByDate(selectedDate!);
       } else if (initialDateOfWeek != null) {
         filterByDate(initialDateOfWeek!);
       }
     } else {
       selectedDate = null;
+    }
+
+    if (!showFinishingTasks) {
+      filteredTasks = filteredTasks.where((task) => !task.finalizado).toList();
     }
 
     hideLoading();
@@ -128,7 +132,20 @@ class HomeController extends DefautChangeNotifer {
     await loadAllTasks();
     await findFilter(filter: filterSelected);
     notifyListeners();
-
   }
 
+  Future<void> finishTask(TaskObject task) async {
+    showLoadingAndResetState();
+    notifyListeners();
+
+    final taskUpdate = task.copyWith(finalizado: !task.finalizado);
+    await _tasksService.finishTask(taskUpdate);
+    hideLoading();
+    refreshPage();
+  }
+
+  void showOrHideFinishingTasks() {
+    showFinishingTasks = !showFinishingTasks;
+    refreshPage();
+  }
 }
