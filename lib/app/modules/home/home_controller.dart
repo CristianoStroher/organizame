@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 
 import 'package:organizame/app/models/task_filter_enum.dart';
@@ -31,6 +32,9 @@ class HomeController extends DefautChangeNotifer {
       _tasksService.getTomorrow(),
       _tasksService.getWeek(),
     ]);
+
+    Logger().i('allTasks: $allTasks');
+    
 
     final todayTasks = (allTasks[0] as List<TaskObject>)
       ..sort((a, b) => _combineDateTime(a).compareTo(_combineDateTime(b)));

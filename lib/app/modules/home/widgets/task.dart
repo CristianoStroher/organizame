@@ -53,7 +53,7 @@ class Task extends StatelessWidget {
               leading: Checkbox(
                 checkColor: context.primaryColor,
                 activeColor: context.primaryColorLight,
-                fillColor: MaterialStateProperty.all(context.primaryColorLight),
+                fillColor: WidgetStateProperty.all(context.primaryColorLight),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.finalizado,
                 onChanged: (value) => context.read<HomeController>().finishTask(object),

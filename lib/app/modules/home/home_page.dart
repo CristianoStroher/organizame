@@ -109,12 +109,6 @@ class _HomePageState extends State<HomePage> {
                 ),
                 PopupMenuItem<bool>(
                   child: Text(
-                    'Tarefas atrasadas',
-                    style: TextStyle(color: context.primaryColor),
-                  ),
-                ),
-                PopupMenuItem<bool>(
-                  child: Text(
                     'Tarefas antigas',
                     style: TextStyle(color: context.primaryColor),
                   ),
