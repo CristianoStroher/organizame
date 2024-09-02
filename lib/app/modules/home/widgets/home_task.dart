@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class HomeTask extends StatelessWidget {
 
-  
+
   const HomeTask({super.key});
 
   @override
@@ -36,7 +36,7 @@ class HomeTask extends StatelessWidget {
                   (controller) => controller.filteredTasks)
               .map((t) => Task( object: t, controller: context.read<TaskController>()))
               .toList(),
-        )
+        ) 
       ],
     ));
   }
