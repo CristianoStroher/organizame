@@ -63,8 +63,14 @@ class TasksRepositoryImpl extends TasksRepository {
         DateFormat('yyyy-MM-dd').format(endFilter),
       ],
     );
-
+    try {
+      
+    
     return result.map((e) => TaskObject.fromMap(e)).toList();
+    } catch (e) {
+     print('error -> $e'); 
+     return [];
+    }
   }
 
   @override

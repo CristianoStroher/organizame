@@ -31,7 +31,7 @@ class TaskObject {
   // Logs de depuração
   Logger().i('Convertendo do Map para TaskObject:');
   Logger().i('Data: $combinedDateTime');
-    
+  print('map => $map');
   return TaskObject(
     id: map['id'] as int?,
     descricao: map['descricao'] as String,

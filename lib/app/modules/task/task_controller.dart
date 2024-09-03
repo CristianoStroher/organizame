@@ -58,7 +58,7 @@ class TaskController extends DefautChangeNotifer {
         success();
         setSelectedDate = null;
         setSelectedTime = null;                      
-                     
+                   Logger().e('tarefa salva');  
       } else {
         setError('Data e hora são obrigatórios');
       }

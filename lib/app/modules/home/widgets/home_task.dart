@@ -7,10 +7,19 @@ import 'package:organizame/app/modules/home/widgets/task.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:provider/provider.dart';
 
-class HomeTask extends StatelessWidget {
-
-
+class HomeTask extends StatefulWidget {
   const HomeTask({super.key});
+
+  @override
+  State<HomeTask> createState() => _HomeTaskState();
+}
+
+class _HomeTaskState extends State<HomeTask> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +43,10 @@ class HomeTask extends StatelessWidget {
           children: context
               .select<HomeController, List<TaskObject>>(
                   (controller) => controller.filteredTasks)
-              .map((t) => Task( object: t, controller: context.read<TaskController>()))
+              .map((t) =>
+                  Task(object: t, controller: context.read<TaskController>()))
               .toList(),
-        ) 
+        )
       ],
     ));
   }

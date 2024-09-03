@@ -14,6 +14,7 @@ import 'package:organizame/app/modules/home/widgets/home_header.dart';
 import 'package:organizame/app/modules/home/widgets/home_task.dart';
 import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final HomeController _homeController;
@@ -25,7 +26,6 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
-  
 }
 
 class _HomePageState extends State<HomePage> {
@@ -39,10 +39,14 @@ class _HomePageState extends State<HomePage> {
       },
     );
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      widget._homeController.loadAllTasks().then((_) {
-        widget._homeController.findFilter(filter: TaskFilterEnum.today);
-      });
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+      await context.read<HomeController>().loadAllTasks();
+      await context
+          .read<HomeController>()
+          .findFilter(filter: TaskFilterEnum.today);
+      // widget._homeController.loadAllTasks().then((_) {
+      //   widget._homeController.findFilter(filter: TaskFilterEnum.today);
+      // });
     });
   }
 
@@ -65,15 +69,12 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.bottomRight,
             child: child,
           );
-              
         },
         pageBuilder: (context, animation, secondaryAnimation) {
           return TaskModule(context).getPage('/task/create', context);
         },
       ),
     );
-
-    widget._homeController.refreshPage();
   }
 
   @override
@@ -97,7 +98,8 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton(
             icon: Icon(OrganizameIcons.filter,
                 size: 20, color: context.primaryColor),
-            onSelected: (bool value) =>widget._homeController.showOrHideFinishingTasks(),
+            onSelected: (bool value) =>
+                widget._homeController.showOrHideFinishingTasks(),
             itemBuilder: (context) {
               return [
                 PopupMenuItem<bool>(
@@ -119,7 +121,10 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _goToTaskPage(context),
+        onPressed: () async {
+          await _goToTaskPage(context);
+          context.read<HomeController>().refreshPage();
+        },
         backgroundColor: context.primaryColor,
         child: Icon(Icons.add, color: context.primaryColorLight),
       ),

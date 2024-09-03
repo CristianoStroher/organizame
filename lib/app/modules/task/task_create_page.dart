@@ -13,6 +13,7 @@ import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
+import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class TaskCreatePage extends StatefulWidget {
@@ -51,7 +52,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
       Logger().i('Data: ${task.data}');
       Logger().i('Hora: ${task.hora}');
       Logger().i('Observações: ${task.observacao}');
-      
     }
 
     DefaultListenerNotifier(
@@ -158,12 +158,12 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                         final formValid =
                             _globalKey.currentState?.validate() ?? false;
                         if (formValid) {
-                          widget._controller.saveTask(
-                            descriptionEC.text,
-                            dateEC.text,
-                            timeEC.text,
-                            observationsEC.text,
-                          );
+                          context.read<TaskController>().saveTask(
+                                descriptionEC.text,
+                                dateEC.text,
+                                timeEC.text,
+                                observationsEC.text,
+                              );
                           Navigator.pop(context);
                         }
                       },

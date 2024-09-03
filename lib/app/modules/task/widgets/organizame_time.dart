@@ -5,7 +5,6 @@ import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:provider/provider.dart';
 
 class OrganizameTimeButton extends StatelessWidget {
-
   final timeFormat = DateFormat('HH:mm');
   final ValueChanged<DateTime>? onDateSelected;
   final double? height;
@@ -32,7 +31,8 @@ class OrganizameTimeButton extends StatelessWidget {
 
         if (selectedTime != null) {
           final now = DateTime.now();
-          final selectedDateTime = DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute);
+          final selectedDateTime = DateTime(now.year, now.month, now.day,
+              selectedTime.hour, selectedTime.minute);
 
           // Atualiza o controlador e o campo de texto com a hora selecionada
           controller.text = timeFormat.format(selectedDateTime);
@@ -62,15 +62,19 @@ class OrganizameTimeButton extends StatelessWidget {
               Selector<TaskController, DateTime?>(
                 selector: (context, controller) => controller.getSelectedTime,
                 builder: (context, selectedTime, child) {
-                  if (selectedTime == null) {
+                  if (controller.text.isEmpty) {
                     return Text(
                       label!,
-                      style: TextStyle(color: context.primaryColor, fontSize: 16),
+                      style:
+                          TextStyle(color: context.primaryColor, fontSize: 16),
                     );
                   } else {
                     return Text(
-                      timeFormat.format(selectedTime),
-                      style: TextStyle(color: context.primaryColor, fontSize: 16),
+                      selectedTime != null
+                          ? timeFormat.format(selectedTime)
+                          : controller.text,
+                      style:
+                          TextStyle(color: context.primaryColor, fontSize: 16),
                     );
                   }
                 },

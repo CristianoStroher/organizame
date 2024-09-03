@@ -39,9 +39,6 @@ class OrganizameCalendarButton extends StatelessWidget {
           // Invoca o callback se definido
           onDateSelected?.call(selectedDate);
         }
-        
-             
-       
       },
       child: Container(
         padding: const EdgeInsets.all(5),
@@ -62,14 +59,16 @@ class OrganizameCalendarButton extends StatelessWidget {
             Selector<TaskController, DateTime?>(
               selector: (context, controller) => controller.getSelectedDate,
               builder: (context, selectedDate, child) {
-                if (selectedDate == null) {
+                if (controller.text.isEmpty) {
                   return Text(
                     'Data',
                     style: TextStyle(color: context.primaryColor, fontSize: 16),
                   );
                 } else {
                   return Text(
-                    dateFormat.format(selectedDate),
+                    selectedDate != null
+                        ? dateFormat.format(selectedDate)
+                        : controller.text,
                     style: TextStyle(color: context.primaryColor, fontSize: 16),
                   );
                 }
