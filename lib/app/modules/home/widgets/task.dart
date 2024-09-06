@@ -118,6 +118,7 @@ class Task extends StatelessWidget {
                     Loader.show(context);
                     try {
                       final result = await controller.deleteTask(object);
+                      
                       Loader.hide();
                       if (result) {
                         Messages.of(context)

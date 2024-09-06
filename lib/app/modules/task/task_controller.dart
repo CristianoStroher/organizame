@@ -54,7 +54,6 @@ class TaskController extends DefautChangeNotifer {
           description,
           observations: observationsEC,
         );
-        // await _homeController.refreshPage();
         success();
         setSelectedDate = null;
         setSelectedTime = null;                      
@@ -62,7 +61,7 @@ class TaskController extends DefautChangeNotifer {
       } else {
         setError('Data e hora são obrigatórios');
       }
-      // hideLoading(); // acho que não precisa
+     
     } catch (e, s) {
       setError('Erro ao salvar tarefa');
       Logger().e(e);

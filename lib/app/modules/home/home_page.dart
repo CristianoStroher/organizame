@@ -44,9 +44,7 @@ class _HomePageState extends State<HomePage> {
       await context
           .read<HomeController>()
           .findFilter(filter: TaskFilterEnum.today);
-      // widget._homeController.loadAllTasks().then((_) {
-      //   widget._homeController.findFilter(filter: TaskFilterEnum.today);
-      // });
+     
     });
   }
 
