@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
 import 'package:organizame/app/models/task_object.dart';
 import './tasks_repository.dart';
@@ -19,20 +18,17 @@ class TasksRepositoryImpl extends TasksRepository {
     final formattedTime = DateFormat('HH:mm:ss').format(time);
 
     // Logs de depuração
-    Logger().i('Salvando tarefa:');
-    Logger().i('Descrição: $description');
-    Logger().i('Data: $formattedDate');
-    Logger().i('Hora: $formattedTime');
-    Logger().i('Observações: $observations');
+    // Logger().i('Salvando tarefa:');
+    // Logger().i('Descrição: $description');
+    // Logger().i('Data: $formattedDate');
+    // Logger().i('Hora: $formattedTime');
+    // Logger().i('Observações: $observations');
 
-   
     await connection.insert('compromisso', {
       'id': null,
       'descricao': description,
-      // 'data': date.toIso8601String(),
-      // 'hora': time.toIso8601String(),
       'data': formattedDate,
-      'hora': formattedTime, 
+      'hora': formattedTime,
       'observacao': observations,
       'finalizado': 0
     });
@@ -46,10 +42,10 @@ class TasksRepositoryImpl extends TasksRepository {
     // Logs de depuração
     final formattedStartFilter = DateFormat('yyyy-MM-dd').format(startFilter);
     final formattedEndFilter = DateFormat('yyyy-MM-dd').format(endFilter);
-    Logger().i('Buscando tarefas entre:');
-    Logger().i('Início: $formattedStartFilter');
-    Logger().i('Fim: $formattedEndFilter');
-    
+    // Logger().i('Buscando tarefas entre:');
+    // Logger().i('Início: $formattedStartFilter');
+    // Logger().i('Fim: $formattedEndFilter');
+
     final conn = await _sqLiteConnectionFactory.openConnection();
     final result = await conn.rawQuery(
       '''
@@ -58,18 +54,15 @@ class TasksRepositoryImpl extends TasksRepository {
         WHERE data BETWEEN ? AND ?
         ORDER BY data''',
       [
-        // startfilter.toIso8601String(), endFilter.toIso8601String()
         DateFormat('yyyy-MM-dd').format(startFilter),
         DateFormat('yyyy-MM-dd').format(endFilter),
       ],
     );
     try {
-      
-    
-    return result.map((e) => TaskObject.fromMap(e)).toList();
+      return result.map((e) => TaskObject.fromMap(e)).toList();
     } catch (e) {
-     print('error -> $e'); 
-     return [];
+      throw Exception('Erro ao buscar tarefas');
+      return [];
     }
   }
 
@@ -106,9 +99,9 @@ class TasksRepositoryImpl extends TasksRepository {
     final conn = await _sqLiteConnectionFactory.openConnection();
 
     // Logs de depuração
-    Logger().i('Atualizando tarefa com ID: ${task.id}');
-    Logger().i('Dados da tarefa: ${task.toMap()}');
-   
+    // Logger().i('Atualizando tarefa com ID: ${task.id}');
+    // Logger().i('Dados da tarefa: ${task.toMap()}');
+
     await conn.update(
       'compromisso',
       task.toMap(),
@@ -116,7 +109,7 @@ class TasksRepositoryImpl extends TasksRepository {
       whereArgs: [task.id],
     );
   }
-  
+
   @override
   Future<void> finishTask(TaskObject task) async {
     final conn = await _sqLiteConnectionFactory.openConnection();
@@ -126,8 +119,6 @@ class TasksRepositoryImpl extends TasksRepository {
       UPDATE compromisso
       SET finalizado = ?
       WHERE id = ?
-    ''', [finished, task.id]     
-    );
-
+    ''', [finished, task.id]);
   }
 }

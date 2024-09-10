@@ -40,9 +40,9 @@ class UserRepositoryImpl extends UserRepository {
 
       return user;
     } on FirebaseAuthException catch (e, s) {
-      OrganizameLogger.logError(e, s);
+      // OrganizameLogger.logError(e, s);
       if (e.code == 'email-already-in-use') {
-        OrganizameLogger.i('A conta já existe para esse e-mail.');
+        // OrganizameLogger.i('A conta já existe para esse e-mail.');
         final loginTypes =
             await _firebaseAuth.fetchSignInMethodsForEmail(email);
 
@@ -65,7 +65,7 @@ class UserRepositoryImpl extends UserRepository {
           email: email, password: password);
       return userCredential.user;
     } on FirebaseAuthException catch (e, s) {
-      OrganizameLogger.logError(e, s);
+      // OrganizameLogger.logError(e, s);
       if (e.code == 'invalid-credential') {
         throw AuthException(message: 'Usuário não encontrado.');
       } else if (e.code == 'wrong-password') {
@@ -74,7 +74,7 @@ class UserRepositoryImpl extends UserRepository {
         throw AuthException(message: 'Erro ao fazer login.');
       }
     } catch (e, s) {
-      OrganizameLogger.logError(e, s);
+      // OrganizameLogger.logError(e, s);
       throw AuthException(message: 'Erro inesperado ao fazer login.');
     }
   }
@@ -93,8 +93,8 @@ class UserRepositoryImpl extends UserRepository {
         await _firebaseAuth.sendPasswordResetEmail(email: email);
       }
     } on PlatformException catch (e, s) {
-      Logger().e(e.message);
-      Logger().e(s.toString());
+      // Logger().e(e.message);
+      // Logger().e(s.toString());
       throw AuthException(message: e.message ?? 'Erro ao recuperar senha');
     }
   }
@@ -127,8 +127,8 @@ class UserRepositoryImpl extends UserRepository {
         }
       }
     } on FirebaseAuthException catch (e, s) {
-      Logger().e(e.message);
-      Logger().e(s.toString());
+      // Logger().e(e.message);
+      // Logger().e(s.toString());
       if (e.code == 'account-exists-with-different-credential') {
         throw AuthException(
             message: 'O e-mail já está cadastrado com outra forma de login.');

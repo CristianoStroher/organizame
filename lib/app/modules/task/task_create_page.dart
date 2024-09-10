@@ -47,11 +47,11 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
       observationsEC.text = task.observacao ?? '';
 
       // Logs de depuração
-      Logger().i('Inicializando com tarefa:');
-      Logger().i('Descrição: ${task.descricao}');
-      Logger().i('Data: ${task.data}');
-      Logger().i('Hora: ${task.hora}');
-      Logger().i('Observações: ${task.observacao}');
+      // Logger().i('Inicializando com tarefa:');
+      // Logger().i('Descrição: ${task.descricao}');
+      // Logger().i('Data: ${task.data}');
+      // Logger().i('Hora: ${task.hora}');
+      // Logger().i('Observações: ${task.observacao}');
     }
 
     DefaultListenerNotifier(

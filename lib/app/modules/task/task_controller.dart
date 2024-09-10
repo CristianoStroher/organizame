@@ -1,12 +1,9 @@
-import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/task_object.dart';
-import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 
 class TaskController extends DefautChangeNotifer {
   final TasksService _tasksService;
-  
   
 
   DateTime? _selectedDate;
@@ -24,6 +21,7 @@ class TaskController extends DefautChangeNotifer {
     _selectedDate = selectedDate;
     resetState();
     notifyListeners();
+    
   }
 
   set setSelectedTime(DateTime? selectedTime) {
@@ -57,15 +55,15 @@ class TaskController extends DefautChangeNotifer {
         success();
         setSelectedDate = null;
         setSelectedTime = null;                      
-                   Logger().e('tarefa salva');  
+        // Logger().e('tarefa salva');  
       } else {
         setError('Data e hora são obrigatórios');
       }
      
     } catch (e, s) {
       setError('Erro ao salvar tarefa');
-      Logger().e(e);
-      Logger().e(s);
+      // Logger().e(e);
+      // Logger().e(s);
     } finally {
       hideLoading();
       notifyListeners();
@@ -88,8 +86,8 @@ class TaskController extends DefautChangeNotifer {
       }
     } catch (e, s) {
       setError('Erro ao deletar tarefa');
-      Logger().e(e);
-      Logger().e(s);
+      // Logger().e(e);
+      // Logger().e(s);
       return false;
     } finally {
       hideLoading();
@@ -107,8 +105,8 @@ class TaskController extends DefautChangeNotifer {
       success();
     } catch (e, s) {
       setError('Erro ao atualizar tarefa');
-      Logger().e(e);
-      Logger().e(s);
+      // Logger().e(e);
+      // Logger().e(s);
     } finally {
       hideLoading();
       notifyListeners();
@@ -120,12 +118,11 @@ class TaskController extends DefautChangeNotifer {
       showLoadingAndResetState();
       notifyListeners();
       await _tasksService.findTask(task);
-      // await _homeController.refreshPage();
       success();
     } catch (e, s) {
       setError('Erro ao buscar tarefa');
-      Logger().e(e);
-      Logger().e(s);
+      // Logger().e(e);
+      // Logger().e(s);
     } finally {
       hideLoading();
       notifyListeners();

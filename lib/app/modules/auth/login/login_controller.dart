@@ -22,10 +22,10 @@ class LoginController extends DefautChangeNotifer {
       notifyListeners();
       final user = await _userService.login(email, password);
       if (user != null) {
-        Logger().i('Usuário logado: ${user.email}');
+        // Logger().i('Usuário logado: ${user.email}');
         success();
       } else {
-        Logger().e('Erro ao fazer login');
+        // Logger().e('Erro ao fazer login');
         setError('Erro ao fazer login');
       }
     } on AuthException catch (e) {
@@ -40,7 +40,7 @@ class LoginController extends DefautChangeNotifer {
 
   Future<void> resetPassword(String email) async {
   try {
-    Logger().i('Iniciando reset de senha para: $email');
+    // Logger().i('Iniciando reset de senha para: $email');
     showLoadingAndResetState();
     infoMessage = null;
     notifyListeners();
@@ -48,13 +48,13 @@ class LoginController extends DefautChangeNotifer {
     infoMessage = 'E-mail enviado para redefinição de senha';
     success();
     
-    Logger().i(infoMessage);
+    // Logger().i(infoMessage);
   } on AuthException catch (e) {
-    Logger().e('Erro específico de autenticação: ${e.message}');
+    // Logger().e('Erro específico de autenticação: ${e.message}');
     setError(e.message);
   } catch (e, s) {
-    Logger().e('Erro genérico ao resetar a senha $e $s');
-    Logger().e(s.toString());
+    // Logger().e('Erro genérico ao resetar a senha $e $s');
+    // Logger().e(s.toString());
     setError('Erro ao resetar a senha');
   } finally {
     hideLoading();
@@ -70,17 +70,18 @@ Future<void> loginGoogle() async {
   try {
     final user = await _userService.googleLogin();
     if (user != null) {
-      Logger().i('Usuário logado: ${user.email}');
+      // Logger().i('Usuário logado: ${user.email}');
       success();
        hideLoading();
     notifyListeners();
       } else {
-      Logger().e('Erro ao fazer login');
+      // Logger().e('Erro ao fazer login');
       setError('Erro ao fazer login');
       _userService.logout();
     }
   } catch(e,s){
-    Logger().e('Erro ao fazer login com google $e $s');
+    // Logger().e('Erro ao fazer login com google $e $s');
+    setError('Erro ao fazer login com google');
   }
 }
 

@@ -106,6 +106,9 @@ class HomeController extends DefautChangeNotifer {
       filteredTasks = filteredTasks.where((task) => !task.finalizado).toList();
     }
 
+    Logger().i('Total de tarefas filtradas: ${filteredTasks.length}');
+    Logger().i('Mostrar tarefas finalizadas: $showFinishingTasks');
+
     hideLoading();
     notifyListeners();
   }
@@ -145,7 +148,7 @@ class HomeController extends DefautChangeNotifer {
     final taskUpdate = task.copyWith(finalizado: !task.finalizado);
     await _tasksService.finishTask(taskUpdate);
     hideLoading();
-    refreshPage();
+    await refreshPage();
   }
 
   void showOrHideFinishingTasks() {
