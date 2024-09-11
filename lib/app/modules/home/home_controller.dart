@@ -1,6 +1,7 @@
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
-
+import 'package:provider/provider.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/models/task_total_filter.dart';
@@ -141,17 +142,19 @@ class HomeController extends DefautChangeNotifer {
     notifyListeners();
   }
 
+  // Função para finalizar ou desfinalizar tarefa
   Future<void> finishTask(TaskObject task) async {
     showLoadingAndResetState();
-    notifyListeners();
-
+    
     final taskUpdate = task.copyWith(finalizado: !task.finalizado);
     await _tasksService.finishTask(taskUpdate);
     hideLoading();
     await refreshPage();
   }
 
-  void showOrHideFinishingTasks() {
+
+  // Função para mostrar ou esconder tarefas finalizadas
+  Future<void> showOrHideFinishingTasks() async {
     showFinishingTasks = !showFinishingTasks;
     refreshPage();
   }

@@ -96,8 +96,8 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton(
             icon: Icon(OrganizameIcons.filter,
                 size: 20, color: context.primaryColor),
-            onSelected: (bool value) =>
-                widget._homeController.showOrHideFinishingTasks(),
+            onSelected: (bool value) => widget._homeController.showOrHideFinishingTasks(),
+
             itemBuilder: (context) {
               return [
                 PopupMenuItem<bool>(

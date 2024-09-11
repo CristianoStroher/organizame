@@ -21,13 +21,21 @@ class TaskObject {
   });
 
   factory TaskObject.fromMap(Map<String, dynamic> map) {
+    try {
   final date = DateTime.parse(map['data'] as String);
   final timeStr = map['hora'] as String;
-  final time = DateFormat('HH:mm:ss').parse(timeStr); // Ajuste para o formato correto
+  final time =
+      DateFormat('HH:mm:ss').parse(timeStr); // Ajuste para o formato correto
   
   // Combine a data e a hora
-  final combinedDateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute, time.second);
+  final combinedDateTime = DateTime(
+      date.year, date.month, date.day, time.hour, time.minute, time.second);
 
+      // Logs de depuração
+      Logger().i('Convertendo do Map para TaskObject:');
+      Logger().i('Data e Hora combinadas: $combinedDateTime');
+      Logger().i('Map: $map');
+  
   // Logs de depuração
   Logger().i('Convertendo do Map para TaskObject:');
   Logger().i('Data: $combinedDateTime');
@@ -40,10 +48,14 @@ class TaskObject {
     observacao: map['observacao'] as String?,
     finalizado: (map['finalizado'] as int) == 1,
   );
+} on Exception catch (e) {
+  Logger().e('Erro ao converter de Map para TaskObject: $e');
+  rethrow;
 }
+  }
 
   Map<String, dynamic> toMap() {
-    
+
     return {
       'id': id,
       'descricao': descricao,
