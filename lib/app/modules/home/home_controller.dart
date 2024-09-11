@@ -20,7 +20,6 @@ class HomeController extends DefautChangeNotifer {
   DateTime? selectedDate;
   bool showFinishingTasks = false;
 
-
   HomeController({
     required TasksService tasksService,
   }) : _tasksService = tasksService;
@@ -35,7 +34,6 @@ class HomeController extends DefautChangeNotifer {
     ]);
 
     Logger().i('allTasks: $allTasks');
-    
 
     final todayTasks = (allTasks[0] as List<TaskObject>)
       ..sort((a, b) => _combineDateTime(a).compareTo(_combineDateTime(b)));
@@ -73,18 +71,23 @@ class HomeController extends DefautChangeNotifer {
     notifyListeners();
     List<TaskObject> tasks;
 
-    switch (filter) {
-      case TaskFilterEnum.today:
-        tasks = await _tasksService.getToday();
-        break;
-      case TaskFilterEnum.tomorrow:
-        tasks = await _tasksService.getTomorrow();
-        break;
-      case TaskFilterEnum.week:
-        final weekObjet = await _tasksService.getWeek();
-        tasks = weekObjet.tasks;
-        initialDateOfWeek = weekObjet.startDate;
-        break;
+    try {
+      switch (filter) {
+        case TaskFilterEnum.today:
+          tasks = await _tasksService.getToday();
+          break;
+        case TaskFilterEnum.tomorrow:
+          tasks = await _tasksService.getTomorrow();
+          break;
+        case TaskFilterEnum.week:
+          final weekObjet = await _tasksService.getWeek();
+          tasks = weekObjet.tasks;
+          initialDateOfWeek = weekObjet.startDate;
+          break;
+      }
+    } on Exception catch (e) {
+      Logger().e('Erro ao buscar tarefas: $e');
+      return;
     }
 
     // Ordena as tarefas por data e hora combinadas
@@ -145,16 +148,15 @@ class HomeController extends DefautChangeNotifer {
   // Função para finalizar ou desfinalizar tarefa
   Future<void> finishTask(TaskObject task) async {
     showLoadingAndResetState();
-    
+
     final taskUpdate = task.copyWith(finalizado: !task.finalizado);
     await _tasksService.finishTask(taskUpdate);
     hideLoading();
     await refreshPage();
   }
 
-
   // Função para mostrar ou esconder tarefas finalizadas
-  Future<void> showOrHideFinishingTasks() async {
+  Future<void> showOrHideFinishingTasks()  async{
     showFinishingTasks = !showFinishingTasks;
     refreshPage();
   }
