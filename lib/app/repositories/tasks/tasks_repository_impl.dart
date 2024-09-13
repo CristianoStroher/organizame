@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
 import 'package:organizame/app/models/task_object.dart';
 import './tasks_repository.dart';
@@ -121,4 +122,19 @@ class TasksRepositoryImpl extends TasksRepository {
       WHERE id = ?
     ''', [finished, task.id]);
   }
+  
+
+@override
+Future<List<TaskObject>> getOldTasks() async {
+  final conn = await _sqLiteConnectionFactory.openConnection();
+  final result = await conn.query(
+    'compromisso',
+    where: 'data < ?',
+    whereArgs: [DateFormat('yyyy-MM-dd').format(DateTime.now())],
+  );
+
+  // Mapeia o resultado para a lista de TaskObject
+  return result.map((e) => TaskObject.fromMap(e)).toList();
+}
+
 }

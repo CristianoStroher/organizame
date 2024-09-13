@@ -1,15 +1,17 @@
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/task_object.dart';
+import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 
 class TaskController extends DefautChangeNotifer {
   final TasksService _tasksService;
   
+  
 
   DateTime? _selectedDate;
   DateTime? _selectedTime;
 
-  TaskController( {
+  TaskController({
     required TasksService tasksService,
   }) : _tasksService = tasksService,
        super() {
@@ -71,14 +73,15 @@ class TaskController extends DefautChangeNotifer {
     }
   }
 
-   Future<bool> deleteTask(TaskObject task) async {
+   Future<bool>deleteTask(TaskObject task) async {
     try {
       showLoadingAndResetState();
       notifyListeners();
       final result = await _tasksService.deleteTask(task);
       if (result) {
-        // await _homeController.refreshPage();
-        success();
+        success();      
+        
+
         return true;
       } else {
         setError('Erro ao deletar tarefa');
@@ -101,7 +104,7 @@ class TaskController extends DefautChangeNotifer {
       showLoadingAndResetState();
       notifyListeners();
       await _tasksService.updateTask(task);
-      // await _homeController.refreshPage();
+      
       success();
     } catch (e, s) {
       setError('Erro ao atualizar tarefa');

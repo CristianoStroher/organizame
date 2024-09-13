@@ -13,7 +13,8 @@ import 'package:provider/provider.dart';
 
 class Task extends StatelessWidget {
   final TaskController controller;
-
+  
+  
   final TaskObject object;
   final dateFormatData = DateFormat('dd/MM/yyyy');
   final dateFormatHora = DateFormat('HH:mm');
