@@ -24,8 +24,11 @@ class HomeModule extends OrganizameModule {
             
           ],
           routers: {
-            '/home': (context) => HomePage(homeController: context.read()),
-            
+            '/home': (context) =>
+               HomePage(homeController: context.read(), taskController: context.read()),
           },
-        );
+        ); 
+                
+
+          
 }

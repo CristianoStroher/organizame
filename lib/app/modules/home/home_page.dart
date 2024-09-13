@@ -13,16 +13,20 @@ import 'package:organizame/app/modules/home/widgets/home_filters.dart';
 import 'package:organizame/app/modules/home/widgets/home_header.dart';
 import 'package:organizame/app/modules/home/widgets/home_task.dart';
 import 'package:organizame/app/modules/home/widgets/home_week_filter.dart';
+import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final HomeController _homeController;
+  final TaskController _taskController;
 
   const HomePage({
     super.key,
     required HomeController homeController,
-  }) : _homeController = homeController;
+    required TaskController taskController,
+  }) : _homeController = homeController,
+       _taskController = taskController;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -39,12 +43,18 @@ class _HomePageState extends State<HomePage> {
       },
     );
 
+    DefaultListenerNotifier(changeNotifier: widget._taskController).listener(
+        context: context,
+        sucessCallback: (notifier, listenerInstance) {
+          listenerInstance.dispose();
+        });
+
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       await context.read<HomeController>().loadAllTasks();
       await context
           .read<HomeController>()
           .findFilter(filter: TaskFilterEnum.today);
-     
+          
     });
   }
 
@@ -96,9 +106,8 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton(
             icon: Icon(OrganizameIcons.filter,
                 size: 20, color: context.primaryColor),
-            onSelected: (value) => context
-                .read<HomeController>().showOrHideFinishingTasks(),
-                            
+            onSelected: (value) =>
+                context.read<HomeController>().showOrHideFinishingTasks(),
             itemBuilder: (context) {
               return [
                 PopupMenuItem<bool>(

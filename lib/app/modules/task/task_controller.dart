@@ -5,25 +5,21 @@ import 'package:organizame/app/services/tasks/tasks_service.dart';
 
 class TaskController extends DefautChangeNotifer {
   final TasksService _tasksService;
-  
-  
 
   DateTime? _selectedDate;
   DateTime? _selectedTime;
 
   TaskController({
     required TasksService tasksService,
-  }) : _tasksService = tasksService,
-       super() {
+  })  : _tasksService = tasksService,
+        super() {
     resetState();
   }
-
 
   set setSelectedDate(DateTime? selectedDate) {
     _selectedDate = selectedDate;
     resetState();
     notifyListeners();
-    
   }
 
   set setSelectedTime(DateTime? selectedTime) {
@@ -41,7 +37,8 @@ class TaskController extends DefautChangeNotifer {
   // Getter para a hora selecionada
   DateTime? get selectedTime => _selectedTime;
 
-  Future<void> saveTask(String description, String date, String time, String observationsEC) async {
+  Future<void> saveTask(String description, String date, String time,
+      String observationsEC) async {
     try {
       showLoadingAndResetState();
       notifyListeners();
@@ -56,12 +53,11 @@ class TaskController extends DefautChangeNotifer {
         );
         success();
         setSelectedDate = null;
-        setSelectedTime = null;                      
-        // Logger().e('tarefa salva');  
+        setSelectedTime = null;
+        // Logger().e('tarefa salva');
       } else {
         setError('Data e hora são obrigatórios');
       }
-     
     } catch (e, s) {
       setError('Erro ao salvar tarefa');
       // Logger().e(e);
@@ -71,40 +67,15 @@ class TaskController extends DefautChangeNotifer {
       notifyListeners();
       
     }
-  }
 
-   Future<bool>deleteTask(TaskObject task) async {
-    try {
-      showLoadingAndResetState();
-      notifyListeners();
-      final result = await _tasksService.deleteTask(task);
-      if (result) {
-        success();      
-        
-
-        return true;
-      } else {
-        setError('Erro ao deletar tarefa');
-        return false;
-      }
-    } catch (e, s) {
-      setError('Erro ao deletar tarefa');
-      // Logger().e(e);
-      // Logger().e(s);
-      return false;
-    } finally {
-      hideLoading();
-      notifyListeners();
-    }
-  
-  }
+  }  
 
   Future<void> updateTask(TaskObject task) async {
     try {
       showLoadingAndResetState();
       notifyListeners();
       await _tasksService.updateTask(task);
-      
+
       success();
     } catch (e, s) {
       setError('Erro ao atualizar tarefa');
@@ -132,4 +103,3 @@ class TaskController extends DefautChangeNotifer {
     }
   }
 }
-

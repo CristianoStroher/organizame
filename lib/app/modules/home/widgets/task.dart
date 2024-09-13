@@ -118,7 +118,8 @@ class Task extends StatelessWidget {
                   if (confirmDelete == true) {
                     Loader.show(context);
                     try {
-                      final result = await controller.deleteTask(object);
+                      final result = //await controller.deleteTask(object);
+                      await context.read<HomeController>().deleteTask(object);
                       
                       Loader.hide();
                       if (result) {

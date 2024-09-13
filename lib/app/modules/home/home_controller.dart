@@ -160,8 +160,25 @@ class HomeController extends DefautChangeNotifer {
     showFinishingTasks = !showFinishingTasks;
     refreshPage();
   }
-
  
-  
+  Future<bool> deleteTask(TaskObject task) async {
+    try {
+      showLoadingAndResetState();
+      final result = await _tasksService.deleteTask(task);
+      if (result) {
+        success();
+      } else {
+        setError('Erro ao deletar tarefa');
+      }
+      return result; // Retorna o próprio resultado
+    } catch (e, s) {
+      setError('Erro ao deletar tarefa');
+      return false;
+    } finally {
+      hideLoading();
+      notifyListeners();
+      refreshPage(); // Chama notifyListeners apenas uma vez no finally
+    }
+  }
 
 }
