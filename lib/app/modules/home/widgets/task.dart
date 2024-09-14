@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:intl/intl.dart';
-import 'package:organizame/app/app_module.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/task_create_page.dart';
-import 'package:organizame/app/services/tasks/tasks_service.dart';
 import 'package:provider/provider.dart';
 
 class Task extends StatelessWidget {
   final TaskController controller;
-  
-  
   final TaskObject object;
   final dateFormatData = DateFormat('dd/MM/yyyy');
   final dateFormatHora = DateFormat('HH:mm');
@@ -34,12 +30,10 @@ class Task extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => TaskCreatePage(
               controller: controller,
-              task: object,       
-              
+              task: object,
             ),
           ),
         );
-        
       },
       child: SizedBox(
         child: Column(
@@ -57,8 +51,10 @@ class Task extends StatelessWidget {
                 fillColor: WidgetStateProperty.all(context.primaryColorLight),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.finalizado,
-                onChanged: (value) => context.read<HomeController>().finishTask(object),
-                
+                onChanged: (value)  async{
+                  await context.read<HomeController>().finishTask(object);
+                  print(object.finalizado);
+                },
               ),
               title: Text(
                 object.descricao.toUpperCase(),
@@ -96,8 +92,8 @@ class Task extends StatelessWidget {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text('Excluir tarefa', style: context.titleMedium),
-                      content: Text(
-                          'Deseja excluir a tarefa ${object.descricao}?'),
+                      content:
+                          Text('Deseja excluir a tarefa ${object.descricao}?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
@@ -119,8 +115,10 @@ class Task extends StatelessWidget {
                     Loader.show(context);
                     try {
                       final result = //await controller.deleteTask(object);
-                      await context.read<HomeController>().deleteTask(object);
-                      
+                          await context
+                              .read<HomeController>()
+                              .deleteTask(object);
+
                       Loader.hide();
                       if (result) {
                         Messages.of(context)

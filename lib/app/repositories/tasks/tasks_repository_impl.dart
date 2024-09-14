@@ -97,44 +97,48 @@ class TasksRepositoryImpl extends TasksRepository {
 
   @override
   Future<void> updateTask(TaskObject task) async {
-    final conn = await _sqLiteConnectionFactory.openConnection();
+    try {
+      final conn = await _sqLiteConnectionFactory.openConnection();
 
-    // Logs de depuração
-    // Logger().i('Atualizando tarefa com ID: ${task.id}');
-    // Logger().i('Dados da tarefa: ${task.toMap()}');
+      Logger().i('Atualizando tarefa com ID: ${task.id}');
+      Logger().i('Dados da tarefa: ${task.toMap()}');
 
-    await conn.update(
-      'compromisso',
-      task.toMap(),
-      where: 'id = ?',
-      whereArgs: [task.id],
-    );
+      await conn.update(
+        'compromisso',
+        task.toMap(),
+        where: 'id = ?',
+        whereArgs: [task.id],
+      );
+    } catch (e) {
+      Logger().e('Erro ao atualizar a tarefa: $e');
+      throw Exception('Erro ao atualizar tarefa: $e');
+    }
   }
 
   @override
   Future<void> finishTask(TaskObject task) async {
     final conn = await _sqLiteConnectionFactory.openConnection();
-    final finished = task.finalizado == 1 ? 0 : 1;
+
+    final finished = task.finalizado ? 1 : 0;
 
     await conn.rawUpdate('''
       UPDATE compromisso
       SET finalizado = ?
       WHERE id = ?
     ''', [finished, task.id]);
+    
   }
-  
 
-@override
-Future<List<TaskObject>> getOldTasks() async {
-  final conn = await _sqLiteConnectionFactory.openConnection();
-  final result = await conn.query(
-    'compromisso',
-    where: 'data < ?',
-    whereArgs: [DateFormat('yyyy-MM-dd').format(DateTime.now())],
-  );
+  @override
+  Future<List<TaskObject>> getOldTasks() async {
+    final conn = await _sqLiteConnectionFactory.openConnection();
+    final result = await conn.query(
+      'compromisso',
+      where: 'data < ?',
+      whereArgs: [DateFormat('yyyy-MM-dd').format(DateTime.now())],
+    );
 
-  // Mapeia o resultado para a lista de TaskObject
-  return result.map((e) => TaskObject.fromMap(e)).toList();
-}
-
+    // Mapeia o resultado para a lista de TaskObject
+    return result.map((e) => TaskObject.fromMap(e)).toList();
+  }
 }

@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
@@ -22,40 +20,36 @@ class TaskObject {
 
   factory TaskObject.fromMap(Map<String, dynamic> map) {
     try {
-  final date = DateTime.parse(map['data'] as String);
-  final timeStr = map['hora'] as String;
-  final time =
-      DateFormat('HH:mm:ss').parse(timeStr); // Ajuste para o formato correto
-  
-  // Combine a data e a hora
-  final combinedDateTime = DateTime(
-      date.year, date.month, date.day, time.hour, time.minute, time.second);
+      // Verificar se os campos existem e têm o formato esperado
+      final dateStr = map['data'] as String?;
+      final timeStr = map['hora'] as String?;
 
-      // Logs de depuração
-      Logger().i('Convertendo do Map para TaskObject:');
-      Logger().i('Data e Hora combinadas: $combinedDateTime');
-      Logger().i('Map: $map');
-  
-  // Logs de depuração
-  Logger().i('Convertendo do Map para TaskObject:');
-  Logger().i('Data: $combinedDateTime');
-  print('map => $map');
-  return TaskObject(
-    id: map['id'] as int?,
-    descricao: map['descricao'] as String,
-    data: combinedDateTime, // Ajuste conforme necessário
-    hora: combinedDateTime, // Ajuste conforme necessário
-    observacao: map['observacao'] as String?,
-    finalizado: (map['finalizado'] as int) == 1,
-  );
-} on Exception catch (e) {
-  Logger().e('Erro ao converter de Map para TaskObject: $e');
-  rethrow;
-}
+      if (dateStr == null || timeStr == null) {
+        throw ArgumentError('Campos obrigatórios ausentes');
+      }
+
+      final date = DateTime.parse(dateStr);
+      final time = DateFormat('HH:mm:ss').parse(timeStr);
+
+      // Combine data e hora
+      final combinedDateTime = DateTime(
+          date.year, date.month, date.day, time.hour, time.minute, time.second);
+
+      return TaskObject(
+        id: map['id'] as int?,
+        descricao: map['descricao'] as String,
+        data: date,
+        hora: combinedDateTime, // Ajuste para armazenar data e hora combinadas
+        observacao: map['observacao'] as String?,
+        finalizado: (map['finalizado'] as int) == 1,
+      );
+    } on Exception catch (e) {
+      Logger().e('Erro ao converter de Map para TaskObject: $e');
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toMap() {
-
     return {
       'id': id,
       'descricao': descricao,

@@ -1,7 +1,5 @@
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
-import 'package:provider/provider.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/models/task_total_filter.dart';
@@ -147,20 +145,24 @@ class HomeController extends DefautChangeNotifer {
 
   // Função para finalizar ou desfinalizar tarefa
   Future<void> finishTask(TaskObject task) async {
-    showLoadingAndResetState();
+    Logger().i('Atualizando tarefa: $task');
+    try {
+      showLoadingAndResetState();
+      final taskUpdate = task.copyWith(finalizado: !task.finalizado);
+      await _tasksService.finishTask(taskUpdate);
+      Logger().e('Tarefa atualizada com sucesso');
+      await refreshPage();
+      hideLoading();
+    } on Exception catch (e) {
+      Logger().e('Erro ao atualizar tarefa: $e');
+    }
+  }
 
-    final taskUpdate = task.copyWith(finalizado: !task.finalizado);
-    await _tasksService.finishTask(taskUpdate);
-    hideLoading();
+  Future<void> showOrHideFinishingTasks() async {
+    showFinishingTasks = !showFinishingTasks;
     await refreshPage();
   }
 
-  // Função para mostrar ou esconder tarefas finalizadas
-  Future<void> showOrHideFinishingTasks()  async{
-    showFinishingTasks = !showFinishingTasks;
-    refreshPage();
-  }
- 
   Future<bool> deleteTask(TaskObject task) async {
     try {
       showLoadingAndResetState();

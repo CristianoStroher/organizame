@@ -65,11 +65,11 @@ class TaskController extends DefautChangeNotifer {
     } finally {
       hideLoading();
       notifyListeners();
-      
+
     }
 
   }  
-
+  
   Future<void> updateTask(TaskObject task) async {
     try {
       showLoadingAndResetState();
