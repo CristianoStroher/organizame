@@ -1,5 +1,6 @@
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/models/task_total_filter.dart';
@@ -31,7 +32,7 @@ class HomeController extends DefautChangeNotifer {
       _tasksService.getWeek(),
     ]);
 
-    Logger().i('allTasks: $allTasks');
+    // Logger().i('allTasks: $allTasks');
 
     final todayTasks = (allTasks[0] as List<TaskObject>)
       ..sort((a, b) => _combineDateTime(a).compareTo(_combineDateTime(b)));
@@ -84,7 +85,7 @@ class HomeController extends DefautChangeNotifer {
           break;
       }
     } on Exception catch (e) {
-      Logger().e('Erro ao buscar tarefas: $e');
+      // Logger().e('Erro ao buscar tarefas: $e');
       return;
     }
 
@@ -108,8 +109,8 @@ class HomeController extends DefautChangeNotifer {
       filteredTasks = filteredTasks.where((task) => !task.finalizado).toList();
     }
 
-    Logger().i('Total de tarefas filtradas: ${filteredTasks.length}');
-    Logger().i('Mostrar tarefas finalizadas: $showFinishingTasks');
+    // Logger().i('Total de tarefas filtradas: ${filteredTasks.length}');
+    // Logger().i('Mostrar tarefas finalizadas: $showFinishingTasks');
 
     hideLoading();
     notifyListeners();
@@ -143,18 +144,19 @@ class HomeController extends DefautChangeNotifer {
     notifyListeners();
   }
 
-  // Função para finalizar ou desfinalizar tarefa
+ 
   Future<void> finishTask(TaskObject task) async {
-    Logger().i('Atualizando tarefa: $task');
+    // Logger().i('Atualizando tarefa: $task');
     try {
       showLoadingAndResetState();
       final taskUpdate = task.copyWith(finalizado: !task.finalizado);
       await _tasksService.finishTask(taskUpdate);
-      Logger().e('Tarefa atualizada com sucesso');
+      // Logger().e('Tarefa atualizada com sucesso');
       await refreshPage();
       hideLoading();
     } on Exception catch (e) {
-      Logger().e('Erro ao atualizar tarefa: $e');
+      // Logger().e('Erro ao atualizar tarefa: $e');
+      setError('Erro ao atualizar tarefa');
     }
   }
 
@@ -182,5 +184,5 @@ class HomeController extends DefautChangeNotifer {
       refreshPage(); // Chama notifyListeners apenas uma vez no finally
     }
   }
-
+  
 }

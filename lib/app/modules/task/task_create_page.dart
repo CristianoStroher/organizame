@@ -154,17 +154,51 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                     const SizedBox(height: 20),
                     OrganizameElevatedButton(
                       label: 'Salvar',
+                      // onPressed: () {
+                      //   final formValid =
+                      //       _globalKey.currentState?.validate() ?? false;
+                      //   if (formValid) {
+                      //     context.read<TaskController>().saveTask(
+                      //           descriptionEC.text,
+                      //           dateEC.text,
+                      //           timeEC.text,
+                      //           observationsEC.text,
+                      //         );
+                      //     Navigator.pop(context);
+                      //   }
+                      // },
+
                       onPressed: () {
                         final formValid =
                             _globalKey.currentState?.validate() ?? false;
+
                         if (formValid) {
-                          context.read<TaskController>().saveTask(
-                                descriptionEC.text,
-                                dateEC.text,
-                                timeEC.text,
-                                observationsEC.text,
-                              );
-                          Navigator.pop(context);
+                          if (widget.task != null) {
+                            // Atualiza a tarefa existente
+                            context.read<TaskController>().updateTask(
+                                  TaskObject(
+                                    id: widget.task!.id,
+                                    descricao: descriptionEC.text,
+                                    data: DateFormat('dd/MM/yyyy')
+                                        .parse(dateEC.text),
+                                    hora:
+                                        DateFormat('HH:mm').parse(timeEC.text),
+                                    observacao: observationsEC.text,
+                                    finalizado: widget.task!.finalizado,
+                                  ),
+                                );
+                          } else {
+                            // Cria uma nova tarefa
+                            context.read<TaskController>().saveTask(
+                                  descriptionEC.text,
+                                  dateEC.text,
+                                  timeEC.text,
+                                  observationsEC.text,
+                                );
+                          }
+
+                          Navigator.pop(
+                              context); // Fecha a tela após salvar ou atualizar
                         }
                       },
                     ),

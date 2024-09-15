@@ -95,6 +95,21 @@ class TasksRepositoryImpl extends TasksRepository {
     });
   }
 
+
+  @override
+  Future<void> finishTask(TaskObject task) async {
+    final conn = await _sqLiteConnectionFactory.openConnection();
+
+    final finished = task.finalizado ? 1 : 0;
+
+    await conn.rawUpdate('''
+      UPDATE compromisso
+      SET finalizado = ?
+      WHERE id = ?
+    ''', [finished, task.id]);
+    
+  }
+
   @override
   Future<void> updateTask(TaskObject task) async {
     try {
@@ -113,32 +128,5 @@ class TasksRepositoryImpl extends TasksRepository {
       Logger().e('Erro ao atualizar a tarefa: $e');
       throw Exception('Erro ao atualizar tarefa: $e');
     }
-  }
-
-  @override
-  Future<void> finishTask(TaskObject task) async {
-    final conn = await _sqLiteConnectionFactory.openConnection();
-
-    final finished = task.finalizado ? 1 : 0;
-
-    await conn.rawUpdate('''
-      UPDATE compromisso
-      SET finalizado = ?
-      WHERE id = ?
-    ''', [finished, task.id]);
-    
-  }
-
-  @override
-  Future<List<TaskObject>> getOldTasks() async {
-    final conn = await _sqLiteConnectionFactory.openConnection();
-    final result = await conn.query(
-      'compromisso',
-      where: 'data < ?',
-      whereArgs: [DateFormat('yyyy-MM-dd').format(DateTime.now())],
-    );
-
-    // Mapeia o resultado para a lista de TaskObject
-    return result.map((e) => TaskObject.fromMap(e)).toList();
   }
 }

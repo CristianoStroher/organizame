@@ -8,10 +8,10 @@ abstract class TasksService {
     Future<List<TaskObject>> getTomorrow();
     Future<TaskWeekObject> getWeek();
     Future<bool> deleteTask(TaskObject task);
-    Future<void> updateTask(TaskObject task);
     Future<TaskObject?> findTask(TaskObject task);
     Future<void> finishTask(TaskObject task);
-    Future<List<TaskObject>> getOldTasks();
+    Future<void> updateTask(TaskObject task);
+   
 
  
 

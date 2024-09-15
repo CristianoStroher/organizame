@@ -57,30 +57,15 @@ class TasksServiceImpl extends TasksService {
     return _tasksRepository.findTask(task);
   }
   
-  @override
-  Future<void> updateTask(TaskObject task) {
-    return _tasksRepository.updateTask(task);
-  }
   
   @override
   Future<void> finishTask(TaskObject task) {
     return _tasksRepository.finishTask(task);
-  }
-  
-  Future<List<TaskObject>> getOldTasks() async {
-    try {
-      // Chama o método do repositório
-      final oldTasks = await _tasksRepository.getOldTasks();
-      
-      // Retorna a lista de tarefas antigas ou uma lista vazia em caso de erro
-      return oldTasks ?? []; // Garante que não retornará nulo
-    } catch (e) {
-      // Trate qualquer exceção, se necessário
-      print('Erro ao buscar tarefas antigas: $e');
-      
-      // Retorna uma lista vazia em caso de erro
-      return [];
-    }
+  } 
+ 
+  @override
+  Future<void> updateTask(TaskObject task) {
+    return _tasksRepository.updateTask(task);
   }
   
   

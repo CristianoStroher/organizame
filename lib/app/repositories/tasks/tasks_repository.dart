@@ -9,5 +9,5 @@ abstract class TasksRepository {
   Future<void> updateTask(TaskObject task);
   Future<TaskObject?> findTask(TaskObject task);
   Future<void> finishTask(TaskObject task);
-  Future<List<TaskObject>> getOldTasks();
+  
 }
