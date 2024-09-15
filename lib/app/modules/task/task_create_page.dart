@@ -45,13 +45,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
       dateEC.text = DateFormat('dd/MM/yyyy').format(task.data);
       timeEC.text = DateFormat('HH:mm').format(task.hora);
       observationsEC.text = task.observacao ?? '';
-
-      // Logs de depuração
-      // Logger().i('Inicializando com tarefa:');
-      // Logger().i('Descrição: ${task.descricao}');
-      // Logger().i('Data: ${task.data}');
-      // Logger().i('Hora: ${task.hora}');
-      // Logger().i('Observações: ${task.observacao}');
+     
     }
 
     DefaultListenerNotifier(
