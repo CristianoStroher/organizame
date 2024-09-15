@@ -65,17 +65,16 @@ class TaskController extends DefautChangeNotifer {
     } finally {
       hideLoading();
       notifyListeners();
-
     }
+  }
 
-  }  
-  
   Future<void> findTask(TaskObject task) async {
     try {
       showLoadingAndResetState();
       notifyListeners();
       await _tasksService.findTask(task);
       success();
+      
     } catch (e, s) {
       setError('Erro ao buscar tarefa');
       // Logger().e(e);
@@ -85,21 +84,18 @@ class TaskController extends DefautChangeNotifer {
       notifyListeners();
     }
   }
-  
+
   Future<void> updateTask(TaskObject task) async {
-  try {
-    showLoadingAndResetState();
-    notifyListeners();
-    await _tasksService.updateTask(task);  // Chama o método no serviço
-    success();
-  } catch (e, s) {
-    setError('Erro ao atualizar tarefa');
-  } finally {
-    hideLoading();
-    notifyListeners();
+    try {
+      showLoadingAndResetState();
+      notifyListeners();
+      await _tasksService.updateTask(task); // Chama o método no serviço
+      success();
+    } catch (e, s) {
+      setError('Erro ao atualizar tarefa');
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
   }
-}
-
-
-
 }
