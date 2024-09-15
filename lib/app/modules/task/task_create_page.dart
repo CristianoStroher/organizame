@@ -154,20 +154,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                     const SizedBox(height: 20),
                     OrganizameElevatedButton(
                       label: 'Salvar',
-                      // onPressed: () {
-                      //   final formValid =
-                      //       _globalKey.currentState?.validate() ?? false;
-                      //   if (formValid) {
-                      //     context.read<TaskController>().saveTask(
-                      //           descriptionEC.text,
-                      //           dateEC.text,
-                      //           timeEC.text,
-                      //           observationsEC.text,
-                      //         );
-                      //     Navigator.pop(context);
-                      //   }
-                      // },
-
                       onPressed: () {
                         final formValid =
                             _globalKey.currentState?.validate() ?? false;
