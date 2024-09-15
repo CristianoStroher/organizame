@@ -95,7 +95,6 @@ class TasksRepositoryImpl extends TasksRepository {
     });
   }
 
-
   @override
   Future<void> finishTask(TaskObject task) async {
     final conn = await _sqLiteConnectionFactory.openConnection();
@@ -107,7 +106,6 @@ class TasksRepositoryImpl extends TasksRepository {
       SET finalizado = ?
       WHERE id = ?
     ''', [finished, task.id]);
-    
   }
 
   @override

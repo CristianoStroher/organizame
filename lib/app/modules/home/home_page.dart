@@ -117,12 +117,12 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(color: context.primaryColor),
                   ),
                 ),
-                PopupMenuItem<bool>(
-                  child: Text(
-                    'Tarefas antigas',
-                    style: TextStyle(color: context.primaryColor),
-                  ),
-                ),
+                // PopupMenuItem(
+                //   child: Text(
+                //     'Tarefas antigas',
+                //     style: TextStyle(color: context.primaryColor),
+                //   ),
+                // ),
               ];
             },
           ),
