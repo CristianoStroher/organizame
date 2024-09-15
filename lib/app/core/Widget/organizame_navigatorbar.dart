@@ -8,6 +8,15 @@ class OrganizameNavigatorbar extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
        return BottomNavigationBar(
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.of(context).pushNamed('/home');
+          } else if (index == 1) {
+            Navigator.of(context).pushNamed('/tecnical');
+          } else if (index == 2) {
+            Navigator.of(context).pushNamed('/budget');
+          }
+        },
         selectedIconTheme: IconThemeData(color: context.primaryColor),
         selectedItemColor: context.primaryColor,
         unselectedIconTheme: IconThemeData(color: context.secondaryColor),
@@ -29,5 +38,6 @@ class OrganizameNavigatorbar extends StatelessWidget {
             ),
         ],
       );
+      
   }
 }

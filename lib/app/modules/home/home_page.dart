@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
-import 'package:organizame/app/core/Widget/organizame_navigatorbar.dart';
+import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
+import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
 import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
@@ -33,6 +33,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   void initState() {
     super.initState();
@@ -84,6 +85,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  int index = 0;
 
   @override
   Widget build(BuildContext context) {

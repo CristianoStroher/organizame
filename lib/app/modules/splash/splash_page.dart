@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:organizame/app/core/Widget/organizame_logo_branco.dart';
+import 'package:organizame/app/core/widget/organizame_logo_branco.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 
 class SplashPage extends StatelessWidget {

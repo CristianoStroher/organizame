@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 import 'package:organizame/app/core/Validators/login_validators.dart';
-import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
-import 'package:organizame/app/core/Widget/organizame_logo.dart';
-import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
+import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
+import 'package:organizame/app/core/widget/organizame_logo.dart';
+import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/modules/auth/register/register_controller.dart';

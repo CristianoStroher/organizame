@@ -9,6 +9,7 @@ import 'package:organizame/app/services/Tasks/tasks_service_impl.dart';
 import 'package:provider/provider.dart';
 
 class TaskModule extends OrganizameModule {
+  
   TaskModule(BuildContext appcontext)
       : super(
         context: appcontext,

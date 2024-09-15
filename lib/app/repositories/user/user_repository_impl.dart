@@ -7,7 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:logger/logger.dart';
 
-import 'package:organizame/app/core/Widget/organizame_logger.dart';
+import 'package:organizame/app/core/widget/organizame_logger.dart';
 import 'package:organizame/app/core/exception/auth_exception.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:logger/logger.dart';
-import 'package:organizame/app/core/Widget/organizame_elevatebutton.dart';
-import 'package:organizame/app/core/Widget/organizame_logo.dart';
-import 'package:organizame/app/core/Widget/organizame_textformfield.dart';
+import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
+import 'package:organizame/app/core/widget/organizame_logo.dart';
+import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/modules/auth/login/login_controller.dart';

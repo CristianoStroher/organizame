@@ -6,6 +6,7 @@ import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
 import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
+import 'package:organizame/app/modules/tecnical/tecnical_controller.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository_impl.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
@@ -67,12 +68,12 @@ class AppModule extends StatelessWidget {
                 TasksServiceImpl(tasksRepository: context.read())),
         ChangeNotifierProvider<TaskController>(
           create: (context) => TaskController(
-            tasksService: context.read(),           
+            tasksService: context.read(),
           ),
         ),
-
         ChangeNotifierProvider(
             create: (context) => HomeController(tasksService: context.read())),
+        ChangeNotifierProvider(create: (context) => TecnicalController()),  
       ],
       child: const AppWidget(),
     );

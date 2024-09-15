@@ -9,6 +9,7 @@ import 'package:organizame/app/modules/auth/auth_module.dart';
 import 'package:organizame/app/modules/home/home_module.dart';
 import 'package:organizame/app/modules/splash/splash_page.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
+import 'package:organizame/app/modules/tecnical/tecnical_module.dart';
 
 //! praticamente a implementação do material app que tem a função de ser
 //! o widget raiz da aplicação 
@@ -53,12 +54,14 @@ class _AppWidgetState extends State<AppWidget> {
       ],
       supportedLocales: const [
         Locale('pt', 'BR'),
+        
                 
       ],
       routes: {
         ...AuthModule().routers,
         ...HomeModule().routers,
         ...TaskModule(context).routers,
+        ...TecnicalModule().routers,
       },
       home: const SplashPage(),
     );
