@@ -45,7 +45,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
       dateEC.text = DateFormat('dd/MM/yyyy').format(task.data);
       timeEC.text = DateFormat('HH:mm').format(task.hora);
       observationsEC.text = task.observacao ?? '';
-     
     }
 
     DefaultListenerNotifier(
@@ -107,7 +106,8 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('NOVA TAREFA', style: context.titleDefaut),
+                    Text(widget.task == null ? 'NOVA TAREFA' : 'ALTERAR TAREFA',
+                        style: context.titleDefaut),
                     const SizedBox(height: 20),
                     OrganizameTextformfield(
                       validator: Validatorless.multiple([
