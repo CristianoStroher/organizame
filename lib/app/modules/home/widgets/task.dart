@@ -3,6 +3,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:intl/intl.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
@@ -33,7 +34,12 @@ class Task extends StatelessWidget {
               task: object,
             ),
           ),
-        );
+        ).then((value) async {
+          await context.read<HomeController>().loadAllTasks();
+          await context
+              .read<HomeController>()
+              .findFilter(filter: TaskFilterEnum.today);
+        });
       },
       child: SizedBox(
         child: Column(
@@ -51,7 +57,7 @@ class Task extends StatelessWidget {
                 fillColor: WidgetStateProperty.all(context.primaryColorLight),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.finalizado,
-                onChanged: (value)  async{
+                onChanged: (value) async {
                   await context.read<HomeController>().finishTask(object);
                   print(object.finalizado);
                 },
