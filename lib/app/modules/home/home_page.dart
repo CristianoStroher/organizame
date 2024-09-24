@@ -139,7 +139,10 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: context.primaryColor,
         child: Icon(Icons.add, color: context.primaryColorLight),
       ),
-      bottomNavigationBar: const OrganizameNavigatorbar(),
+      bottomNavigationBar: OrganizameNavigatorbar(
+        color: context.primaryColorLight,
+        initialIndex: index,        
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
