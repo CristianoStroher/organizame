@@ -10,8 +10,14 @@ import '../../../core/auth/auth_provider.dart';
 class HomeDrawer extends StatelessWidget {
 
   final nameVN = ValueNotifier<String>('');
+  final Color colorDrawer;
+  final Color backgroundButton;
 
-  HomeDrawer({super.key});
+  HomeDrawer({
+    super.key,
+    required this.colorDrawer,
+    required this.backgroundButton
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class HomeDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
               decoration: BoxDecoration(
-                color: context.primaryColorLight,
+                color: colorDrawer,
               ),
               child: Row(
                 children: [
@@ -118,7 +124,7 @@ class HomeDrawer extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   decoration: BoxDecoration(
-                    color: context.primaryColorLight,
+                    color: backgroundButton,
                     borderRadius: BorderRadius.circular(2),
                     border: Border.all(color: context.primaryColor),
                   ),
