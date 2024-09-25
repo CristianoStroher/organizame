@@ -34,7 +34,7 @@ class Task extends StatelessWidget {
               task: object,
             ),
           ),
-         ).then((value) async {
+        ).then((value) async {
           await context.read<HomeController>().loadAllTasks();
           await context
               .read<HomeController>()
@@ -57,7 +57,7 @@ class Task extends StatelessWidget {
                 fillColor: WidgetStateProperty.all(context.primaryColorLight),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.finalizado,
-                onChanged: (value)  async {
+                onChanged: (value) async {
                   await context.read<HomeController>().finishTask(object);
                   print(object.finalizado);
                 },
