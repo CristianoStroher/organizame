@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
-import 'package:provider/provider.dart';
+
 
 class Visit extends StatelessWidget {
   const Visit({super.key});

@@ -5,9 +5,11 @@ import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/home/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/tecnical/widgets/visit.dart';
+import 'package:organizame/app/modules/visit/visit_module.dart';
 
 class TecnicalPage extends StatefulWidget {
-  TecnicalPage({super.key});
+
+  const TecnicalPage({super.key});
 
   @override
   State<TecnicalPage> createState() => _TecnicalPageState();
@@ -17,11 +19,38 @@ class _TecnicalPageState extends State<TecnicalPage> {
   int index = 1;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _goToTaskPage(BuildContext appcontext) async {
+    await Navigator.of(appcontext).push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 600),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          animation = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeInQuad,
+          );
+          return ScaleTransition(
+            scale: animation,
+            alignment: Alignment.bottomRight,
+            child: child,
+          );
+        },
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return VisitModule().getPage('/visit/create', context);
+        },
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: HomeDrawer(
         colorDrawer: const Color(0xFFFAFFC5),
-        backgroundButton:  const Color(0xFFFAFFC5),
+        backgroundButton: const Color(0xFFFAFFC5),
       ),
       appBar: AppBar(
         backgroundColor: const Color(0xFFFAFFC5),
@@ -57,7 +86,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // await _goToTaskPage(context);
+          await _goToTaskPage(context);
           // context.read<HomeController>().refreshPage();
         },
         backgroundColor: context.primaryColor,
@@ -78,29 +107,22 @@ class _TecnicalPageState extends State<TecnicalPage> {
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-                      Text('VISITAS TÉCNICAS',
-                          style: context.titleDefaut),
-                      const SizedBox(height: 10),
-                      const Column(
-                        children: [
-                          Visit(), //! substituir pela lista abaixo
-                          // context
-                          //     .select<HomeController, List<TaskObject>>(
-                          //         (controller) => controller.filteredTasks)
-                          //     .map((t) =>
-                          //         Task(object: t, controller: context.read<TaskController>()))
-                          //     .toList(),
-                        ],
-                      )
-
-
-                    ],
-                  ),
-                ),
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Text('VISITAS TÉCNICAS', style: context.titleDefaut),
+                    SizedBox(height: 10),
+                    Visit(),
+                    //! substituir pela lista abaixo
+                    // context
+                    //     .select<HomeController, List<TaskObject>>(
+                    //         (controller) => controller.filteredTasks)
+                    //     .map((t) =>
+                    //         Task(object: t, controller: context.read<TaskController>()))
+                    //     .toList(),
+                  ],
+                )),
               ),
             ),
           );
