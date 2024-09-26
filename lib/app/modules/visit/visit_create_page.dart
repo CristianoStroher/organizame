@@ -1,10 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
+import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
+import 'package:organizame/app/core/widget/organizame_textfield.dart';
+import 'package:organizame/app/core/widget/organizame_textformfield.dart';
+import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
+import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
 
 import 'package:organizame/app/modules/visit/visit_controller.dart';
 
 class VisitCreatePage extends StatelessWidget {
-
   VisitController _controller;
 
   VisitCreatePage({
@@ -12,11 +18,87 @@ class VisitCreatePage extends StatelessWidget {
     required VisitController controller,
   }) : _controller = controller;
 
-   @override
-   Widget build(BuildContext context) {
-       return Scaffold(
-           appBar: AppBar(title: const Text('VISITAS TÉCNICAS'),),
-           body: Container(),
-       );
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: const Color(0xFFFAFFC5),
+        automaticallyImplyLeading: false,
+        title: OrganizameLogoMovie(
+          text: 'Visita Técnica',
+          part1Color: context.primaryColor,
+          part2Color: context.primaryColor,
+        ),
+        leading: const SizedBox.shrink(),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.close,
+              color: context.primaryColor,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+      body: Form(
+          child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+              minWidth: constraints.maxWidth,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Text(widget.task == null ? 'NOVA VISITA TÉCNICA' : 'ALTERAR VISITA TÉCNICA',
+                  //   style: context.titleDefaut),
+                  Text('NOVA VISITA TÉCNICA', style: context.titleDefaut),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OrganizameCalendarButton(
+                          // controller: dateEC,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: OrganizameTimeButton(
+                          // controller: timeEC,
+                          label: 'Hora',
+                        ),
+                      ),
+                    ],
+                  ),
+                  OrganizameTextformfield(
+                    label: 'Cliente',
+                  ),
+                  const SizedBox(height: 20),
+                  OrganizameTextformfield(
+                    label: 'Telefone',
+                  ),
+                  const SizedBox(height: 20),
+                  OrganizameTextformfield(
+                    label: 'Endereço',
+                  ),
+                  const SizedBox(height: 20),
+                  OrganizameElevatedButton(
+                    onPressed: () {},
+                    label: 'Adicionar Cliente',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      )),
+    );
   }
 }
