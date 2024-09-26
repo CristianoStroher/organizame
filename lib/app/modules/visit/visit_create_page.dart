@@ -9,6 +9,8 @@ import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.d
 import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
 
 import 'package:organizame/app/modules/visit/visit_controller.dart';
+import 'package:organizame/app/modules/visit/widgets/environment.dart';
+import 'package:organizame/app/modules/visit/widgets/visit_header.dart';
 
 class VisitCreatePage extends StatelessWidget {
   VisitController _controller;
@@ -57,41 +59,21 @@ class VisitCreatePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Text(widget.task == null ? 'NOVA VISITA TÉCNICA' : 'ALTERAR VISITA TÉCNICA',
-                  //   style: context.titleDefaut),
-                  Text('NOVA VISITA TÉCNICA', style: context.titleDefaut),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OrganizameCalendarButton(
-                          // controller: dateEC,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: OrganizameTimeButton(
-                          // controller: timeEC,
-                          label: 'Hora',
-                        ),
-                      ),
-                    ],
-                  ),
-                  OrganizameTextformfield(
-                    label: 'Cliente',
-                  ),
-                  const SizedBox(height: 20),
-                  OrganizameTextformfield(
-                    label: 'Telefone',
-                  ),
-                  const SizedBox(height: 20),
-                  OrganizameTextformfield(
-                    label: 'Endereço',
-                  ),
+                  const VisitHeader(),
+                  const Environment(),
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
                     onPressed: () {},
-                    label: 'Adicionar Cliente',
+                    label: 'Salvar',
+                    textColor: context.scaffoldBackgroundColor,
+                  ),
+                  const SizedBox(height: 10),
+                  OrganizameElevatedButton(
+                    onPressed: () {},
+                    label: 'Fechar',
+                    textColor: context.primaryColor,
+                    backgroundColor: context.scaffoldBackgroundColor,
+                    borderColor: context.primaryColor,
                   ),
                 ],
               ),

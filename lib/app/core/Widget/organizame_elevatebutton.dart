@@ -10,6 +10,7 @@ class OrganizameElevatedButton extends StatelessWidget {
   final Color? textColor;
   final double? fontSize;
   final BorderRadiusGeometry? borderRadius;
+  final Color? borderColor;
 
   const OrganizameElevatedButton({
     super.key,
@@ -21,6 +22,7 @@ class OrganizameElevatedButton extends StatelessWidget {
     this.textColor,
     this.fontSize,
     this.borderRadius,
+    this.borderColor,
   });
 
   @override
@@ -34,11 +36,14 @@ class OrganizameElevatedButton extends StatelessWidget {
           backgroundColor: backgroundColor ?? context.primaryColor,
           foregroundColor: textColor ?? context.primaryColorLight,
           textStyle: TextStyle(
-            fontSize: fontSize ?? 20,
+            fontSize: fontSize ?? 18,
             fontWeight: FontWeight.bold,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.circular(3),
+            side: BorderSide(
+              color: borderColor ?? Colors.transparent,
+            ),
           ),
         ),
         child: Text(label),
