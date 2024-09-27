@@ -117,7 +117,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                       label: 'Descrição',
                       controller: descriptionEC,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     // Colocando Data e Hora numa única linha
                     Row(
                       children: [
@@ -126,7 +126,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                             controller: dateEC,
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: OrganizameTimeButton(
                             controller: timeEC,
@@ -135,7 +135,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     // Caixa de texto de Observações com altura de 3 linhas
                     SizedBox(
                       height: 120, // Ajusta a altura total

@@ -110,10 +110,10 @@ class _TecnicalPageState extends State<TecnicalPage> {
                     child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text('VISITAS TÉCNICAS', style: context.titleDefaut),
-                    SizedBox(height: 10),
-                    Visit(),
+                    const SizedBox(height: 10),
+                    const Visit(),
                     //! substituir pela lista abaixo
                     // context
                     //     .select<HomeController, List<TaskObject>>(

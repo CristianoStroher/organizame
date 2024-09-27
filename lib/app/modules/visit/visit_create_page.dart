@@ -59,13 +59,13 @@ class VisitCreatePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const VisitHeader(),
+                  VisitHeader(),
                   const Environment(),
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
                     onPressed: () {},
                     label: 'Salvar',
-                    textColor: context.scaffoldBackgroundColor,
+                    textColor: const Color(0xFFFAFFC5),
                   ),
                   const SizedBox(height: 10),
                   OrganizameElevatedButton(

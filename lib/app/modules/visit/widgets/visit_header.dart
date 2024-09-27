@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 
-class VisitHeader extends StatelessWidget {
+class VisitHeader extends StatefulWidget {
   const VisitHeader({super.key});
+
+  @override
+  _VisitHeaderState createState() => _VisitHeaderState();
+}
+
+class _VisitHeaderState extends State<VisitHeader> {
+  List<String> clients = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
+  String? selectedClient;
 
   @override
   Widget build(BuildContext context) {
@@ -12,46 +21,42 @@ class VisitHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        // Text(widget.task == null ? 'NOVA VISITA TÉCNICA' : 'ALTERAR VISITA TÉCNICA',
-        //   style: context.titleDefaut),
         children: [
           Text('NOVA VISITA TÉCNICA', style: context.titleDefaut),
           const SizedBox(height: 20),
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: OrganizameCalendarButton(
-          //         // controller: dateEC,
-          //       ),
-          //     ),
-          //     const SizedBox(width: 20),
-          //     Expanded(
-          //       child: OrganizameTimeButton(
-          //         // controller: timeEC,
-          //         label: 'Hora',
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          OrganizameTextformfield(
+          OrganizameDropdownfield(
             label: 'Cliente',
-            hintText: 'Nome completo',
+            clients: clients,
+            selectedClient: selectedClient,
+            onChanged: (newValue) {
+              setState(() {
+                selectedClient = newValue; // Atualiza o cliente selecionado
+              });
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor, selecione um cliente';
+              }
+              return null;
+            },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           OrganizameTextformfield(
             label: 'Telefone',
             hintText: '(99) 99999-9999',
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           OrganizameTextformfield(
             label: 'Endereço',
             hintText: 'Rua, número, bairro',
           ),
           const SizedBox(height: 20),
           OrganizameElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              // Ação para adicionar o cliente
+            },
             label: 'Adicionar Cliente',
-            textColor: context.scaffoldBackgroundColor,
+            textColor: const Color(0xFFFAFFC5),
           ),
         ],
       ),

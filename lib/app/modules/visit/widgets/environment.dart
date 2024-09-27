@@ -26,7 +26,7 @@ class Environment extends StatelessWidget {
           OrganizameElevatedButton(
             onPressed: () {},
             label: 'Adicionar Ambiente',
-            textColor: context.scaffoldBackgroundColor,
+            textColor: const Color(0xFFFAFFC5),
           ),
         ],
       ),
