@@ -72,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           children: [
                             OrganizameTextformfield(
+                              enabled: true,
                               label: 'E-mail',
                               controller: _emailEC,
                               focusNode: _emailFN,
@@ -83,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             const SizedBox(height: 20),
                             OrganizameTextformfield(
+                              enabled: true,
                               label: 'Senha',
                               controller: _passwordEC,
                               validator: Validatorless.multiple([

@@ -11,6 +11,10 @@ class OrganizameTextformfield extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final FocusNode? focusNode;
   final String? hintText;
+  final Color? fillColor;
+  final bool filled;
+  final bool? readOnly;
+  final bool enabled;
 
   OrganizameTextformfield({
     super.key,
@@ -21,6 +25,10 @@ class OrganizameTextformfield extends StatelessWidget {
     this.validator,
     this.focusNode,
     this.hintText,
+    required this.enabled,
+    this.fillColor,
+    this.filled = true,
+    this.readOnly = false,
   })  : assert(obscureText == true ? suffixIconButton == null : true,
             'ObscureText não pode ser enviado em conjunto com suffixIconButton'),
         obscureTextVN = ValueNotifier(
@@ -36,6 +44,9 @@ class OrganizameTextformfield extends StatelessWidget {
           validator: validator,
           focusNode: focusNode,
           decoration: InputDecoration(
+            enabled: enabled,
+            fillColor: fillColor,
+            filled: filled,
             labelText: label,
             labelStyle: TextStyle(
               color: context.primaryColor,
@@ -43,7 +54,8 @@ class OrganizameTextformfield extends StatelessWidget {
             ),
             hintText: hintText, // Texto que aparece quando o campo está vazio
             hintStyle: TextStyle(
-              color: context.secondaryColor.withOpacity(0.5), // Cor do hint mais clara
+              color: context.secondaryColor
+                  .withOpacity(0.5), // Cor do hint mais clara
               fontSize: context.titleDefaut.fontSize,
             ),
             border: OutlineInputBorder(

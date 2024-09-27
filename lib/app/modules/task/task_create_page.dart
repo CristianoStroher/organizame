@@ -110,6 +110,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                         style: context.titleDefaut),
                     const SizedBox(height: 20),
                     OrganizameTextformfield(
+                      enabled: true,
                       validator: Validatorless.multiple([
                         Validatorless.required('Campo obrigatório'),
                         Validatorless.max(50, 'Nome muito longo'),

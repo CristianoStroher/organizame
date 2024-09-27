@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
@@ -12,25 +12,41 @@ class VisitHeader extends StatefulWidget {
 }
 
 class _VisitHeaderState extends State<VisitHeader> {
-  List<String> clients = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
-  String? selectedClient;
+  static const List<String> clients = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
 
-  // Controladores para os campos de telefone e endereço
+  String? selectedClient;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
-  // Mapa para armazenar os dados de telefone e endereço dos clientes (exemplo)
   final Map<String, Map<String, String>> clientData = {
     'Cliente 1': {'telefone': '(11) 12345-6789', 'endereco': 'Rua A, 123'},
     'Cliente 2': {'telefone': '(21) 98765-4321', 'endereco': 'Rua B, 456'},
     'Cliente 3': {'telefone': '(31) 99999-8888', 'endereco': 'Rua C, 789'},
   };
 
+  bool isFieldsEditable = true;
+
   @override
   void dispose() {
     phoneController.dispose();
     addressController.dispose();
     super.dispose();
+  }
+
+  void _updateClientData(String? newValue) {
+    setState(() {
+      selectedClient = newValue;
+
+      if (newValue != null && clientData.containsKey(newValue)) {
+        phoneController.text = clientData[newValue]!['telefone']!;
+        addressController.text = clientData[newValue]!['endereco']!;
+        isFieldsEditable = false; // Desabilita os campos
+      } else {
+        phoneController.clear();
+        addressController.clear();
+        isFieldsEditable = true; // Habilita os campos
+      }
+    });
   }
 
   @override
@@ -46,21 +62,7 @@ class _VisitHeaderState extends State<VisitHeader> {
             label: 'Cliente',
             clients: clients,
             selectedClient: selectedClient,
-            onChanged: (newValue) {
-              setState(() {
-                selectedClient = newValue;
-
-                // Atualiza os campos de telefone e endereço com base no cliente selecionado
-                if (newValue != null && clientData.containsKey(newValue)) {
-                  phoneController.text = clientData[newValue]!['telefone']!;
-                  addressController.text = clientData[newValue]!['endereco']!;
-                } else {
-                  // Limpa os campos se nenhum cliente for selecionado
-                  phoneController.clear();
-                  addressController.clear();
-                }
-              });
-            },
+            onChanged: _updateClientData,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Por favor, selecione um cliente';
@@ -71,18 +73,36 @@ class _VisitHeaderState extends State<VisitHeader> {
           const SizedBox(height: 10),
           OrganizameTextformfield(
             label: 'Telefone',
-            controller: phoneController, // Usando o controlador
+            hintText: '(99) 99999-9999',
+            controller: phoneController,
+            enabled: false, // Campo completamente desabilitado
+            fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
+            filled: true, // Permite que o campo seja preenchido
+            readOnly: true, // Adicionado para indicar que é somente leitura
+            // decoration: InputDecoration(
+            //   enabled: false, // Não permite interação
+            //   border: InputBorder.none, // Remove a borda
+            //   hintText: '(99) 99999-9999', // Sugestão de formato
+            // ),
           ),
           const SizedBox(height: 10),
           OrganizameTextformfield(
             label: 'Endereço',
-            controller: addressController, // Usando o controlador
+            hintText: 'Rua, número, bairro',
+            controller: addressController,
+            enabled: false, // Campo completamente desabilitado
+            fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
+            filled: true, // Permite que o campo seja preenchido
+            readOnly: true, // Adicionado para indicar que é somente leitura
+            // decoration: InputDecoration(
+            //   enabled: false, // Não permite interação
+            //   border: InputBorder.none, // Remove a borda
+            //   hintText: 'Rua, número, bairro', // Sugestão de formato
+            // ),
           ),
           const SizedBox(height: 20),
           OrganizameElevatedButton(
-            onPressed: () {
-              // Ação para adicionar o cliente
-            },
+            onPressed: () {},
             label: 'Adicionar Cliente',
             textColor: const Color(0xFFFAFFC5),
           ),

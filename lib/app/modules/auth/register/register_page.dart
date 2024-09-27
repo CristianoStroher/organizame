@@ -96,6 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 20),
               OrganizameTextformfield(
+                enabled: true,
                 label: 'Nome',
                 obscureText: false,
                 controller: _nomeEC,
@@ -106,6 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 20),
               OrganizameTextformfield(
+                enabled: true,
                 label: 'E-mail',
                 obscureText: false,
                 controller: _emailEC,
@@ -116,6 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 20),
               OrganizameTextformfield(
+                enabled: true,
                 label: 'Senha',
                 obscureText: true,
                 controller: _passwordEC,
@@ -129,6 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 20),
               OrganizameTextformfield(
+                enabled: true,
                 label: 'Confirmar Senha',
                 obscureText: true,
                 controller: _confirmPasswordEC,

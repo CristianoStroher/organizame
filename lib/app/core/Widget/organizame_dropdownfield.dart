@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 
@@ -5,9 +7,9 @@ class OrganizameDropdownfield extends StatelessWidget {
   final String label;
   final List<String> clients; // Lista de clientes
   final String? selectedClient; // Cliente selecionado
-  final ValueChanged<String?>?
-      onChanged; // Função que executa quando cliente é selecionado
+  final ValueChanged<String?>? onChanged; // Função que executa quando cliente é selecionado
   final FormFieldValidator<String>? validator;
+  final bool enabled; // Mudei para booleano não-nulo
 
   const OrganizameDropdownfield({
     super.key,
@@ -16,6 +18,7 @@ class OrganizameDropdownfield extends StatelessWidget {
     this.selectedClient,
     this.onChanged,
     this.validator,
+    this.enabled = true, // Valor padrão
   });
 
   @override
@@ -23,6 +26,7 @@ class OrganizameDropdownfield extends StatelessWidget {
     return DropdownButtonFormField<String>(
       value: selectedClient,
       decoration: InputDecoration(
+        enabled: enabled, // Habilita ou desabilita
         labelText: label,
         labelStyle: TextStyle(
           color: context.primaryColor,
@@ -46,7 +50,7 @@ class OrganizameDropdownfield extends StatelessWidget {
         ),
       ),
       validator: validator,
-      onChanged: onChanged,
+      onChanged: enabled ? onChanged : null, // Verifica se está habilitado
       items: clients
           .map(
             (client) => DropdownMenuItem<String>(
@@ -55,6 +59,7 @@ class OrganizameDropdownfield extends StatelessWidget {
             ),
           )
           .toList(),
+      isExpanded: true, // Para usar a largura completa
     );
   }
 }
