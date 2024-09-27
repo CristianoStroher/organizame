@@ -59,7 +59,7 @@ class VisitCreatePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  VisitHeader(),
+                  const VisitHeader(),
                   const Environment(),
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
