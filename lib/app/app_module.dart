@@ -19,6 +19,7 @@ import 'package:organizame/app/services/user_service_impl.dart';
 import 'package:provider/provider.dart';
 
 import 'core/auth/auth_provider.dart';
+import 'modules/customer/customer_controller.dart';
 
 //! fica estrutura base do projeto onde estarão as configurações geral do projeto
 //! e tudo que for compartilhado entre os módulos
@@ -76,6 +77,7 @@ class AppModule extends StatelessWidget {
             create: (context) => HomeController(tasksService: context.read())),
         ChangeNotifierProvider(create: (context) => TecnicalController()),  
         ChangeNotifierProvider(create: (context) => VisitController()),
+        ChangeNotifierProvider(create: (context) => CustomerController()),
       ],
       child: const AppWidget(),
     );
