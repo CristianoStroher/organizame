@@ -10,6 +10,7 @@ class OrganizameTimeButton extends StatelessWidget {
   final double? height;
   final String? label;
   final TextEditingController controller;
+  final Color color;
 
   OrganizameTimeButton({
     super.key,
@@ -17,6 +18,7 @@ class OrganizameTimeButton extends StatelessWidget {
     this.label,
     required this.controller,
     this.onDateSelected,
+    required this.color,
   });
 
   @override
@@ -46,7 +48,7 @@ class OrganizameTimeButton extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         height: height ?? 48,
         decoration: BoxDecoration(
-          color: context.primaryColorLight,
+          color: color,
           borderRadius: BorderRadius.circular(3),
           border: Border.all(color: context.primaryColor, width: 1),
         ),

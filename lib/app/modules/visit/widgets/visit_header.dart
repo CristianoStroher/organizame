@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
+import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
+import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
 
 class VisitHeader extends StatefulWidget {
   const VisitHeader({super.key});
@@ -17,6 +19,8 @@ class _VisitHeaderState extends State<VisitHeader> {
   String? selectedClient;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController dateEC = TextEditingController();
+  final TextEditingController timeEC = TextEditingController();
 
   final Map<String, Map<String, String>> clientData = {
     'Cliente 1': {'telefone': '(11) 12345-6789', 'endereco': 'Rua A, 123'},
@@ -58,6 +62,25 @@ class _VisitHeaderState extends State<VisitHeader> {
         children: [
           Text('NOVA VISITA TÉCNICA', style: context.titleDefaut),
           const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: OrganizameCalendarButton(
+                  controller: dateEC,
+                  color: const Color(0xFFFAFFC5),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OrganizameTimeButton(
+                  controller: timeEC,
+                  label: 'Hora',
+                  color: const Color(0xFFFAFFC5),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
           OrganizameDropdownfield(
             label: 'Cliente',
             clients: clients,
@@ -76,7 +99,8 @@ class _VisitHeaderState extends State<VisitHeader> {
             hintText: '(99) 99999-9999',
             controller: phoneController,
             enabled: false, // Campo completamente desabilitado
-            fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
+            fillColor: context.secondaryColor
+                .withOpacity(0.5), // Cor de fundo azul claro
             filled: true, // Permite que o campo seja preenchido
             readOnly: true, // Adicionado para indicar que é somente leitura
             // decoration: InputDecoration(
@@ -91,7 +115,8 @@ class _VisitHeaderState extends State<VisitHeader> {
             hintText: 'Rua, número, bairro',
             controller: addressController,
             enabled: false, // Campo completamente desabilitado
-            fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
+            fillColor: context.secondaryColor
+                .withOpacity(0.5), // Cor de fundo azul claro
             filled: true, // Permite que o campo seja preenchido
             readOnly: true, // Adicionado para indicar que é somente leitura
             // decoration: InputDecoration(

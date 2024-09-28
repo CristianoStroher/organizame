@@ -9,12 +9,14 @@ class OrganizameCalendarButton extends StatelessWidget {
   final ValueChanged<DateTime>? onDateSelected;
   final double? height;
   final TextEditingController controller;
+  final Color color;
 
   OrganizameCalendarButton({
     super.key,
     this.height,
     required this.controller,
     this.onDateSelected,
+    required this.color,
   });
 
   @override
@@ -44,7 +46,7 @@ class OrganizameCalendarButton extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         height: height ?? 48,
         decoration: BoxDecoration(
-          color: context.primaryColorLight,
+          color: color,
           borderRadius: BorderRadius.circular(3),
           border: Border.all(color: context.primaryColor, width: 1),
         ),

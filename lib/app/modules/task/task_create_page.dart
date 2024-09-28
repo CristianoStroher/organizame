@@ -125,6 +125,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                         Expanded(
                           child: OrganizameCalendarButton(
                             controller: dateEC,
+                            color: context.primaryColorLight,
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -132,6 +133,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                           child: OrganizameTimeButton(
                             controller: timeEC,
                             label: 'Hora',
+                            color: context.primaryColorLight,
                           ),
                         ),
                       ],
