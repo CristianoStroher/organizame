@@ -127,8 +127,10 @@ class _VisitHeaderState extends State<VisitHeader> {
           ),
           const SizedBox(height: 20),
           OrganizameElevatedButton(
-            onPressed: () {},
-            label: 'Adicionar Cliente',
+            onPressed: () {              
+              Navigator.of(context).pushNamed('/customer');
+            },
+            label: 'Cadastrar Cliente',
             textColor: const Color(0xFFFAFFC5),
           ),
         ],
