@@ -4,7 +4,7 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
-import 'package:organizame/app/modules/customer/widget/customer.dart';
+import 'package:organizame/app/modules/customer/widget/list_customer.dart';
 
 class CustomerCreatePage extends StatefulWidget {
   const CustomerCreatePage({super.key});
@@ -77,7 +77,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                       onPressed: (){}, 
                       ),
                     const SizedBox(height: 20),
-                    const Customer(),
+                    const ListCustomer(),
 
                   ],
                 )),
