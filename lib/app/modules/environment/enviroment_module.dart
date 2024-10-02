@@ -5,11 +5,11 @@ import 'package:organizame/app/modules/environment/enviroment_page.dart';
 class EnviromentModule extends OrganizameModule {
   EnviromentModule()
       : super(
-          bindings: [
-            // ChangeNotifierProvider(create: (context) => EnviromentController()),            
-                      ],
+          // bindings: [
+          //   // ChangeNotifierProvider(create: (context) => EnviromentController()),            
+          //             ],
           routers: {
-            '/enviroment': (context) => const EnviromentPage(),
+            '/environment': (context) => const EnviromentPage(),
           }, 
         );
 

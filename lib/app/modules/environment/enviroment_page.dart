@@ -13,7 +13,7 @@ class EnviromentPage extends StatelessWidget {
         backgroundColor: const Color(0xFFFAFFC5),
         automaticallyImplyLeading: false,
         title: OrganizameLogoMovie(
-          text: 'Visita Técnica',
+          text: 'Ambientes',
           part1Color: context.primaryColor,
           part2Color: context.primaryColor,
         ),
