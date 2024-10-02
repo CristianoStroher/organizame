@@ -6,12 +6,14 @@ import 'package:organizame/app/core/navigator/organizame_navigator.dart';
 import 'package:organizame/app/core/ui/desing_ui.dart';
 import 'package:organizame/app/modules/auth/auth_module.dart';
 import 'package:organizame/app/modules/customer/customer_%20module.dart';
+import 'package:organizame/app/modules/environment/enviroment_module.dart';
 
 import 'package:organizame/app/modules/home/home_module.dart';
 import 'package:organizame/app/modules/splash/splash_page.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 import 'package:organizame/app/modules/tecnical/tecnical_module.dart';
 import 'package:organizame/app/modules/visit/visit_module.dart';
+import 'package:organizame/app/modules/visit/widgets/environment.dart';
 
 //! praticamente a implementação do material app que tem a função de ser
 //! o widget raiz da aplicação 
@@ -66,6 +68,7 @@ class _AppWidgetState extends State<AppWidget> {
         ...TecnicalModule().routers,
         ...VisitModule().routers,
         ...CustomerModule().routers,
+        ...EnviromentModule().routers,
       },
       home: const SplashPage(),
     );

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/app_widget.dart';
 import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
+import 'package:organizame/app/modules/environment/enviroment_controller.dart';
+import 'package:organizame/app/modules/environment/enviroment_module.dart';
 import 'package:organizame/app/modules/home/home_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/tecnical/tecnical_controller.dart';
@@ -78,6 +80,7 @@ class AppModule extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TecnicalController()),  
         ChangeNotifierProvider(create: (context) => VisitController()),
         ChangeNotifierProvider(create: (context) => CustomerController()),
+        ChangeNotifierProvider(create: (context) => EnviromentController()),
       ],
       child: const AppWidget(),
     );
