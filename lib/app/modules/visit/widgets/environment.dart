@@ -24,7 +24,9 @@ class Environment extends StatelessWidget {
           const SizedBox(height: 20),
           
           OrganizameElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed('/environment');
+            },
             label: 'Adicionar Ambiente',
             textColor: const Color(0xFFFAFFC5),
           ),
