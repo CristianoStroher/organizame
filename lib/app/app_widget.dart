@@ -13,7 +13,7 @@ import 'package:organizame/app/modules/splash/splash_page.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 import 'package:organizame/app/modules/tecnical/tecnical_module.dart';
 import 'package:organizame/app/modules/visit/visit_module.dart';
-import 'package:organizame/app/modules/visit/widgets/environment.dart';
+import 'package:organizame/app/modules/visit/widgets/environment_list.dart';
 
 //! praticamente a implementação do material app que tem a função de ser
 //! o widget raiz da aplicação 

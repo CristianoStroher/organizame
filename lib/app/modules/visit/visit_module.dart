@@ -13,7 +13,7 @@ class VisitModule extends OrganizameModule {
           ],
           routers: {
             '/visit/create': (context) => VisitCreatePage(
-                  controller: context.read(),
+                  // controller: context.read(),
                 ),
           },
         );

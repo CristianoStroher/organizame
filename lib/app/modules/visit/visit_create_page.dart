@@ -3,22 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
-import 'package:organizame/app/core/widget/organizame_textfield.dart';
-import 'package:organizame/app/core/widget/organizame_textformfield.dart';
-import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
-import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
-
+import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/visit/visit_controller.dart';
-import 'package:organizame/app/modules/visit/widgets/environment.dart';
+import 'package:organizame/app/modules/visit/widgets/environment_list.dart';
 import 'package:organizame/app/modules/visit/widgets/visit_header.dart';
 
 class VisitCreatePage extends StatelessWidget {
-  VisitController _controller;
 
+
+   
   VisitCreatePage({
-    super.key,
-    required VisitController controller,
-  }) : _controller = controller;
+    super.key,   
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +56,21 @@ class VisitCreatePage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const VisitHeader(),
-                  const Environment(),
+                  const SizedBox(height: 10),
+                  EnvironmentList(
+                    environments: [
+                      EnvironmentObject(
+                        name: 'Ambiente 1',
+                        phone: '9999-9999',
+                        address: 'Rua 1, 123',
+                      ),
+                      EnvironmentObject(
+                        name: 'Ambiente 2',
+                        phone: '9999-9999',
+                        address: 'Rua 2, 123',
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
                     onPressed: () {},

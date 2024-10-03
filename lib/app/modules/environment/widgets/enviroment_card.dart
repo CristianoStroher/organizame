@@ -29,7 +29,7 @@ class EnviromentCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           border: Border.all(
             color: context.secondaryColor, // Cor da borda ajustada
           ),
