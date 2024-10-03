@@ -103,7 +103,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   Text('VISITAS TÉCNICAS', style: context.titleDefaut),
                   const SizedBox(height: 10),
                   // Usando uma lista de Visit para demonstrar
@@ -114,6 +114,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
                   const Visit(),
                   const Visit(),
                   const Visit(),
+                  const SizedBox(height: 20),
                   // Substitua pela lista de visitas se necessário
                 ],
               ),

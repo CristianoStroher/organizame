@@ -45,12 +45,12 @@ class EnviromentPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Text(
               'SELECIONE O AMBIENTE',
               style: context.titleDefaut,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
