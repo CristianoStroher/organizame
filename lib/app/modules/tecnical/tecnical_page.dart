@@ -8,7 +8,6 @@ import 'package:organizame/app/modules/tecnical/widgets/visit.dart';
 import 'package:organizame/app/modules/visit/visit_module.dart';
 
 class TecnicalPage extends StatefulWidget {
-
   const TecnicalPage({super.key});
 
   @override
@@ -99,30 +98,24 @@ class _TecnicalPageState extends State<TecnicalPage> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: constraints.maxWidth * 0.9,
-                minHeight: constraints.maxHeight * 0.9,
-              ),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: IntrinsicHeight(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Text('VISITAS TÉCNICAS', style: context.titleDefaut),
-                    const SizedBox(height: 10),
-                    const Visit(),
-                    //! substituir pela lista abaixo
-                    // context
-                    //     .select<HomeController, List<TaskObject>>(
-                    //         (controller) => controller.filteredTasks)
-                    //     .map((t) =>
-                    //         Task(object: t, controller: context.read<TaskController>()))
-                    //     .toList(),
-                  ],
-                )),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Text('VISITAS TÉCNICAS', style: context.titleDefaut),
+                  const SizedBox(height: 10),
+                  // Usando uma lista de Visit para demonstrar
+                  const Visit(),
+                  const Visit(),
+                  const Visit(),
+                  const Visit(),
+                  const Visit(),
+                  const Visit(),
+                  const Visit(),
+                  // Substitua pela lista de visitas se necessário
+                ],
               ),
             ),
           );
