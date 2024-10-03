@@ -48,15 +48,16 @@ class VisitCreatePage extends StatelessWidget {
                 EnvironmentList(
                   environments: [
                     EnvironmentObject(
-                      name: 'Ambiente 1',
-                      phone: '9999-9999',
-                      address: 'Rua 1, 123',
+                      name: 'QUARTO CASAL',
+                      difficulty: 'MODERADO',
+                      observation: 'Quarto casal com suíte',
                     ),
                     EnvironmentObject(
-                      name: 'Ambiente 2',
-                      phone: '9999-9999',
-                      address: 'Rua 2, 123',
+                      name: 'COZINHA',
+                      difficulty: 'CRÍTICO',
+                      observation: 'Cozinha com armários planejados',
                     ),
+                    
                   ],
                 ),
                 const SizedBox(height: 20),

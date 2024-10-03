@@ -24,14 +24,14 @@ class EnvironmentList extends StatelessWidget {
         children: [
           Text('AMBIENTES', style: context.titleDefaut),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           // Exibe a lista de ambientes dinamicamente
           Column(
             children: environments.map((environment) {
               return Enviroment(
                 enviromentName: environment.name,
-                enviromentPhone: environment.phone,
-                enviromentAdress: environment.address,
+                enviromentPhone: environment.difficulty,
+                enviromentAdress: environment.observation ?? '',
               );
             }).toList(),
           ),
