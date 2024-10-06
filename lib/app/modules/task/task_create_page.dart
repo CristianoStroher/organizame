@@ -20,9 +20,11 @@ class TaskCreatePage extends StatefulWidget {
   final TaskController _controller;
   final TaskObject? task;
 
-  const TaskCreatePage(
-      {super.key, required TaskController controller, this.task})
-      : _controller = controller;
+  const TaskCreatePage({
+    super.key,
+    required TaskController controller,
+    this.task
+    }) : _controller = controller;
 
   @override
   State<TaskCreatePage> createState() => _TaskCreatePageState();
@@ -39,6 +41,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
   void initState() {
     super.initState();
 
+    // Se for uma tarefa existente, preenche os campos com os dados da tarefa
     if (widget.task != null) {
       final task = widget.task!;
       descriptionEC.text = task.descricao;

@@ -10,7 +10,10 @@ class CustomerModule extends OrganizameModule {
             ChangeNotifierProvider(create: (context) => CustomerController()),            
                       ],
           routers: {
-            '/customer_create': (context) => const CustomerCreatePage(),
+            '/customer_create': (context) => CustomerCreatePage(
+              controller: Provider.of<CustomerController>(context, listen: false),
+
+            ),
           }, 
         );
 }
