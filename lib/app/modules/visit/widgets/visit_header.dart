@@ -84,7 +84,7 @@ class _VisitHeaderState extends State<VisitHeader> {
           OrganizameDropdownfield(
             label: 'Cliente',
             options: clients,
-            selectedClient: selectedClient,
+            selectedOptions: selectedClient,
             onChanged: _updateClientData,
             validator: (value) {
               if (value == null || value.isEmpty) {

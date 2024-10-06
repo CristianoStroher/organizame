@@ -69,11 +69,20 @@ class _KitchenPageState extends State<KitchenPage> {
                 const SizedBox(height: 10),
                 OrganizameTextformfield(label: 'Metragem 2', enabled: true),
                 const SizedBox(height: 10),
-                OrganizameDropdownfield(label: 'Dificuldade', options: [
-                  'Fácil',
-                  'Moderado',
-                  'Crítico',
-                ]),
+                OrganizameDropdownfield(
+                  label: 'Dificuldade',
+                  options: [
+                    'Fácil',
+                    'Moderado',
+                    'Crítico',
+                  ],
+                  selectedOptions: selectedDifficulty,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedDifficulty = newValue;
+                    });
+                  },
+                ),
                 const SizedBox(height: 10),
                 OrganizameCheckboxlist(
                   options: options,

@@ -6,7 +6,7 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 class OrganizameDropdownfield extends StatelessWidget {
   final String label;
   final List<String> options; // Lista de clientes
-  final String? selectedClient; // Cliente selecionado
+  final String? selectedOptions; // Cliente selecionado
   final ValueChanged<String?>? onChanged; // Função que executa quando cliente é selecionado
   final FormFieldValidator<String>? validator;
   final bool enabled; // Mudei para booleano não-nulo
@@ -15,7 +15,7 @@ class OrganizameDropdownfield extends StatelessWidget {
     super.key,
     required this.label,
     required this.options,
-    this.selectedClient,
+    this.selectedOptions,
     this.onChanged,
     this.validator,
     this.enabled = true, // Valor padrão
@@ -24,7 +24,7 @@ class OrganizameDropdownfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: selectedClient,
+      value: selectedOptions,
       decoration: InputDecoration(
         enabled: enabled, // Habilita ou desabilita
         labelText: label,
