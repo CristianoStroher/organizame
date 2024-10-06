@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:organizame/app/core/modules/organizame_module.dart';
+import 'package:organizame/app/modules/kitchen/kitchen_page.dart';
 
 class KitchenModule extends OrganizameModule {
   KitchenModule()
@@ -10,7 +10,7 @@ class KitchenModule extends OrganizameModule {
           //   // ),
           // ],
           routers: {
-            '/kitchen': (context) => Container(
+            '/kitchen': (context) => KitchenPage(
                   // controller: context.read(),
                 ),
           },
