@@ -12,6 +12,8 @@ import 'package:organizame/app/modules/enviromentLivingRoom/livingRoom_controlle
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/visit/visit_controller.dart';
+import 'package:organizame/app/repositories/customer/customer_repository.dart';
+import 'package:organizame/app/repositories/customer/customer_repository_impl.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository_impl.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
@@ -46,6 +48,8 @@ class AppModule extends StatelessWidget {
         Provider<CustomerService>(create: (_) => CustomerServiceImpl(customerRepository: context.read())), //injetando o serviço de cliente
         Provider<UserRepository>(create: (context) => UserRepositoryImpl(firebaseAuth: context.read(),firestore: context.read())), //injetando o repositório do usuário //adicionado firestore
         Provider<UserService>(create: (context) => UserServiceImpl(userRepository: context.read(),loginValidators: context.read())), //injetando o serviço do usuário
+        Provider<CustomerRepository>(create: (context) => CustomerRepositoryImpl(firestore: context.read())),
+
         Provider<TasksRepository>(create: (context) => TasksRepositoryImpl(sqLiteConnectionFactory: context.read())), //injetando o repositório de tarefas
         Provider<TasksService>(create: (context) =>TasksServiceImpl(tasksRepository: context.read())), //injetando o serviço de tarefas
         ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,), //injetando o provider de autenticação
