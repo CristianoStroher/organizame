@@ -18,6 +18,7 @@ class TaskObject {
     this.observacao,
   });
 
+  // Construtor de fábrica que será usado para converter um mapa em um objeto
   factory TaskObject.fromMap(Map<String, dynamic> map) {
     try {
       // Verificar se os campos existem e têm o formato esperado
@@ -34,7 +35,7 @@ class TaskObject {
       // Combine data e hora
       final combinedDateTime = DateTime(
           date.year, date.month, date.day, time.hour, time.minute, time.second);
-
+      // Retorna o objeto
       return TaskObject(
         id: map['id'] as int?,
         descricao: map['descricao'] as String,
@@ -49,6 +50,7 @@ class TaskObject {
     }
   }
 
+  // Converte o objeto em um mapa
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -60,6 +62,7 @@ class TaskObject {
     };
   }
 
+  // Cria uma cópia do objeto com os campos atualizados
   TaskObject copyWith({
     int? id,
     String? descricao,
