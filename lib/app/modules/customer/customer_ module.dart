@@ -7,7 +7,10 @@ class CustomerModule extends OrganizameModule {
   CustomerModule()
       : super(
           bindings: [
-            ChangeNotifierProvider(create: (context) => CustomerController()),            
+            ChangeNotifierProvider(create: (context) => CustomerController(
+              customerService: context.read(),
+            )),
+
                       ],
           routers: {
             '/customer_create': (context) => CustomerCreatePage(

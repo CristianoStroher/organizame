@@ -1,5 +1,18 @@
+import 'package:organizame/app/repositories/customer/customer_repository.dart';
+
 import './customer_service.dart';
 
 class CustomerServiceImpl extends CustomerService {
 
+  final CustomerRepository _customerRepository;
+
+  CustomerServiceImpl({
+    required CustomerRepository customerRepository,
+  }) : _customerRepository = customerRepository;
+
+  //função para salvar o cliente
+  @override
+  Future<void> saveCustomer(String name, String phone, String address) =>
+    _customerRepository.saveCustomer(name, phone, address);
+   
 }

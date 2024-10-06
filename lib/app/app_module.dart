@@ -17,6 +17,8 @@ import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository_impl.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
 import 'package:organizame/app/repositories/user/user_repository_impl.dart';
+import 'package:organizame/app/services/customer/customer_service.dart';
+import 'package:organizame/app/services/customer/customer_service_impl.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 import 'package:organizame/app/services/tasks/tasks_service_impl.dart';
 import 'package:organizame/app/services/user_service.dart';
@@ -37,56 +39,30 @@ class AppModule extends StatelessWidget {
     //injetando objetos que serão compartilhados entre os módulos
     return MultiProvider(
       providers: [
-        Provider<LoginValidators>(
-            create: (_) => LoginValidators
-                .instance), //injetando a instância da classe de validação de login
-        Provider(
-            create: (_) =>
-                FirebaseAuth.instance), //injetando a instância do firebase)
-        Provider(
-            create: (_) => FirebaseFirestore
-                .instance), //injetando a instância do firestore
-        Provider(
-          create: (_) =>
-              SqliteConnectionFactory(), //injetando a conexão com o banco de dados
-          lazy: false, //sempre que for chamado ele vai criar uma nova instância
-        ),
-        Provider<UserRepository>(
-            create: (context) => UserRepositoryImpl(
-                firebaseAuth: context.read(),
-                firestore: context
-                    .read())), //injetando o repositório do usuário //adicionado firestore
-        Provider<UserService>(
-            create: (context) => UserServiceImpl(
-                userRepository: context.read(),
-                loginValidators: context.read())),
-        ChangeNotifierProvider(
-          create: (context) => AuthProvider(
-            firebaseAuth: context.read(),
-            userService: context.read(),
-          )..loadListener(),
-          lazy: false, //logo que inicializado ja chama a função
-        ),
-        Provider<TasksRepository>(
-            create: (context) =>
-                TasksRepositoryImpl(sqLiteConnectionFactory: context.read())),
-        Provider<TasksService>(
-            create: (context) =>
-                TasksServiceImpl(tasksRepository: context.read())),
-        ChangeNotifierProvider<TaskController>(
-          create: (context) => TaskController(
-            tasksService: context.read(),
-          ),
-        ),
-        ChangeNotifierProvider(
-            create: (context) => HomeController(tasksService: context.read())),
-        ChangeNotifierProvider(create: (context) => TecnicalController()),  
-        ChangeNotifierProvider(create: (context) => VisitController()),
-        ChangeNotifierProvider(create: (context) => CustomerController()),
-        ChangeNotifierProvider(create: (context) => EnviromentController()),
-        ChangeNotifierProvider(create: (context) => LivingRoomController()),
-        ChangeNotifierProvider(create: (context) => ChildBedroomController()),
-        ChangeNotifierProvider(create: (context) => KitchenController()),
+
+        Provider<LoginValidators>(create: (_) => LoginValidators.instance), //injetando a instância da classe de validação de login
+        Provider(create: (_) =>FirebaseAuth.instance), //injetando a instância do firebase)
+        Provider(create: (_) => FirebaseFirestore.instance), //injetando a instância do firestore
+        Provider(create: (_) => SqliteConnectionFactory(), lazy: false,), //injetando a instância do sqlite
+        
+        Provider<UserRepository>(create: (context) => UserRepositoryImpl(firebaseAuth: context.read(),firestore: context.read())), //injetando o repositório do usuário //adicionado firestore
+        Provider<UserService>(create: (context) => UserServiceImpl(userRepository: context.read(),loginValidators: context.read())), //injetando o serviço do usuário
+        Provider<TasksRepository>(create: (context) => TasksRepositoryImpl(sqLiteConnectionFactory: context.read())), //injetando o repositório de tarefas
+        Provider<TasksService>(create: (context) =>TasksServiceImpl(tasksRepository: context.read())), //injetando o serviço de tarefas
+        
+        Provider<CustomerService>(create: (context) => CustomerServiceImpl(customerRepository: context.read())), //injetando o serviço de cliente
+
+        ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,), //injetando o provider de autenticação
+        ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
+        
+        ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
+        ChangeNotifierProvider(create: (context) => TecnicalController()), //injetando o controller do módulo tecnical
+        ChangeNotifierProvider(create: (context) => VisitController()), //injetando o controller do módulo visit
+        ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read())),//injetando o controller do módulo
+        ChangeNotifierProvider(create: (context) => EnviromentController()), //injetando o controller do módulo enviroment
+        ChangeNotifierProvider(create: (context) => LivingRoomController()), //injetando o controller do módulo livingRoom
+        ChangeNotifierProvider(create: (context) => ChildBedroomController()), //injetando o controller do módulo childBedroom
+        ChangeNotifierProvider(create: (context) => KitchenController()), //injetando o controller do módulo kitchen
         
       ],
       child: const AppWidget(),

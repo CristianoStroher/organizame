@@ -6,6 +6,8 @@ import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/customer/customer_controller.dart';
 import 'package:organizame/app/modules/customer/widget/list_customer.dart';
+import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
+import 'package:provider/provider.dart';
 
 class CustomerCreatePage extends StatefulWidget {
   
@@ -24,24 +26,31 @@ class CustomerCreatePage extends StatefulWidget {
 
 class _CustomerCreatePageState extends State<CustomerCreatePage> {
 
-  final _formKey = GlobalKey<FormState>();
+  final _globalKey = GlobalKey<FormState>();
   final nameEC = TextEditingController();
-  final contactEC = TextEditingController();
+  final phoneEC = TextEditingController();
   final addressEC = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    // // Se for um cliente existente, preenche os campos com os dados do cliente
-    // if (widget.customer != null) {
-    //   final customer = widget.customer!;
-    //   nameEC.text = customer.name;
-    //   contactEC.text = customer.contact ?? '';
-    //   addressEC.text = customer.address ?? '';
-    // }
-
+    // Se for um cliente existente, preenche os campos com os dados do cliente
+    if (widget.customer != null) {
+      final customer = widget.customer!;
+      nameEC.text = customer.name;
+      phoneEC.text = customer.phone ?? '';
+      addressEC.text = customer.address ?? '';
+    }
   }
+
+    @override
+    void dispose() {
+      nameEC.dispose();
+      phoneEC.dispose();
+      addressEC.dispose();
+      super.dispose();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +78,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
         ],
       ),
       body: Form(
-        key: _formKey,
+        key: _globalKey,
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
@@ -96,7 +105,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                       OrganizameTextformfield(
                         label: 'Contato',
                         enabled: true,
-                        controller: contactEC,
+                        controller: phoneEC,
                       ),
                       const SizedBox(height: 10),
                       OrganizameTextformfield(
@@ -108,7 +117,15 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                       OrganizameElevatedButton(
                         label: 'Salvar',
                         textColor: context.scaffoldBackgroundColor,
-                        onPressed: (){}, 
+                        onPressed: (){
+                          if (_globalKey.currentState!.validate()) {
+                            context.read<CustomerController>().saveCustomer(
+                              nameEC.text,
+                              phoneEC.text,
+                              addressEC.text,
+                            );
+                          }
+                        }, 
                         ),
                       const SizedBox(height: 20),
                       const ListCustomer(),
