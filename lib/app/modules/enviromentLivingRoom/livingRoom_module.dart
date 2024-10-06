@@ -1,5 +1,5 @@
 import 'package:organizame/app/core/modules/organizame_module.dart';
-import 'package:organizame/app/modules/livingRoom/livingRoom_page.dart';
+import 'package:organizame/app/modules/enviromentLivingRoom/livingRoom_page.dart';
 
 class LivingRoomModule extends OrganizameModule {
   LivingRoomModule()

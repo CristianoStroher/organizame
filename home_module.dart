@@ -1,6 +1,6 @@
 import 'package:organizame/app/core/modules/organizame_module.dart';
-import 'package:organizame/app/modules/home/home_controller.dart';
-import 'package:organizame/app/modules/home/home_page.dart';
+import 'package:organizame/app/modules/homeTasks/home_controller.dart';
+import 'package:organizame/app/modules/homeTasks/home_page.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository_impl.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';

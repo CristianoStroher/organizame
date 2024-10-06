@@ -2,7 +2,7 @@ import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
-import 'package:organizame/app/modules/home/home_controller.dart';
+import 'package:organizame/app/modules/homeTasks/home_controller.dart';
 import 'package:provider/provider.dart';
 
 class HomeWeekFilter extends StatelessWidget {

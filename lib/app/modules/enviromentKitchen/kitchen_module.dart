@@ -1,17 +1,16 @@
-
 import 'package:organizame/app/core/modules/organizame_module.dart';
-import 'package:organizame/app/modules/childBedroom/childBedroom_page.dart';
+import 'package:organizame/app/modules/enviromentKitchen/kitchen_page.dart';
 
-class ChildBedroomModule extends OrganizameModule {
-  ChildBedroomModule()
+class KitchenModule extends OrganizameModule {
+  KitchenModule()
       : super(
           // bindings: [
           //   // ChangeNotifierProvider(
-          //   //   create: (context) => ChildBedroomController(),
+          //   //   create: (context) => KitchenController(),
           //   // ),
           // ],
           routers: {
-            '/childBedroom': (context) => ChildBedroomPage(
+            '/kitchen': (context) => KitchenPage(
                   // controller: context.read(),
                 ),
           },

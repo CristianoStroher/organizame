@@ -5,21 +5,18 @@ import 'package:organizame/app/core/database/sqlite_adm_connection.dart';
 import 'package:organizame/app/core/navigator/organizame_navigator.dart';
 import 'package:organizame/app/core/ui/desing_ui.dart';
 import 'package:organizame/app/modules/auth/auth_module.dart';
-import 'package:organizame/app/modules/childBedroom/childBedroom_module.dart';
-import 'package:organizame/app/modules/customer/customer_%20module.dart';
-import 'package:organizame/app/modules/environment/enviroment_module.dart';
+import 'package:organizame/app/modules/enviromentChildBedroom/childBedroom_module.dart';
 
-import 'package:organizame/app/modules/home/home_module.dart';
-import 'package:organizame/app/modules/kitchen/kitchen_module.dart';
-import 'package:organizame/app/modules/livingRoom/livingRoom_module.dart';
+import 'package:organizame/app/modules/homeTasks/home_module.dart';
+import 'package:organizame/app/modules/enviromentKitchen/kitchen_module.dart';
+import 'package:organizame/app/modules/enviromentLivingRoom/livingRoom_module.dart';
 import 'package:organizame/app/modules/splash/splash_page.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
-import 'package:organizame/app/modules/tecnical/tecnical_module.dart';
+import 'package:organizame/app/modules/homeTecnical/tecnical_module.dart';
 import 'package:organizame/app/modules/visit/visit_module.dart';
-import 'package:organizame/app/modules/visit/widgets/environment_list.dart';
 
 //! praticamente a implementação do material app que tem a função de ser
-//! o widget raiz da aplicação 
+//! o widget raiz da aplicação
 
 class AppWidget extends StatefulWidget {
   const AppWidget({super.key});
@@ -29,23 +26,20 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
-
   final sqliteAdmConnection = SqliteAdmConnection();
 
   @override
   void initState() {
     super.initState();
     FirebaseAuth auth = FirebaseAuth.instance;
-    WidgetsBinding.instance?.addObserver(sqliteAdmConnection);   
+    WidgetsBinding.instance?.addObserver(sqliteAdmConnection);
   }
 
   @override
   void dispose() {
     super.dispose();
     WidgetsBinding.instance?.removeObserver(sqliteAdmConnection);
-    
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +51,9 @@ class _AppWidgetState extends State<AppWidget> {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
-
       ],
       supportedLocales: const [
         Locale('pt', 'BR'),
-        
-                
       ],
       routes: {
         ...AuthModule().routers,
@@ -70,8 +61,6 @@ class _AppWidgetState extends State<AppWidget> {
         ...TaskModule(context).routers,
         ...TecnicalModule().routers,
         ...VisitModule().routers,
-        ...CustomerModule().routers,
-        ...EnviromentModule().routers,
         ...KitchenModule().routers,
         ...LivingRoomModule().routers,
         ...ChildBedroomModule().routers,

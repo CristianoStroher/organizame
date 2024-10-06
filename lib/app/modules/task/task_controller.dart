@@ -1,6 +1,6 @@
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/task_object.dart';
-import 'package:organizame/app/modules/home/home_controller.dart';
+import 'package:organizame/app/modules/homeTasks/home_controller.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 
 class TaskController extends DefautChangeNotifer {

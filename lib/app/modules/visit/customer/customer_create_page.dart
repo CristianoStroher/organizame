@@ -4,28 +4,23 @@ import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/modules/customer/customer_controller.dart';
-import 'package:organizame/app/modules/customer/widget/list_customer.dart';
-import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
+import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
+import 'package:organizame/app/modules/visit/customer/widget/list_customer.dart';
 import 'package:provider/provider.dart';
 
 class CustomerCreatePage extends StatefulWidget {
-  
   final CustomerController _controller;
   final CustomerObject? customer;
 
-  const CustomerCreatePage({
-    super.key,
-    required CustomerController controller,
-    this.customer
-  }) : _controller = controller;
+  const CustomerCreatePage(
+      {super.key, required CustomerController controller, this.customer})
+      : _controller = controller;
 
   @override
   State<CustomerCreatePage> createState() => _CustomerCreatePageState();
 }
 
 class _CustomerCreatePageState extends State<CustomerCreatePage> {
-
   final _globalKey = GlobalKey<FormState>();
   final nameEC = TextEditingController();
   final phoneEC = TextEditingController();
@@ -44,13 +39,13 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
     }
   }
 
-    @override
-    void dispose() {
-      nameEC.dispose();
-      phoneEC.dispose();
-      addressEC.dispose();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    nameEC.dispose();
+    phoneEC.dispose();
+    addressEC.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,19 +112,18 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                       OrganizameElevatedButton(
                         label: 'Salvar',
                         textColor: context.scaffoldBackgroundColor,
-                        onPressed: (){
+                        onPressed: () {
                           if (_globalKey.currentState!.validate()) {
                             context.read<CustomerController>().saveCustomer(
-                              nameEC.text,
-                              phoneEC.text,
-                              addressEC.text,
-                            );
+                                  nameEC.text,
+                                  phoneEC.text,
+                                  addressEC.text,
+                                );
                           }
-                        }, 
-                        ),
+                        },
+                      ),
                       const SizedBox(height: 20),
                       const ListCustomer(),
-        
                     ],
                   )),
                 ),

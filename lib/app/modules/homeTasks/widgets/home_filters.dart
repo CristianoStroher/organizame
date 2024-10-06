@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/task_total_filter.dart';
-import 'package:organizame/app/modules/home/home_controller.dart';
-import 'package:organizame/app/modules/home/widgets/home_card_filter.dart';
+import 'package:organizame/app/modules/homeTasks/home_controller.dart';
+import 'package:organizame/app/modules/homeTasks/widgets/home_card_filter.dart';
 import 'package:provider/provider.dart';
 
 

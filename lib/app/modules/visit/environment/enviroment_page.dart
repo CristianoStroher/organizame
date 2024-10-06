@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
-import 'package:organizame/app/modules/environment/widgets/enviroment_card.dart'; // Certifique-se de importar o EnviromentCard corretamente
+import 'package:organizame/app/modules/visit/environment/widgets/enviroment_card.dart'; // Certifique-se de importar o EnviromentCard corretamente
 
 class EnviromentPage extends StatelessWidget {
   const EnviromentPage({super.key});

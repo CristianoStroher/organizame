@@ -3,8 +3,8 @@ import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
-import 'package:organizame/app/modules/home/widgets/home_drawer.dart';
-import 'package:organizame/app/modules/tecnical/widgets/visit.dart';
+import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
+import 'package:organizame/app/modules/homeTecnical/widgets/visit.dart';
 import 'package:organizame/app/modules/visit/visit_module.dart';
 
 class TecnicalPage extends StatefulWidget {
@@ -86,7 +86,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await _goToTaskPage(context);
-          // context.read<HomeController>().refreshPage();
+          // context.read<CustomerController>().refreshPage();
         },
         backgroundColor: context.primaryColor,
         child: const Icon(Icons.add, color: Color(0xFFFAFFC5)),

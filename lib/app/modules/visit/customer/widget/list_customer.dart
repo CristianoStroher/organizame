@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
-import 'package:organizame/app/modules/customer/widget/customer.dart';
+import 'package:organizame/app/modules/visit/customer/widget/customer.dart';
 
 class ListCustomer extends StatelessWidget {
   const ListCustomer({super.key});

@@ -14,12 +14,12 @@ class AuthModule extends OrganizameModule {
             Provider(create: (_) => LoginValidators.instance), //injetando a instância da classe de validação de login
             ChangeNotifierProvider(create: (context) => LoginController(userService: context.read()), //injetando o controller da tela de login
             ),
-            ChangeNotifierProvider(create: (context) => RegisterController(userService: context.read()), //injetando o controller da tela de login
+            ChangeNotifierProvider(create: (context) => RegisterController(userService: context.read()), // injetando o controller da tela de registro
             ),
           ],
           routers: {
-            '/login': (context) => const LoginPage(),
-            '/register': (context) => const RegisterPage(),
+            '/login': (context) => const LoginPage(), // rota para a tela de login
+            '/register': (context) => const RegisterPage(), // rota para a tela de registro
           },
         );
   
