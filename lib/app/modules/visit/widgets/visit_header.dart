@@ -83,7 +83,7 @@ class _VisitHeaderState extends State<VisitHeader> {
           const SizedBox(height: 10),
           OrganizameDropdownfield(
             label: 'Cliente',
-            clients: clients,
+            options: clients,
             selectedClient: selectedClient,
             onChanged: _updateClientData,
             validator: (value) {

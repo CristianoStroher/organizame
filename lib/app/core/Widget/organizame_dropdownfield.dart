@@ -5,7 +5,7 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 
 class OrganizameDropdownfield extends StatelessWidget {
   final String label;
-  final List<String> clients; // Lista de clientes
+  final List<String> options; // Lista de clientes
   final String? selectedClient; // Cliente selecionado
   final ValueChanged<String?>? onChanged; // Função que executa quando cliente é selecionado
   final FormFieldValidator<String>? validator;
@@ -14,7 +14,7 @@ class OrganizameDropdownfield extends StatelessWidget {
   const OrganizameDropdownfield({
     super.key,
     required this.label,
-    required this.clients,
+    required this.options,
     this.selectedClient,
     this.onChanged,
     this.validator,
@@ -51,7 +51,7 @@ class OrganizameDropdownfield extends StatelessWidget {
       ),
       validator: validator,
       onChanged: enabled ? onChanged : null, // Verifica se está habilitado
-      items: clients
+      items: options
           .map(
             (client) => DropdownMenuItem<String>(
               value: client,

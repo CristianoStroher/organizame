@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_checkboxlist.dart';
+import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
@@ -14,6 +15,7 @@ class KitchenPage extends StatefulWidget {
 }
 
 class _KitchenPageState extends State<KitchenPage> {
+  String? selectedDifficulty; // Armazena a dificuldade selecionada
   final List<String> options = [
     'Louças',
     'Utensílios',
@@ -67,7 +69,11 @@ class _KitchenPageState extends State<KitchenPage> {
                 const SizedBox(height: 10),
                 OrganizameTextformfield(label: 'Metragem 2', enabled: true),
                 const SizedBox(height: 10),
-                OrganizameTextformfield(label: 'Dificuldade', enabled: true),
+                OrganizameDropdownfield(label: 'Dificuldade', options: [
+                  'Fácil',
+                  'Moderado',
+                  'Crítico',
+                ]),
                 const SizedBox(height: 10),
                 OrganizameCheckboxlist(
                   options: options,

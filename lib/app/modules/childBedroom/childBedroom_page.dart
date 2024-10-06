@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_checkboxlist.dart';
+import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
@@ -14,6 +15,7 @@ class ChildBedroomPage extends StatefulWidget {
 }
 
 class _ChildBedroomPageState extends State<ChildBedroomPage> {
+  String? selectedDifficulty; // Armazena a dificuldade selecionada
   @override
   Widget build(BuildContext context) {
     final List<String> options = [
@@ -61,7 +63,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 const SizedBox(height: 10),
                 OrganizameTextformfield(label: 'Metragem 2', enabled: true),
                 const SizedBox(height: 10),
-                OrganizameTextformfield(label: 'Dificuldade', enabled: true),
+                OrganizameDropdownfield(label: 'Dificuldade', options: [
+                  'Fácil',
+                  'Moderado',
+                  'Crítico',
+                ]),
                 const SizedBox(height: 10),
                 OrganizameCheckboxlist(
                   options: options,
