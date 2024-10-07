@@ -45,11 +45,13 @@ class AppModule extends StatelessWidget {
         Provider(create: (_) =>FirebaseAuth.instance), //injetando a instância do firebase)
         Provider(create: (_) => FirebaseFirestore.instance), //injetando a instância do firestore
         Provider(create: (_) => SqliteConnectionFactory(), lazy: false,), //injetando a instância do sqlite
+        Provider<CustomerRepository>(create: (context) => CustomerRepositoryImpl(firestore: context.read())),
         Provider<CustomerService>(create: (_) => CustomerServiceImpl(customerRepository: context.read())), //injetando o serviço de cliente
         Provider<UserRepository>(create: (context) => UserRepositoryImpl(firebaseAuth: context.read(),firestore: context.read())), //injetando o repositório do usuário //adicionado firestore
         Provider<UserService>(create: (context) => UserServiceImpl(userRepository: context.read(),loginValidators: context.read())), //injetando o serviço do usuário
-        Provider<CustomerRepository>(create: (context) => CustomerRepositoryImpl(firestore: context.read())),
-
+        ChangeNotifierProvider(create: (context) => VisitController()), // injetando o controller da tela de visitas
+        ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read())), // injetando o controller da tela de clientes
+        ChangeNotifierProvider(create: (context) => EnviromentController()), // injetando o controller da tela de ambiente
         Provider<TasksRepository>(create: (context) => TasksRepositoryImpl(sqLiteConnectionFactory: context.read())), //injetando o repositório de tarefas
         Provider<TasksService>(create: (context) =>TasksServiceImpl(tasksRepository: context.read())), //injetando o serviço de tarefas
         ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,), //injetando o provider de autenticação

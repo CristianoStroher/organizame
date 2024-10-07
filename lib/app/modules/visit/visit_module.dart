@@ -14,17 +14,17 @@ import 'package:provider/provider.dart';
 class VisitModule extends OrganizameModule {
   VisitModule()
       : super(
-          bindings: [
-            Provider<CustomerRepository>(create: (context) => CustomerRepositoryImpl(firestore: context.read())), //injetando o repositório de cliente
-            Provider<CustomerService>(create: (context) => CustomerServiceImpl(customerRepository: context.read())), // injetando o serviço de cliente
-            ChangeNotifierProvider(create: (context) => VisitController()), // injetando o controller da tela de visitas
-            ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read())), // injetando o controller da tela de clientes
-            ChangeNotifierProvider(create: (context) => EnviromentController()), // injetando o controller da tela de ambiente
+          // bindings: [
+          //  Provider<CustomerRepository>(create: (context) => CustomerRepositoryImpl(firestore: context.read())), //injetando o repositório de cliente
+          //   Provider<CustomerService>(create: (context) => CustomerServiceImpl(customerRepository: context.read())), // injetando o serviço de cliente
+          //   ChangeNotifierProvider(create: (context) => VisitController()), // injetando o controller da tela de visitas
+          //   ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read())), // injetando o controller da tela de clientes
+          //   ChangeNotifierProvider(create: (context) => EnviromentController()), // injetando o controller da tela de ambiente
           
-          ],
+          // ],
           routers: {
             '/visit/create': (context) => VisitCreatePage(), // rota para a tela de criação de visitas
-            '/customer_create': (context) => CustomerCreatePage(controller: context.read()), // rota para a tela de criação de clientes
+            '/customer/create': (context) => CustomerCreatePage(controller: context.read()), // rota para a tela de criação de clientes
             '/environment': (context) => const EnviromentPage(), // rota para a tela de ambiente
           },
         );

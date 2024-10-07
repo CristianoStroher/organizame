@@ -7,7 +7,7 @@ import 'package:organizame/app/modules/visit/widgets/environment_list.dart';
 import 'package:organizame/app/modules/visit/widgets/visit_header.dart';
 
 class VisitCreatePage extends StatelessWidget {
-  
+
   VisitCreatePage({
     super.key,
   });
@@ -38,8 +38,7 @@ class VisitCreatePage extends StatelessWidget {
         ],
       ),
       body: Form(
-        child: LayoutBuilder(
-          builder: (context, constraints) => SingleChildScrollView(
+        child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +70,6 @@ class VisitCreatePage extends StatelessWidget {
               ],
             ),
           ),
-        ),
       ),
     );
   }

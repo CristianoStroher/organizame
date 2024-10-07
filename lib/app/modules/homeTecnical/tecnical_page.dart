@@ -23,25 +23,25 @@ class _TecnicalPageState extends State<TecnicalPage> {
   }
 
   Future<void> _goToTaskPage(BuildContext appcontext) async {
-    await Navigator.of(appcontext).push(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 600),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          animation = CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInQuad,
-          );
-          return ScaleTransition(
-            scale: animation,
-            alignment: Alignment.bottomRight,
-            child: child,
-          );
-        },
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return VisitModule().getPage('/visit/create', context);
-        },
-      ),
-    );
+    await Navigator.of(appcontext).pushNamed('/visit/create');
+      // PageRouteBuilder(
+      //   transitionDuration: const Duration(milliseconds: 600),
+      //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      //     animation = CurvedAnimation(
+      //       parent: animation,
+      //       curve: Curves.easeInQuad,
+      //     );
+      //     return ScaleTransition(
+      //       scale: animation,
+      //       alignment: Alignment.bottomRight,
+      //       child: child,
+      //     );
+      //   },
+      //   pageBuilder: (context, animation, secondaryAnimation) {
+      //     return VisitModule().getPage('/visit/create', appcontext);
+      //   },
+      // ),
+    // );
   }
 
   @override
