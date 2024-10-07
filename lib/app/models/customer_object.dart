@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 
 class CustomerObject {
-  final int? id;
+  final String? id;
   final String name;
   final String? phone;
   final String? address;
@@ -12,7 +12,7 @@ class CustomerObject {
   factory CustomerObject.fromMap(Map<String, dynamic> map) {
     try {
       return CustomerObject(
-        id: map['id'] as int?,
+        id: map['id'] as String,
         name: map['name'] as String,
         phone: map['phone'] as String?,
         address: map['address'] as String?,

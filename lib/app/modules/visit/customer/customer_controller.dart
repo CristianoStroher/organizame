@@ -1,9 +1,12 @@
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
+import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/services/customer/customer_service.dart';
 
 class CustomerController extends DefautChangeNotifer {
 
   final CustomerService _customerService;
+
+  List<CustomerObject> filteredCustomer = [];
 
   CustomerController({
     required CustomerService customerService,
@@ -28,6 +31,21 @@ class CustomerController extends DefautChangeNotifer {
       }
     } catch (e) {
       setError('Erro ao salvar cliente');
+    }
+  }
+
+  Future<void> findAllCustomers() async {
+    try {
+      showLoadingAndResetState();
+      notifyListeners();
+      final customers = await _customerService.findAllCustomers();
+      if (customers.isNotEmpty) {
+        success();
+      } else {
+        setError('Nenhum cliente encontrado');
+      }
+    } catch (e) {
+      setError('Erro ao buscar clientes');
     }
   }
 

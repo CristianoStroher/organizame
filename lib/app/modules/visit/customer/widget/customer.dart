@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
 
-class Customer extends StatelessWidget {
+class Customer extends StatefulWidget {
 
-  const Customer({ super.key });
+  final CustomerController controller;
+  final CustomerObject object;
+  
 
+  const Customer({
+     super.key,
+     required this.controller,
+     required this.object,
+    });
+
+  @override
+  State<Customer> createState() => _CustomerState();
+}
+
+class _CustomerState extends State<Customer> {
    @override
    Widget build(BuildContext context) {
        return InkWell(
-        onTap: () {},
+        onTap: () {
+          /// função de selecionar o cliente
+        },
         child: SizedBox(
           child: Column(
             children: [
@@ -19,7 +36,8 @@ class Customer extends StatelessWidget {
               ),
               ListTile(
                 contentPadding: const EdgeInsets.all(.8),
-                title: Text('CRISTIANO ALBERTO STROHER',
+                title: Text(
+                  widget.object.name.toUpperCase(),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -29,10 +47,10 @@ class Customer extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('54.99025.5221',
+                    Text(widget.object.phone ?? '',
                         style: context.titleDefaut,
                         ),
-                    Text('Rua Santa Catarina, 369 - Ap. 101 - Passo Fundo',
+                    Text(widget.object.address ?? '',
                     style: context.titleDefaut,),
                   ],
                 ),

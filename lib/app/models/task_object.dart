@@ -62,7 +62,7 @@ class TaskObject {
     };
   }
 
-  // Cria uma cópia do objeto com os campos atualizados
+  // Cria uma cópia do objeto com os campos atualizados. muito útil para atualizar objetos
   TaskObject copyWith({
     int? id,
     String? descricao,
