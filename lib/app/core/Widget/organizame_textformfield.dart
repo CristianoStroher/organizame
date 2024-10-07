@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 
@@ -15,6 +16,7 @@ class OrganizameTextformfield extends StatelessWidget {
   final bool filled;
   final bool? readOnly;
   final bool enabled;
+  final MaskTextInputFormatter? maskFormatter;
 
   OrganizameTextformfield({
     super.key,
@@ -29,6 +31,7 @@ class OrganizameTextformfield extends StatelessWidget {
     this.fillColor,
     this.filled = true,
     this.readOnly = false,
+    this.maskFormatter,
   })  : assert(obscureText == true ? suffixIconButton == null : true,
             'ObscureText não pode ser enviado em conjunto com suffixIconButton'),
         obscureTextVN = ValueNotifier(
@@ -43,6 +46,7 @@ class OrganizameTextformfield extends StatelessWidget {
           controller: controller,
           validator: validator,
           focusNode: focusNode,
+          inputFormatters: maskFormatter != null ? [maskFormatter!] : [],
           decoration: InputDecoration(
             enabled: enabled,
             fillColor: fillColor,

@@ -33,6 +33,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
+    
     final defaultListener = DefaultListenerNotifier (changeNotifier: context.read<RegisterController>());
     defaultListener.listener(
       context: context,

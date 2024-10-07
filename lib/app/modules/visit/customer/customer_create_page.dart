@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
@@ -7,14 +9,12 @@ import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
 import 'package:organizame/app/modules/visit/customer/widget/list_customer.dart';
 import 'package:provider/provider.dart';
+import 'package:validatorless/validatorless.dart';
 
 class CustomerCreatePage extends StatefulWidget {
-  final CustomerController _controller;
   final CustomerObject? customer;
 
-  const CustomerCreatePage(
-      {super.key, required CustomerController controller, this.customer})
-      : _controller = controller;
+  const CustomerCreatePage({super.key, this.customer});
 
   @override
   State<CustomerCreatePage> createState() => _CustomerCreatePageState();
@@ -22,9 +22,15 @@ class CustomerCreatePage extends StatefulWidget {
 
 class _CustomerCreatePageState extends State<CustomerCreatePage> {
   final _globalKey = GlobalKey<FormState>();
-  final nameEC = TextEditingController();
-  final phoneEC = TextEditingController();
-  final addressEC = TextEditingController();
+  final _nameEC = TextEditingController();
+  final _phoneEC = TextEditingController();
+  final _addressEC = TextEditingController();
+  final phoneMaskFormatter = MaskTextInputFormatter(
+    mask: '(##) #####-####',
+    filter: {'#': RegExp(r'[0-9]')},
+  );
+
+  CustomerController? _controller;
 
   @override
   void initState() {
@@ -33,17 +39,17 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
     // Se for um cliente existente, preenche os campos com os dados do cliente
     if (widget.customer != null) {
       final customer = widget.customer!;
-      nameEC.text = customer.name;
-      phoneEC.text = customer.phone ?? '';
-      addressEC.text = customer.address ?? '';
+      _nameEC.text = customer.name;
+      _phoneEC.text = customer.phone ?? '';
+      _addressEC.text = customer.address ?? '';
     }
   }
 
   @override
   void dispose() {
-    nameEC.dispose();
-    phoneEC.dispose();
-    addressEC.dispose();
+    _nameEC.dispose();
+    _phoneEC.dispose();
+    _addressEC.dispose();
     super.dispose();
   }
 
@@ -94,31 +100,52 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                       OrganizameTextformfield(
                         label: 'Nome',
                         enabled: true,
-                        controller: nameEC,
+                        controller: _nameEC,
+                        validator: Validatorless.multiple([
+                          Validatorless.required('Campo obrigatório'),
+                        ]),
                       ),
                       const SizedBox(height: 10),
                       OrganizameTextformfield(
                         label: 'Contato',
+                        hintText: '(00) 00000-0000',
+                        maskFormatter: phoneMaskFormatter,
                         enabled: true,
-                        controller: phoneEC,
+                        controller: _phoneEC,
                       ),
                       const SizedBox(height: 10),
                       OrganizameTextformfield(
                         label: 'Endereço',
                         enabled: true,
-                        controller: addressEC,
+                        controller: _addressEC,
                       ),
                       const SizedBox(height: 20),
                       OrganizameElevatedButton(
                         label: 'Salvar',
                         textColor: context.scaffoldBackgroundColor,
-                        onPressed: () {
-                          if (_globalKey.currentState!.validate()) {
-                            context.read<CustomerController>().saveCustomer(
-                                  nameEC.text,
-                                  phoneEC.text,
-                                  addressEC.text,
-                                );
+                        onPressed: () async {
+                          final formValid = _globalKey.currentState!.validate();
+                          if (formValid) {
+                            final name = _nameEC.text;
+                            final phone = _phoneEC.text;
+                            final address = _addressEC.text;
+                            try {
+                              await context
+                                  .read<CustomerController>()
+                                  .saveCustomer(name, phone, address);
+
+                              _nameEC.clear();
+                              _phoneEC.clear();
+                              _addressEC.clear();
+
+                              Messages.of(context).showInfo('Cliente salvo com sucesso');
+                              
+                              setState(() {
+                                _controller = context.read<CustomerController>();
+                              });
+                            } on Exception catch (e) {
+                              Messages.of(context).showError('Erro ao salvar cliente');
+                            }
                           }
                         },
                       ),

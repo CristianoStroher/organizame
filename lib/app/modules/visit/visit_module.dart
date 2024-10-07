@@ -37,9 +37,7 @@ class VisitModule extends OrganizameModule {
           routers: {
             '/visit/create': (context) =>
                 VisitCreatePage(), // rota para a tela de criação de visitas
-            '/customer/create': (context) => CustomerCreatePage(
-                controller:
-                    context.read()), // rota para a tela de criação de clientes
+            '/customer/create': (context) => CustomerCreatePage(), // rota para a tela de criação de clientes
             '/environment': (context) =>
                 const EnviromentPage(), // rota para a tela de ambiente
           },
