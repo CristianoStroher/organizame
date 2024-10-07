@@ -22,7 +22,9 @@ class OrganizamePage extends StatelessWidget {
     
     return MultiProvider(
       providers: _bindings ?? [ Provider(create: (_) => Object())],
-      child: _page(appContext?? context)
+      builder: (context, w) {
+        return _page(appContext ?? context);
+},
     );       
   }
 }
