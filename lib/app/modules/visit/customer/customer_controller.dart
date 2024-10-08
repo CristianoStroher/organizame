@@ -41,14 +41,14 @@ class CustomerController extends DefautChangeNotifer {
 
     showLoadingAndResetState();
     notifyListeners();
-    Logger().i('Buscando clientes');//!   
-
+    
     try {
       // Busca todos os clientes do serviço
       final customers = await _customerService.findAllCustomers();
 
       if (customers.isNotEmpty) {
-        // Atualiza a lista de clientes filtrados
+        // Ordena os clientes por nome
+        customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         filteredCustomer = customers;
         success();
       } else {
@@ -56,7 +56,7 @@ class CustomerController extends DefautChangeNotifer {
       }
 
       // Notifica os ouvintes que a lista foi atualizada
-      notifyListeners();
+      refreshPage();
     } catch (e) {
       setError('Erro ao buscar clientes');
     }
