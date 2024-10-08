@@ -20,5 +20,10 @@ class CustomerServiceImpl extends CustomerService {
   Future<List<CustomerObject>> findAllCustomers() {
     return _customerRepository.findAllCustomers();
   }
+  
+  @override
+  Future<bool> deleteCustomer(CustomerObject customer) {
+    return _customerRepository.deleteCustomer(customer);
+  }
    
 }

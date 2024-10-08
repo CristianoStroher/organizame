@@ -7,12 +7,27 @@ import 'package:provider/provider.dart';
 
 class ListCustomer extends StatefulWidget {
   const ListCustomer({super.key});
+  
+
 
   @override
   State<ListCustomer> createState() => _ListCustomerState();
 }
 
 class _ListCustomerState extends State<ListCustomer> {
+
+  
+
+  @override
+  void initState() {
+    super.initState();
+    // Chama o método para buscar os clientes assim que a página for carregada
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CustomerController>().findAllCustomers();
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -28,10 +43,10 @@ class _ListCustomerState extends State<ListCustomer> {
             (controller) => controller.filteredCustomer)
             .map((c) => Customer(object: c, controller: context.read<CustomerController>()))
             .toList(),
-
+            
         )
       ],
-      
-    ));
+    )
+    );
   }
 }

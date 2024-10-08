@@ -34,9 +34,10 @@ class CustomerRepositoryImpl extends CustomerRepository {
 
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
+
         return CustomerObject(
           id: doc.id,
-          name: data['name'],
+          name: data['name'] ?? '',
           phone: data['phone'],
           address: data['address'],
         );
@@ -47,4 +48,18 @@ class CustomerRepositoryImpl extends CustomerRepository {
       rethrow;
     }
   }
+  
+  @override
+  Future<bool> deleteCustomer(CustomerObject customer) {
+    try {
+      _firestore.collection('customers').doc(customer.id).delete();
+      return Future.value(true);
+    } catch (e, s) {
+      Logger().e('Erro ao deletar o cliente: $e');
+      Logger().e('Stacktrace: $s');
+      return Future.value(false);
+    }
+  }
+  
+  
 }

@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class CustomerCreatePage extends StatefulWidget {
+  
   final CustomerObject? customer;
 
   const CustomerCreatePage({super.key, this.customer});
@@ -152,7 +153,8 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                       const SizedBox(height: 20),
                       const ListCustomer(),
                     ],
-                  )),
+                  )
+                  ),
                 ),
               ),
             );
