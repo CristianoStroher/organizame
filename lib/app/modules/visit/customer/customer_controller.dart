@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/customer_object.dart';
@@ -91,6 +92,12 @@ Future<void> refreshPage() async {
     notifyListeners();
   }
 
-
+Stream<List<CustomerObject>> getAllCustomersStream() {
+    return FirebaseFirestore.instance.collection('customers').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return CustomerObject.fromFirestore(doc); // Supondo que você tenha um método estático para converter Firestore
+      }).toList();
+    });
+  }
 
 }

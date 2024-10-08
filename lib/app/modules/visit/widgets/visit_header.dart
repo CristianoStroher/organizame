@@ -5,6 +5,9 @@ import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
+import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
+import 'package:provider/provider.dart';
 
 class VisitHeader extends StatefulWidget {
   const VisitHeader({super.key});
@@ -14,19 +17,11 @@ class VisitHeader extends StatefulWidget {
 }
 
 class _VisitHeaderState extends State<VisitHeader> {
-  static const List<String> clients = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
-
   String? selectedClient;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController dateEC = TextEditingController();
   final TextEditingController timeEC = TextEditingController();
-
-  final Map<String, Map<String, String>> clientData = {
-    'Cliente 1': {'telefone': '(11) 12345-6789', 'endereco': 'Rua A, 123'},
-    'Cliente 2': {'telefone': '(21) 98765-4321', 'endereco': 'Rua B, 456'},
-    'Cliente 3': {'telefone': '(31) 99999-8888', 'endereco': 'Rua C, 789'},
-  };
 
   bool isFieldsEditable = true;
 
@@ -37,104 +32,112 @@ class _VisitHeaderState extends State<VisitHeader> {
     super.dispose();
   }
 
-  void _updateClientData(String? newValue) {
+  // Função para atualizar os dados do cliente selecionado
+  void _updateClientData(String? newValue, List<CustomerObject> clients) {
     setState(() {
       selectedClient = newValue;
 
-      if (newValue != null && clientData.containsKey(newValue)) {
-        phoneController.text = clientData[newValue]!['telefone']!;
-        addressController.text = clientData[newValue]!['endereco']!;
-        isFieldsEditable = false; // Desabilita os campos
-      } else {
-        phoneController.clear();
-        addressController.clear();
-        isFieldsEditable = true; // Habilita os campos
-      }
+      // Procurar o cliente selecionado na lista dinâmica
+      final selectedCustomer = clients.firstWhere(
+        (customer) => customer.name == newValue,
+        orElse: () => CustomerObject(name: '', phone: '', address: ''),
+      );
+
+      // Atualizar os campos de telefone e endereço
+      phoneController.text = selectedCustomer.phone ?? '';
+      addressController.text = selectedCustomer.address ?? '';
+      isFieldsEditable = false; // Desabilita os campos
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final customerController = context.watch<CustomerController>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('NOVA VISITA TÉCNICA', style: context.titleDefaut),
-          const SizedBox(height: 20),
-          Row(
+      child: StreamBuilder<List<CustomerObject>>(
+        stream: customerController.getAllCustomersStream(), // Escuta as atualizações
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Carregando...
+          }
+
+          if (snapshot.hasError) {
+            return Text('Erro: ${snapshot.error}'); // Tratamento de erro
+          }
+
+          final clients = snapshot.data ?? []; // Lista de clientes
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: OrganizameCalendarButton(
-                  controller: dateEC,
-                  color: const Color(0xFFFAFFC5),
-                ),
+              Text('NOVA VISITA TÉCNICA', style: context.titleDefaut),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: OrganizameCalendarButton(
+                      controller: dateEC,
+                      color: const Color(0xFFFAFFC5),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: OrganizameTimeButton(
+                      controller: timeEC,
+                      label: 'Hora',
+                      color: const Color(0xFFFAFFC5),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: OrganizameTimeButton(
-                  controller: timeEC,
-                  label: 'Hora',
-                  color: const Color(0xFFFAFFC5),
-                ),
+              const SizedBox(height: 10),
+              // Dropdown dinâmico para selecionar clientes
+              OrganizameDropdownfield(
+                label: 'Cliente',
+                options: clients.map((customer) => customer.name).toList(), // Usar lista dinâmica de clientes
+                selectedOptions: selectedClient,
+                onChanged: (newValue) => _updateClientData(newValue, clients),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, selecione um cliente';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 10),
+              OrganizameTextformfield(
+                label: 'Telefone',
+                hintText: '(99) 99999-9999',
+                controller: phoneController,
+                enabled: false, // Campo completamente desabilitado
+                fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
+                filled: true, // Permite que o campo seja preenchido
+                readOnly: true, // Somente leitura
+              ),
+              const SizedBox(height: 10),
+              OrganizameTextformfield(
+                label: 'Endereço',
+                hintText: 'Rua, número, bairro',
+                controller: addressController,
+                enabled: false, // Campo completamente desabilitado
+                fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
+                filled: true, // Permite que o campo seja preenchido
+                readOnly: true, // Somente leitura
+              ),
+              const SizedBox(height: 20),
+              OrganizameElevatedButton(
+                onPressed: () {
+                  // Navegar até a página de cadastro de cliente
+                  Navigator.of(context).pushNamed('/customer/create');
+                },
+                label: 'Cadastrar Cliente',
+                textColor: const Color(0xFFFAFFC5),
               ),
             ],
-          ),
-          const SizedBox(height: 10),
-          OrganizameDropdownfield(
-            label: 'Cliente',
-            options: clients,
-            selectedOptions: selectedClient,
-            onChanged: _updateClientData,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Por favor, selecione um cliente';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          OrganizameTextformfield(
-            label: 'Telefone',
-            hintText: '(99) 99999-9999',
-            controller: phoneController,
-            enabled: false, // Campo completamente desabilitado
-            fillColor: context.secondaryColor
-                .withOpacity(0.5), // Cor de fundo azul claro
-            filled: true, // Permite que o campo seja preenchido
-            readOnly: true, // Adicionado para indicar que é somente leitura
-            // decoration: InputDecoration(
-            //   enabled: false, // Não permite interação
-            //   border: InputBorder.none, // Remove a borda
-            //   hintText: '(99) 99999-9999', // Sugestão de formato
-            // ),
-          ),
-          const SizedBox(height: 10),
-          OrganizameTextformfield(
-            label: 'Endereço',
-            hintText: 'Rua, número, bairro',
-            controller: addressController,
-            enabled: false, // Campo completamente desabilitado
-            fillColor: context.secondaryColor
-                .withOpacity(0.5), // Cor de fundo azul claro
-            filled: true, // Permite que o campo seja preenchido
-            readOnly: true, // Adicionado para indicar que é somente leitura
-            // decoration: InputDecoration(
-            //   enabled: false, // Não permite interação
-            //   border: InputBorder.none, // Remove a borda
-            //   hintText: 'Rua, número, bairro', // Sugestão de formato
-            // ),
-          ),
-          const SizedBox(height: 20),
-          OrganizameElevatedButton(
-            onPressed: () {              
-              // navegar até a página de cadastro de cliente
-              Navigator.of(context).pushNamed('/customer/create');
-            },
-            label: 'Cadastrar Cliente',
-            textColor: const Color(0xFFFAFFC5),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
