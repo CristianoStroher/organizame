@@ -55,7 +55,7 @@ class OrganizameDropdownfield extends StatelessWidget {
           .map(
             (client) => DropdownMenuItem<String>(
               value: client,
-              child: Text(client),
+              child: Text(client.toUpperCase(), style: TextStyle(color: context.primaryColor)),
             ),
           )
           .toList(),

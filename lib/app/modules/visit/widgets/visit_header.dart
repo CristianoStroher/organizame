@@ -97,7 +97,7 @@ class _VisitHeaderState extends State<VisitHeader> {
               OrganizameDropdownfield(
                 label: 'Cliente',
                 options: clients.map((customer) => customer.name).toList(), // Usar lista dinâmica de clientes
-                selectedOptions: selectedClient,
+                selectedOptions: selectedClient, //
                 onChanged: (newValue) => _updateClientData(newValue, clients),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
