@@ -15,6 +15,9 @@ import 'package:organizame/app/modules/task/task_module.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_module.dart';
 import 'package:organizame/app/modules/visit/visit_module.dart';
 
+import 'modules/enviromentChildBedroom/childBedroom_module.dart';
+import 'modules/enviromentLivingRoom/livingRoom_module.dart';
+
 //! praticamente a implementação do material app que tem a função de ser
 //! o widget raiz da aplicação
 
