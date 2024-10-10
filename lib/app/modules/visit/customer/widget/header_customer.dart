@@ -19,7 +19,6 @@ class HeaderCustomer extends StatefulWidget {
 }
 
 class _HeaderCustomerState extends State<HeaderCustomer> {
-
   final _globalKey = GlobalKey<FormState>();
   final _nameEC = TextEditingController();
   final _phoneEC = TextEditingController();
@@ -28,8 +27,6 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
     mask: '(##) #####-####',
     filter: {'#': RegExp(r'[0-9]')},
   );
-
-  CustomerController? _controller;
 
   @override
   void initState() {
@@ -95,21 +92,19 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
                 final phone = _phoneEC.text;
                 final address = _addressEC.text;
                 try {
-                  await context
-                      .read<CustomerController>()
-                      .saveCustomer(name, phone, address);
+                  await context.read<CustomerController>().saveCustomer(name, phone, address);
 
-                  _nameEC.clear();
-                  _phoneEC.clear();
-                  _addressEC.clear();
-
-                  Messages.of(context).showInfo('Cliente salvo com sucesso');
-
-                  setState(() {
-                    _controller = context.read<CustomerController>();
-                  });
+                  // Limpar os campos apenas se o widget ainda estiver montado
+                  if (mounted) {
+                    _nameEC.clear();
+                    _phoneEC.clear();
+                    _addressEC.clear();
+                    Messages.of(context).showInfo('Cliente salvo com sucesso');
+                  }
                 } on Exception catch (e) {
-                  Messages.of(context).showError('Erro ao salvar cliente');
+                  if (mounted) {
+                    Messages.of(context).showError('Erro ao salvar cliente');
+                  }
                 }
               }
             },

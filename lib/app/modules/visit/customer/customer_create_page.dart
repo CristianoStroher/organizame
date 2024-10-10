@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import 'customer_controller.dart';
 
-
 class CustomerCreatePage extends StatefulWidget {
   final CustomerObject? customer;
 
@@ -23,7 +22,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) { // Verifica se o widget ainda está montado
+      if (mounted) {
         context.read<CustomerController>().findAllCustomers();
       }
     });
@@ -31,7 +30,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    final customerController = context.watch<CustomerController>(); // Usa watch para reconstruir quando os dados mudam
+    final customerController = context.watch<CustomerController>();
 
     return Scaffold(
       appBar: AppBar(
@@ -56,44 +55,36 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: constraints.maxWidth * 0.9,
-                minHeight: constraints.maxHeight * 0.9,
-              ),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    HeaderCustomer(),
-                    const SizedBox(height: 20),
-                    Text('RELAÇÃO DE CLIENTES', style: context.titleDefaut),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: constraints.maxHeight * 0.7, // Define uma altura fixa
-                      child: customerController.filteredCustomer.isEmpty
-                          ? Center(child: CircularProgressIndicator()) // Loader se a lista estiver vazia
-                          : ListView.builder(
-                              itemCount: customerController.filteredCustomer.length,
-                              itemBuilder: (context, index) {
-                                final customer = customerController.filteredCustomer[index];
-                                return Customer(
-                                  object: customer,
-                                  controller: customerController,
-                                );
-                              },
-                            ),
+      body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            HeaderCustomer(),
+            const SizedBox(height: 20),
+            Text('RELAÇÃO DE CLIENTES', style: context.titleDefaut),
+            const SizedBox(height: 10),
+            // Container(
+            //   height: 0.5, // Espessura da linha
+            //   color: context.secondaryColor.withOpacity(0.3),
+            // ),
+            const SizedBox(height: 10),
+            Expanded( // Use Expanded para ocupar o espaço disponível
+              child: customerController.filteredCustomer.isEmpty
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: customerController.filteredCustomer.length,
+                      itemBuilder: (context, index) {
+                        final customer = customerController.filteredCustomer[index];
+                        return Customer(
+                          object: customer,
+                          controller: customerController,
+                        );
+                      },
                     ),
-                  ],
-                ),
-              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:organizame/app/app_module.dart';
@@ -26,9 +28,10 @@ class Customer extends StatelessWidget {
         child: SizedBox(
           child: Column(
             children: [
+              SizedBox(height: 1),
               Divider(
-                color: Colors.grey[300], // Linha cinza acima
-                thickness: 1.5,
+                color: context.secondaryColor.withOpacity(.5), // Linha cinza acima
+                thickness: 0.3,
                 height: 0,
               ),
               ListTile(
@@ -59,8 +62,10 @@ class Customer extends StatelessWidget {
                     final bool? confirmDelete = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Excluir Cliente',style: context.titleMedium),
-                        content: Text('Deseja realmente excluir ${object.name}?'),
+                        title:
+                            Text('Excluir Cliente', style: context.titleMedium),
+                        content:
+                            Text('Deseja realmente excluir ${object.name}?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
@@ -102,13 +107,10 @@ class Customer extends StatelessWidget {
                   },
                 ),
               ),
-              Divider(
-                color: Colors.grey[300], // Linha cinza abaixo
-                thickness: 1.5,
-                height: 0,
-              ),
+              
             ],
           ),
+          
         ));
   }
 }
