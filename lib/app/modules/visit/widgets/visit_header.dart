@@ -17,6 +17,7 @@ class VisitHeader extends StatefulWidget {
 }
 
 class _VisitHeaderState extends State<VisitHeader> {
+  
   String? selectedClient;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
@@ -27,6 +28,8 @@ class _VisitHeaderState extends State<VisitHeader> {
 
   @override
   void dispose() {
+    dateEC.dispose();
+    timeEC.dispose();
     phoneController.dispose();
     addressController.dispose();
     super.dispose();

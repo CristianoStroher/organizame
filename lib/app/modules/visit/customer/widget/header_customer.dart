@@ -19,6 +19,7 @@ class HeaderCustomer extends StatefulWidget {
 }
 
 class _HeaderCustomerState extends State<HeaderCustomer> {
+
   final _globalKey = GlobalKey<FormState>();
   final _nameEC = TextEditingController();
   final _phoneEC = TextEditingController();
@@ -48,17 +49,17 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
     _nameEC.dispose();
     _phoneEC.dispose();
     _addressEC.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Form(
-          key: _globalKey,
-          child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+    return Form(
+      key: _globalKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           const SizedBox(height: 20),
           Text('NOVO CLIENTE', style: context.titleDefaut),
           const SizedBox(height: 20),
@@ -98,13 +99,13 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
                   await context
                       .read<CustomerController>()
                       .saveCustomer(name, phone, address);
-          
+
                   _nameEC.clear();
                   _phoneEC.clear();
                   _addressEC.clear();
-          
+
                   Messages.of(context).showInfo('Cliente salvo com sucesso');
-          
+
                   setState(() {
                     _controller = context.read<CustomerController>();
                   });
@@ -114,8 +115,9 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
               }
             },
           ),
-                ],
-              ),
-        ));
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
   }
 }
