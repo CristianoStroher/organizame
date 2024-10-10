@@ -49,7 +49,6 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
     _nameEC.dispose();
     _phoneEC.dispose();
     _addressEC.dispose();
-    _controller?.dispose();
     super.dispose();
   }
 

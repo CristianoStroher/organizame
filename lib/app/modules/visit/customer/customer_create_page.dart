@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
 import 'package:organizame/app/modules/visit/customer/widget/customer.dart';
 import 'package:organizame/app/modules/visit/customer/widget/header_customer.dart';
-import 'package:organizame/app/modules/visit/customer/widget/list_customer.dart';
 import 'package:provider/provider.dart';
+
+import 'customer_controller.dart';
+
 
 class CustomerCreatePage extends StatefulWidget {
   final CustomerObject? customer;
@@ -18,23 +19,20 @@ class CustomerCreatePage extends StatefulWidget {
 }
 
 class _CustomerCreatePageState extends State<CustomerCreatePage> {
-  
   @override
   void initState() {
     super.initState();
-    // Chama o método para buscar os clientes assim que a página for carregada
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CustomerController>().findAllCustomers();
+      if (mounted) { // Verifica se o widget ainda está montado
+        context.read<CustomerController>().findAllCustomers();
+      }
     });
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final customerController = context.watch<CustomerController>(); // Usa watch para reconstruir quando os dados mudam
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -67,27 +65,30 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                 minHeight: constraints.maxHeight * 0.9,
               ),
               child: Container(
-                height: constraints.maxHeight,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      HeaderCustomer(),
-                      const SizedBox(height: 20),
-                      Text('RELAÇÃO DE CLIENTES', style: context.titleDefaut),
-                      const SizedBox(height: 10),
-                      Column(
-                        children: context
-                            .select<CustomerController, List<CustomerObject>>(
-                                (controller) => controller.filteredCustomer)
-                            .map((c) => Customer(
-                                object: c,
-                                controller: context.read<CustomerController>()))
-                            .toList(),
-                      )
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    HeaderCustomer(),
+                    const SizedBox(height: 20),
+                    Text('RELAÇÃO DE CLIENTES', style: context.titleDefaut),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: constraints.maxHeight * 0.7, // Define uma altura fixa
+                      child: customerController.filteredCustomer.isEmpty
+                          ? Center(child: CircularProgressIndicator()) // Loader se a lista estiver vazia
+                          : ListView.builder(
+                              itemCount: customerController.filteredCustomer.length,
+                              itemBuilder: (context, index) {
+                                final customer = customerController.filteredCustomer[index];
+                                return Customer(
+                                  object: customer,
+                                  controller: customerController,
+                                );
+                              },
+                            ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/services/customer/customer_service.dart';
 
 class CustomerController extends DefautChangeNotifer {
+
   final CustomerService _customerService;
 
   List<CustomerObject> filteredCustomer = [];
