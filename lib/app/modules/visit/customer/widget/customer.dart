@@ -10,6 +10,7 @@ import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
 import 'package:provider/provider.dart';
 
 class Customer extends StatelessWidget {
+  
   final CustomerController controller;
   final CustomerObject object;
 

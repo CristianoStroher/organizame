@@ -5,12 +5,32 @@ import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/visit/widgets/environment_list.dart';
 import 'package:organizame/app/modules/visit/widgets/visit_header.dart';
+import 'package:provider/provider.dart';
 
-class VisitCreatePage extends StatelessWidget {
+class VisitCreatePage extends StatefulWidget {
 
   VisitCreatePage({
     super.key,
   });
+
+  @override
+  State<VisitCreatePage> createState() => _VisitCreatePageState();
+}
+
+
+class _VisitCreatePageState extends State<VisitCreatePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    
+  }
+
+@override
+  void dispose() {
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {

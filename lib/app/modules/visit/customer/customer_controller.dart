@@ -29,7 +29,9 @@ class CustomerController extends DefautChangeNotifer {
           phone,
           address,
         );
+        await findAllCustomers();
         success();
+        notifyListeners();
       } else {
         setError('Nome é obrigatório');
       }
@@ -40,29 +42,37 @@ class CustomerController extends DefautChangeNotifer {
 
   // Método para buscar todos os clientes
   Future<void> findAllCustomers() async {
+  showLoadingAndResetState();
+  print('Iniciando findAllCustomers');
+  
+  try {
+    // Busca todos os clientes do serviço
+    final customers = await _customerService.findAllCustomers();
 
-    showLoadingAndResetState();
-    notifyListeners();
-    
-    try {
-      // Busca todos os clientes do serviço
-      final customers = await _customerService.findAllCustomers();
-
-      if (customers.isNotEmpty) {
-        // Ordena os clientes por nome
-        customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-        filteredCustomer = customers;
-        success();
-      } else {
-        setError('Nenhum cliente encontrado');
-      }
-
-      // Notifica os ouvintes que a lista foi atualizada
-      refreshPage();
-    } catch (e) {
-      setError('Erro ao buscar clientes');
+    if (customers.isNotEmpty) {
+      // Ordena os clientes por nome
+      customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      filteredCustomer = customers;
+      success();
+    } else {
+      setError('Nenhum cliente encontrado');
     }
+
+    // Notifica os ouvintes que a lista foi atualizada
+    print('Notificando listeners após atualização da lista de clientes');
+    notifyListeners();
+  } catch (e) {
+    print('Erro ao buscar clientes: $e');
+    setError('Erro ao buscar clientes');
+    notifyListeners();
   }
+}
+
+Future<void> refreshPage() async {
+  print('Iniciando refreshPage');
+  await findAllCustomers();
+  
+}
 
   Future<bool> deleteCustomer(CustomerObject customer) async {
   try {
@@ -88,10 +98,6 @@ class CustomerController extends DefautChangeNotifer {
   }
 }
 
-Future<void> refreshPage() async {
-    await findAllCustomers();
-    notifyListeners();
-  }
 
 Stream<List<CustomerObject>> getAllCustomersStream() {
     return FirebaseFirestore.instance.collection('customers').snapshots().map((snapshot) {

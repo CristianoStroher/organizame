@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
-import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/visit/customer/widget/customer.dart';
 import 'package:organizame/app/modules/visit/customer/widget/header_customer.dart';
@@ -23,7 +23,8 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        context.read<CustomerController>().findAllCustomers();
+        final customerController = context.read<CustomerController>();
+        customerController.findAllCustomers();
       }
     });
   }
@@ -64,12 +65,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
             const SizedBox(height: 20),
             Text('RELAÇÃO DE CLIENTES', style: context.titleDefaut),
             const SizedBox(height: 10),
-            // Container(
-            //   height: 0.5, // Espessura da linha
-            //   color: context.secondaryColor.withOpacity(0.3),
-            // ),
-            const SizedBox(height: 10),
-            Expanded( // Use Expanded para ocupar o espaço disponível
+            Expanded(
               child: customerController.filteredCustomer.isEmpty
                   ? Center(child: CircularProgressIndicator())
                   : ListView.builder(
