@@ -107,4 +107,6 @@ Stream<List<CustomerObject>> getAllCustomersStream() {
     });
   }
 
+  // void editCustomer(CustomerObject object) {}
+
 }
