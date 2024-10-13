@@ -55,7 +55,7 @@ class Customer extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.edit, color: context.secondaryColor),
                     onPressed: () {
-                      // controller.editCustomer(object);
+                      controller.updateCustomer(object);
                     },
                   ),
                   IconButton(

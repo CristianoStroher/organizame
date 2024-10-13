@@ -5,6 +5,7 @@ import 'package:organizame/app/models/customer_object.dart';
 import './customer_repository.dart';
 
 class CustomerRepositoryImpl extends CustomerRepository {
+  
   final FirebaseFirestore _firestore; // adiconado conexao com o firestore
 
   // construtor
@@ -48,7 +49,7 @@ class CustomerRepositoryImpl extends CustomerRepository {
       rethrow;
     }
   }
-  
+
   @override
   Future<bool> deleteCustomer(CustomerObject customer) {
     try {
@@ -60,6 +61,39 @@ class CustomerRepositoryImpl extends CustomerRepository {
       return Future.value(false);
     }
   }
-  
-  
+
+  @override
+  Future<CustomerObject> findCustomerById(String id) async {
+    try {
+      final docSnapshot =
+          await _firestore.collection('customers').doc(id).get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        return CustomerObject(
+          id: docSnapshot.id,
+          name: data?['name'] ?? '',
+          phone: data?['phone'] ?? '',
+          address: data?['address'] ?? '',
+        );
+      } else {
+        throw Exception('Cliente não encontrado');
+      }
+    } catch (e) {
+      throw Exception('Erro ao buscar cliente: $e');
+    }
+  }
+
+  @override
+  Future<void> updateCustomer(CustomerObject customer) async {
+    try {
+      await _firestore.collection('customers').doc(customer.id).update({
+        'name': customer.name,
+        'phone': customer.phone,
+        'address': customer.address,
+      });
+    } catch (e) {
+      throw Exception('Erro ao atualizar cliente: $e');
+    }
+  }
 }
