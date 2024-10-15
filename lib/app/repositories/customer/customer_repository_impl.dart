@@ -17,9 +17,9 @@ class CustomerRepositoryImpl extends CustomerRepository {
   Future<void> saveCustomer(String name, String phone, String address) async {
     try {
       await _firestore.collection('customers').add({
-        'name': name,
+        'name': name.toUpperCase(),
         'phone': phone,
-        'address': address,
+        'address': address.toUpperCase(),
       });
     } catch (e, s) {
       Logger().e('Erro ao salvar o cliente: $e');

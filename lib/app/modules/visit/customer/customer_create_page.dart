@@ -79,8 +79,8 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                   );
                 }
                 setState(() {
-                  selectedCustomer = null;
-                   // Limpa o cliente selecionado após salvar
+                  selectedCustomer = null; // Limpa o cliente selecionado após salvar
+                  
                   
 
                 });
