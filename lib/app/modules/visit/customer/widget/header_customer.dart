@@ -11,8 +11,9 @@ import 'package:validatorless/validatorless.dart';
 
 class HeaderCustomer extends StatefulWidget {
   final CustomerObject? customer;
+  final Function(String, String, String) onSave;
 
-  const HeaderCustomer({super.key, this.customer});
+  const HeaderCustomer({super.key, this.customer, required this.onSave});
 
   @override
   State<HeaderCustomer> createState() => _HeaderCustomerState();
@@ -31,13 +32,24 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
   @override
   void initState() {
     super.initState();
+    _loadCustomerData();
+  }
 
-    // Se for um cliente existente, preenche os campos com os dados do cliente
+  void _loadCustomerData() {
     if (widget.customer != null) {
-      final customer = widget.customer!;
-      _nameEC.text = customer.name;
-      _phoneEC.text = customer.phone ?? '';
-      _addressEC.text = customer.address ?? '';
+      setState(() {
+        _nameEC.text = widget.customer!.name;
+        _phoneEC.text = widget.customer!.phone ?? '';
+        _addressEC.text = widget.customer!.address ?? '';
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(HeaderCustomer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.customer != widget.customer) {
+      _loadCustomerData();
     }
   }
 
@@ -57,7 +69,8 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
-          Text('NOVO CLIENTE', style: context.titleDefaut),
+          Text(widget.customer == null ? 'NOVO CLIENTE' : 'EDITAR CLIENTE', 
+               style: context.titleDefaut),
           const SizedBox(height: 20),
           OrganizameTextformfield(
             label: 'Nome',
@@ -92,14 +105,14 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
                 final phone = _phoneEC.text;
                 final address = _addressEC.text;
                 try {
-                  await context.read<CustomerController>().saveCustomer(name, phone, address);
-
-                  // Limpar os campos apenas se o widget ainda estiver montado
+                  await widget.onSave(name, phone, address);
                   if (mounted) {
-                    _nameEC.clear();
-                    _phoneEC.clear();
-                    _addressEC.clear();
                     Messages.of(context).showInfo('Cliente salvo com sucesso');
+                    if (widget.customer == null) {
+                      _nameEC.clear();
+                      _phoneEC.clear();
+                      _addressEC.clear();
+                    }
                   }
                 } on Exception catch (e) {
                   if (mounted) {

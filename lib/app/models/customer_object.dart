@@ -39,4 +39,19 @@ class CustomerObject {
       'address': address,
     };
   }
+
+  // Cria uma cópia do objeto com os valores passados que servem para substituir os valores atuais
+  CustomerObject copyWith({
+    String? id,
+    String? name,
+    String? phone,
+    String? address,
+  }) {
+    return CustomerObject(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      address: address ?? this.address,
+    );
+  }
 }

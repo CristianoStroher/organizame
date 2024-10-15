@@ -18,6 +18,8 @@ class CustomerCreatePage extends StatefulWidget {
 }
 
 class _CustomerCreatePageState extends State<CustomerCreatePage> {
+  CustomerObject? selectedCustomer;
+
   @override
   void initState() {
     super.initState();
@@ -53,8 +55,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-          ),          
-           
+          ),
         ],
       ),
       body: Container(
@@ -62,7 +63,28 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            HeaderCustomer(),
+            HeaderCustomer(
+              customer: selectedCustomer,
+              onSave: (name, phone, address) async {
+                final controller = context.read<CustomerController>();
+                if (selectedCustomer == null) {
+                  await controller.saveCustomer(name, phone, address);
+                } else {
+                  await controller.updateCustomer(
+                    selectedCustomer!.copyWith(
+                      name: name,
+                      phone: phone,
+                      address: address,
+                    ),
+                  );
+                }
+                setState(() {
+                  selectedCustomer = null; // Limpa o cliente selecionado após salvar
+                });
+                // Atualiza a lista de clientes após salvar/atualizar
+                controller.findAllCustomers();
+              },
+            ),
             const SizedBox(height: 20),
             Text('RELAÇÃO DE CLIENTES', style: context.titleDefaut),
             const SizedBox(height: 10),
@@ -75,7 +97,15 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                         final customer = customerController.filteredCustomer[index];
                         return Customer(
                           object: customer,
-                          controller: customerController,
+                          controller: context.read<CustomerController>(),
+                          onEdit: (editedCustomer) {
+                            setState(() {
+                              selectedCustomer = editedCustomer;
+                            });
+                            // Rola a tela para o topo para mostrar o formulário de edição
+                            Scrollable.ensureVisible(context,
+                                duration: Duration(milliseconds: 300));
+                          },
                         );
                       },
                     ),

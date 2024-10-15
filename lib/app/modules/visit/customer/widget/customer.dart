@@ -1,20 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:provider/provider.dart';
+
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
-import 'package:provider/provider.dart';
+
 
 class Customer extends StatelessWidget {
   final CustomerController controller;
   final CustomerObject object;
+  final Function(CustomerObject) onEdit;
 
   const Customer({
-    super.key,
+    Key? key,
     required this.controller,
     required this.object,
-  });
+    required this.onEdit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +60,7 @@ class Customer extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.edit, color: context.secondaryColor),
                     onPressed: () {
-                      controller.updateCustomer(object);
+                      onEdit(object);
                     },
                   ),
                   IconButton(
