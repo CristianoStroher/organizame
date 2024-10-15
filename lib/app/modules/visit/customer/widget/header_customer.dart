@@ -87,6 +87,9 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
             maskFormatter: phoneMaskFormatter,
             enabled: true,
             controller: _phoneEC,
+            validator: Validatorless.multiple([
+              Validatorless.min(11, 'Telefone incompleto'),
+            ]),
           ),
           const SizedBox(height: 10),
           OrganizameTextformfield(

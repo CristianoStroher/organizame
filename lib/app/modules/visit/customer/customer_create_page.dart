@@ -79,10 +79,13 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                   );
                 }
                 setState(() {
-                  selectedCustomer = null; // Limpa o cliente selecionado após salvar
+                  selectedCustomer = null;
+                   // Limpa o cliente selecionado após salvar
+                  
+
                 });
                 // Atualiza a lista de clientes após salvar/atualizar
-                controller.findAllCustomers();
+                context.read<CustomerController>().findAllCustomers();
               },
             ),
             const SizedBox(height: 20),
