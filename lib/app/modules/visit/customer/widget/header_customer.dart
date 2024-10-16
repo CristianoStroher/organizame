@@ -97,14 +97,26 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
             maskFormatter: phoneMaskFormatter,
             enabled: true,
             controller: _phoneEC,
-            // Removido o validator para tornar o campo opcional
+            validator: (value) {
+              if (value != null && value.isNotEmpty) {
+                final numericValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+                if (numericValue.length < 11) {
+                  return 'O telefone deve ter 11 dígitos';
+                }
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 5),
+          Text(
+            'O telefone é opcional, mas se preenchido deve ter 11 dígitos.',
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
           const SizedBox(height: 10),
           OrganizameTextformfield(
             label: 'Endereço',
             enabled: true,
             controller: _addressEC,
-            // Nenhum validator necessário, pois é opcional
           ),
           const SizedBox(height: 20),
           OrganizameElevatedButton(
@@ -129,6 +141,8 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
                     Messages.of(context).showError('Erro ao salvar cliente: ${e.toString()}');
                   }
                 }
+              } else {
+                Messages.of(context).showError('Por favor, corrija os campos destacados');
               }
             },
           ),

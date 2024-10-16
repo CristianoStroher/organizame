@@ -27,7 +27,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final customerController = context.read<CustomerController>();
-        customerController.findAllCustomers();
+        customerController.refreshCustomers();
       }
     });
   }
@@ -69,7 +69,6 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
               onSave: (name, phone, address) async {
                 final controller = context.read<CustomerController>();
 
-                // Convertendo para maiúsculas
                 final upperName = name.toUpperCase();
                 final upperPhone = phone;
                 final upperAddress = address;
@@ -92,7 +91,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                     selectedCustomer = null;
                   });
                 }                
-                controller.findAllCustomers();
+                controller.refreshCustomers();
                 
                 if (clearFormCallback != null) {
                   clearFormCallback!();
@@ -106,27 +105,32 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
             Text('RELAÇÃO DE CLIENTES', style: context.titleDefaut),
             const SizedBox(height: 10),
             Expanded(
-              child: customerController.filteredCustomer.isEmpty
-                  ? Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      itemCount: customerController.filteredCustomer.length,
-                      itemBuilder: (context, index) {
-                        final customer =
-                            customerController.filteredCustomer[index];
-                        return Customer(
-                          object: customer,
-                          controller: context.read<CustomerController>(),
-                          onEdit: (editedCustomer) {
-                            setState(() {
-                              selectedCustomer = editedCustomer;
-                            });
-                            // Rola a tela para o topo para mostrar o formulário de edição
-                            Scrollable.ensureVisible(context,
-                                duration: Duration(milliseconds: 300));
-                          },
-                        );
-                      },
-                    ),
+              child: ValueListenableBuilder<List<CustomerObject>>(
+                valueListenable: customerController.customersNotifier,
+                builder: (context, customers, child) {
+                  if (customers.isEmpty) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  return ListView.builder(
+                    itemCount: customers.length,
+                    itemBuilder: (context, index) {
+                      final customer = customers[index];
+                      return Customer(
+                        object: customer,
+                        controller: context.read<CustomerController>(),
+                        onEdit: (editedCustomer) {
+                          setState(() {
+                            selectedCustomer = editedCustomer;
+                          });
+                          // Rola a tela para o topo para mostrar o formulário de edição
+                          Scrollable.ensureVisible(context,
+                              duration: Duration(milliseconds: 300));
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
