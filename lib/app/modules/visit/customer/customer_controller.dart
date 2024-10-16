@@ -13,83 +13,58 @@ class CustomerController extends DefautChangeNotifer {
 
   CustomerController({
     required CustomerService customerService,
-  }) : _customerService = customerService,
-       super() {
+  })  : _customerService = customerService,
+        super() {
     resetState();
     findAllCustomers();
   }
 
-  // Future<void> saveCustomer(String name, String phone, String address) async {
-  //   try {
-  //     showLoadingAndResetState();
-  //     notifyListeners();
-
-  //     if (name.isEmpty) {
-  //       throw Exception('Nome é obrigatório');
-  //     }
-
-  //     if (phone.isEmpty) {
-  //       throw Exception('Telefone é obrigatório');
-  //     }
-
-  //     await _customerService.saveCustomer(name, phone, address);
-      
-      
-  //     await findAllCustomers();
-  //     success();
-  //   } catch (e) {
-  //     _logger.e('Erro ao salvar cliente: $e');
-  //     setError('Erro ao salvar cliente: ${e.toString()}');
-  //   } finally {
-  //     hideLoading();
-  //     notifyListeners();
-  //   }
-  // }
   Future<void> saveCustomer(String name, String? phone, String? address) async {
-  _logger.i('Iniciando saveCustomer');
-  try {
-    showLoadingAndResetState();
-    notifyListeners();
+    _logger.i('Iniciando saveCustomer');
+    try {
+      showLoadingAndResetState();
+      notifyListeners();
 
-    if (name.isEmpty) {
-      throw Exception('Nome é obrigatório');
+      if (name.isEmpty) {
+        throw Exception('Nome é obrigatório');
+      }
+
+      // Crie um novo objeto CustomerObject
+      final newCustomer = CustomerObject(
+        name: name.toUpperCase(),
+        phone: phone?.isNotEmpty == true ? phone : null,
+        address: address?.isNotEmpty == true ? address?.toUpperCase() : null,
+      );
+
+      // Salve o cliente usando o serviço
+      await _customerService.saveCustomer(newCustomer);
+
+      _logger.i('Cliente salvo com sucesso: $name');
+
+      // Atualize a lista de clientes
+      await findAllCustomers();
+
+      success();
+    } catch (e) {
+      _logger.e('Erro ao salvar cliente: $e');
+      setError('Erro ao salvar cliente: ${e.toString()}');
+      rethrow; // Relança a exceção para que ela possa ser tratada no widget
+    } finally {
+      hideLoading();
+      notifyListeners();
     }
-
-    // Crie um novo objeto CustomerObject
-    final newCustomer = CustomerObject(
-      name: name.toUpperCase(),
-      phone: phone?.isNotEmpty == true ? phone : null,
-      address: address?.isNotEmpty == true ? address?.toUpperCase() : null,
-    );
-
-    // Salve o cliente usando o serviço
-    await _customerService.saveCustomer(newCustomer);
-    
-    _logger.i('Cliente salvo com sucesso: $name');
-    
-    // Atualize a lista de clientes
-    await findAllCustomers();
-    
-    success();
-  } catch (e) {
-    _logger.e('Erro ao salvar cliente: $e');
-    setError('Erro ao salvar cliente: ${e.toString()}');
-    rethrow; // Relança a exceção para que ela possa ser tratada no widget
-  } finally {
-    hideLoading();
-    notifyListeners();
   }
-}
 
   Future<void> findAllCustomers() async {
     _logger.i('Iniciando findAllCustomers');
     try {
       showLoadingAndResetState();
-      
+
       final customers = await _customerService.findAllCustomers();
 
       if (customers.isNotEmpty) {
-        customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        customers.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         filteredCustomer = customers;
         success();
       } else {
@@ -143,7 +118,8 @@ class CustomerController extends DefautChangeNotifer {
         List<CustomerObject> customers = snapshot.docs
             .map((doc) => CustomerObject.fromFirestore(doc))
             .toList();
-        customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        customers.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         filteredCustomer = customers;
         notifyListeners();
         return customers;
@@ -175,7 +151,7 @@ class CustomerController extends DefautChangeNotifer {
         throw Exception('ID do cliente é nulo ou inválido');
       }
       showLoadingAndResetState();
-      
+
       final selectedCustomer = await findCustomerById(object.id!);
 
       if (selectedCustomer != null) {
