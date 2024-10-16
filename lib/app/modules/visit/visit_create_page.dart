@@ -5,7 +5,7 @@ import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/visit/widgets/environment_list.dart';
 import 'package:organizame/app/modules/visit/widgets/visit_header.dart';
-import 'package:provider/provider.dart';
+
 
 class VisitCreatePage extends StatefulWidget {
 

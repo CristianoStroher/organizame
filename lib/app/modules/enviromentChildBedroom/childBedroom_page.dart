@@ -97,7 +97,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 const SizedBox(height: 20),
                 OrganizameElevatedButton(
                   onPressed: () {},
-                  label: 'Salvar',
+                  label: 'Adicionar',
                   textColor: const Color(0xFFFAFFC5),
                 ),
                 const SizedBox(height: 40),

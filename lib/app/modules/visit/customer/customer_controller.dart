@@ -6,6 +6,7 @@ import 'package:organizame/app/services/customer/customer_service.dart';
 
 class CustomerController extends DefautChangeNotifer {
   final CustomerService _customerService;
+  final Logger _logger = Logger();
 
   List<CustomerObject> filteredCustomer = [];
 
@@ -14,56 +15,64 @@ class CustomerController extends DefautChangeNotifer {
   })  : _customerService = customerService,
         super() {
     resetState();
+    findAllCustomers();
   }
 
   // Método para salvar o cliente
-  Future<void> saveCustomer(String name, String phone, String address) async {
+    Future<void> saveCustomer(String name, String phone, String address) async {
     try {
       showLoadingAndResetState();
       notifyListeners();
 
-      if (name.isNotEmpty) {
-        await _customerService.saveCustomer(
-          name,
-          phone,
-          address,
-        );
-        await findAllCustomers();
-        success();
-        notifyListeners();
-      } else {
-        setError('Nome é obrigatório');
+      if (name.isEmpty) {
+        throw Exception('Nome é obrigatório');
       }
+
+      if (phone.isEmpty) {
+        throw Exception('Telefone é obrigatório');
+      }
+
+      // Validação adicional pode ser adicionada aqui
+
+      await _customerService.saveCustomer(name, phone, address);
+      
+      _logger.i('Cliente salvo com sucesso: $name');
+      
+      await findAllCustomers();
+      success();
     } catch (e) {
-      setError('Erro ao salvar cliente');
+      _logger.e('Erro ao salvar cliente: $e');
+      setError('Erro ao salvar cliente: ${e.toString()}');
+    } finally {
+      hideLoading();
+      notifyListeners();
     }
   }
 
   // Método para buscar todos os clientes
-  Future<void> findAllCustomers() async {
-    showLoadingAndResetState();
-    print('Iniciando findAllCustomers');
-
+   Future<void> findAllCustomers() async {
+    _logger.i('Iniciando findAllCustomers');
     try {
+      showLoadingAndResetState();
+      
       // Busca todos os clientes do serviço
       final customers = await _customerService.findAllCustomers();
 
       if (customers.isNotEmpty) {
         // Ordena os clientes por nome
-        customers.sort(
-            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         filteredCustomer = customers;
         success();
+        _logger.i('Lista de clientes atualizada com ${customers.length} clientes');
       } else {
         setError('Nenhum cliente encontrado');
+        _logger.w('Nenhum cliente encontrado');
       }
-
-      // Notifica os ouvintes que a lista foi atualizada
-      print('Notificando listeners após atualização da lista de clientes');
-      notifyListeners();
     } catch (e) {
-      print('Erro ao buscar clientes: $e');
-      setError('Erro ao buscar clientes');
+      _logger.e('Erro ao buscar clientes: $e');
+      setError('Erro ao buscar clientes: ${e.toString()}');
+    } finally {
+      hideLoading();
       notifyListeners();
     }
   }
@@ -102,9 +111,11 @@ class CustomerController extends DefautChangeNotifer {
         .collection('customers')
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return CustomerObject.fromFirestore(doc);
-      }).toList();
+      List<CustomerObject> customers = snapshot.docs.map((doc) => CustomerObject.fromFirestore(doc)).toList();
+      customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      filteredCustomer = customers;
+      notifyListeners();
+      return customers;
     });
   }
 
@@ -136,6 +147,7 @@ class CustomerController extends DefautChangeNotifer {
       if (selectedCustomer != null) {
         // Atualizar os campos necessários no serviço
         await _customerService.updateCustomer(object);
+        await findAllCustomers();
 
         // Notificar listeners sobre a mudança
         notifyListeners();
@@ -147,4 +159,6 @@ class CustomerController extends DefautChangeNotifer {
       setError('Erro ao editar cliente: $e');
     }
   }
+  
+   
 }

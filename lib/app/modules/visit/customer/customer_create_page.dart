@@ -19,6 +19,7 @@ class CustomerCreatePage extends StatefulWidget {
 
 class _CustomerCreatePageState extends State<CustomerCreatePage> {
   CustomerObject? selectedCustomer;
+  VoidCallback? clearFormCallback;
 
   @override
   void initState() {
@@ -67,25 +68,39 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
               customer: selectedCustomer,
               onSave: (name, phone, address) async {
                 final controller = context.read<CustomerController>();
+
+                // Convertendo para maiúsculas
+                final upperName = name.toUpperCase();
+                final upperPhone = phone.toUpperCase();
+                final upperAddress = address.toUpperCase();
+
                 if (selectedCustomer == null) {
-                  await controller.saveCustomer(name, phone, address);
+                  await controller.saveCustomer(
+                      upperName, upperPhone, upperAddress);
                 } else {
                   await controller.updateCustomer(
                     selectedCustomer!.copyWith(
-                      name: name,
-                      phone: phone,
-                      address: address,
+                      name: upperName,
+                      phone: upperPhone,
+                      address: upperAddress,
                     ),
                   );
                 }
-                setState(() {
-                  selectedCustomer = null; // Limpa o cliente selecionado após salvar
-                  
-                  
 
+                setState(() {
+                  selectedCustomer = null;
                 });
-                // Atualiza a lista de clientes após salvar/atualizar
-                context.read<CustomerController>().findAllCustomers();
+
+                // Atualiza a lista de clientes
+                controller.findAllCustomers();
+
+                // Chama o callback para limpar os campos
+                if (clearFormCallback != null) {
+                  clearFormCallback!();
+                }
+              },
+              setClearFormCallback: (callback) {
+                clearFormCallback = callback;
               },
             ),
             const SizedBox(height: 20),
@@ -97,7 +112,8 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                   : ListView.builder(
                       itemCount: customerController.filteredCustomer.length,
                       itemBuilder: (context, index) {
-                        final customer = customerController.filteredCustomer[index];
+                        final customer =
+                            customerController.filteredCustomer[index];
                         return Customer(
                           object: customer,
                           controller: context.read<CustomerController>(),

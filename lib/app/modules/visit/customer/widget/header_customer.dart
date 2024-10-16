@@ -5,15 +5,18 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
-import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class HeaderCustomer extends StatefulWidget {
   final CustomerObject? customer;
   final Function(String, String, String) onSave;
+  final Function(VoidCallback) setClearFormCallback;
 
-  const HeaderCustomer({super.key, this.customer, required this.onSave});
+  const HeaderCustomer({
+    super.key, this.customer,
+    required this.onSave,
+    required this.setClearFormCallback
+    });
 
   @override
   State<HeaderCustomer> createState() => _HeaderCustomerState();
@@ -33,6 +36,16 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
   void initState() {
     super.initState();
     _loadCustomerData();
+    widget.setClearFormCallback(_clearForm);
+
+  }
+
+  void _clearForm() {
+    _nameEC.clear();
+    _phoneEC.clear();
+    _addressEC.clear();
+    setState(() {});
+    
   }
 
   void _loadCustomerData() {
@@ -69,8 +82,8 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
-          Text(widget.customer == null ? 'NOVO CLIENTE' : 'EDITAR CLIENTE', 
-               style: context.titleDefaut),
+          Text(widget.customer == null ? 'NOVO CLIENTE' : 'EDITAR CLIENTE',
+              style: context.titleDefaut),
           const SizedBox(height: 20),
           OrganizameTextformfield(
             label: 'Nome',
@@ -112,9 +125,7 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
                   if (mounted) {
                     Messages.of(context).showInfo('Cliente salvo com sucesso');
                     if (widget.customer == null) {
-                      _nameEC.clear();
-                      _phoneEC.clear();
-                      _addressEC.clear();
+                      _clearForm();
                     }
                   }
                 } on Exception catch (e) {
