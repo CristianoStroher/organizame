@@ -17,7 +17,6 @@ class VisitHeader extends StatefulWidget {
 }
 
 class _VisitHeaderState extends State<VisitHeader> {
-  
   String? selectedClient;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
@@ -59,18 +58,12 @@ class _VisitHeaderState extends State<VisitHeader> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: StreamBuilder<List<CustomerObject>>(
-        stream: customerController.getAllCustomersStream(), // Escuta as atualizações
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Carregando...
+      child: ValueListenableBuilder<List<CustomerObject>>(
+        valueListenable: customerController.customersNotifier,
+        builder: (context, customers, child) {
+          if (customers.isEmpty) {
+            return CircularProgressIndicator();
           }
-
-          if (snapshot.hasError) {
-            return Text('Erro: ${snapshot.error}'); // Tratamento de erro
-          }
-
-          final clients = snapshot.data ?? []; // Lista de clientes
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,9 +92,9 @@ class _VisitHeaderState extends State<VisitHeader> {
               // Dropdown dinâmico para selecionar clientes
               OrganizameDropdownfield(
                 label: 'Cliente',
-                options: clients.map((customer) => customer.name).toList(), // Usar lista dinâmica de clientes
-                selectedOptions: selectedClient, //
-                onChanged: (newValue) => _updateClientData(newValue, clients),
+                options: customers.map((customer) => customer.name).toList(),
+                selectedOptions: selectedClient,
+                onChanged: (newValue) => _updateClientData(newValue, customers),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, selecione um cliente';
@@ -115,7 +108,8 @@ class _VisitHeaderState extends State<VisitHeader> {
                 hintText: '(99) 99999-9999',
                 controller: phoneController,
                 enabled: false, // Campo completamente desabilitado
-                fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
+                fillColor: context.secondaryColor
+                    .withOpacity(0.5), // Cor de fundo azul claro
                 filled: true, // Permite que o campo seja preenchido
                 readOnly: true, // Somente leitura
                 validator: (value) {
@@ -131,16 +125,18 @@ class _VisitHeaderState extends State<VisitHeader> {
                 hintText: 'Rua, número, bairro',
                 controller: addressController,
                 enabled: false, // Campo completamente desabilitado
-                fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
+                fillColor: context.secondaryColor
+                    .withOpacity(0.5), // Cor de fundo azul claro
                 filled: true, // Permite que o campo seja preenchido
                 readOnly: true, // Somente leitura
-                
               ),
               const SizedBox(height: 20),
               OrganizameElevatedButton(
-                onPressed: () {
-                  // Navegar até a página de cadastro de cliente
-                  Navigator.of(context).pushNamed('/customer/create');
+                onPressed: () async {
+                  await Navigator.of(context).pushNamed('/customer/create');
+                  if (mounted) {
+                    context.read<CustomerController>().refreshCustomers();
+                  }
                 },
                 label: 'Cadastrar Cliente',
                 textColor: const Color(0xFFFAFFC5),
