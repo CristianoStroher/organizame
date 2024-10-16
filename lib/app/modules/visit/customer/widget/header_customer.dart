@@ -68,10 +68,11 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
 
   @override
   void dispose() {
+    super.dispose();
     _nameEC.dispose();
     _phoneEC.dispose();
     _addressEC.dispose();
-    super.dispose();
+
   }
 
   @override

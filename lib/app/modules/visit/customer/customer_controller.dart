@@ -63,10 +63,8 @@ class CustomerController extends DefautChangeNotifer {
         customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         filteredCustomer = customers;
         success();
-        _logger.i('Lista de clientes atualizada com ${customers.length} clientes');
       } else {
         setError('Nenhum cliente encontrado');
-        _logger.w('Nenhum cliente encontrado');
       }
     } catch (e) {
       _logger.e('Erro ao buscar clientes: $e');

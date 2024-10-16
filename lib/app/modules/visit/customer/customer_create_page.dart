@@ -87,14 +87,14 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                   );
                 }
 
-                setState(() {
-                  selectedCustomer = null;
-                });
-
-                // Atualiza a lista de clientes
+                if (mounted) {
+                  setState(() {
+                    selectedCustomer = null;
+                  });
+                }
+                                
                 controller.findAllCustomers();
-
-                // Chama o callback para limpar os campos
+                
                 if (clearFormCallback != null) {
                   clearFormCallback!();
                 }
