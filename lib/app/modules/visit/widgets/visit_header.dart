@@ -118,6 +118,12 @@ class _VisitHeaderState extends State<VisitHeader> {
                 fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
                 filled: true, // Permite que o campo seja preenchido
                 readOnly: true, // Somente leitura
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, informe o telefone';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               OrganizameTextformfield(
@@ -128,6 +134,7 @@ class _VisitHeaderState extends State<VisitHeader> {
                 fillColor: context.secondaryColor.withOpacity(0.5), // Cor de fundo azul claro
                 filled: true, // Permite que o campo seja preenchido
                 readOnly: true, // Somente leitura
+                
               ),
               const SizedBox(height: 20),
               OrganizameElevatedButton(

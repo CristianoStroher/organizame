@@ -71,8 +71,8 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
 
                 // Convertendo para maiúsculas
                 final upperName = name.toUpperCase();
-                final upperPhone = phone.toUpperCase();
-                final upperAddress = address.toUpperCase();
+                final upperPhone = phone;
+                final upperAddress = address;
 
                 if (selectedCustomer == null) {
                   await controller.saveCustomer(
@@ -91,8 +91,7 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                   setState(() {
                     selectedCustomer = null;
                   });
-                }
-                                
+                }                
                 controller.findAllCustomers();
                 
                 if (clearFormCallback != null) {

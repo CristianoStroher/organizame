@@ -9,57 +9,86 @@ class CustomerController extends DefautChangeNotifer {
   final Logger _logger = Logger();
 
   List<CustomerObject> filteredCustomer = [];
+  bool _isStreamInitialized = false;
 
   CustomerController({
     required CustomerService customerService,
-  })  : _customerService = customerService,
-        super() {
+  }) : _customerService = customerService,
+       super() {
     resetState();
     findAllCustomers();
   }
 
-  // Método para salvar o cliente
-    Future<void> saveCustomer(String name, String phone, String address) async {
-    try {
-      showLoadingAndResetState();
-      notifyListeners();
+  // Future<void> saveCustomer(String name, String phone, String address) async {
+  //   try {
+  //     showLoadingAndResetState();
+  //     notifyListeners();
 
-      if (name.isEmpty) {
-        throw Exception('Nome é obrigatório');
-      }
+  //     if (name.isEmpty) {
+  //       throw Exception('Nome é obrigatório');
+  //     }
 
-      if (phone.isEmpty) {
-        throw Exception('Telefone é obrigatório');
-      }
+  //     if (phone.isEmpty) {
+  //       throw Exception('Telefone é obrigatório');
+  //     }
 
-      // Validação adicional pode ser adicionada aqui
-
-      await _customerService.saveCustomer(name, phone, address);
+  //     await _customerService.saveCustomer(name, phone, address);
       
-      _logger.i('Cliente salvo com sucesso: $name');
       
-      await findAllCustomers();
-      success();
-    } catch (e) {
-      _logger.e('Erro ao salvar cliente: $e');
-      setError('Erro ao salvar cliente: ${e.toString()}');
-    } finally {
-      hideLoading();
-      notifyListeners();
+  //     await findAllCustomers();
+  //     success();
+  //   } catch (e) {
+  //     _logger.e('Erro ao salvar cliente: $e');
+  //     setError('Erro ao salvar cliente: ${e.toString()}');
+  //   } finally {
+  //     hideLoading();
+  //     notifyListeners();
+  //   }
+  // }
+  Future<void> saveCustomer(String name, String? phone, String? address) async {
+  _logger.i('Iniciando saveCustomer');
+  try {
+    showLoadingAndResetState();
+    notifyListeners();
+
+    if (name.isEmpty) {
+      throw Exception('Nome é obrigatório');
     }
-  }
 
-  // Método para buscar todos os clientes
-   Future<void> findAllCustomers() async {
+    // Crie um novo objeto CustomerObject
+    final newCustomer = CustomerObject(
+      name: name.toUpperCase(),
+      phone: phone?.isNotEmpty == true ? phone : null,
+      address: address?.isNotEmpty == true ? address?.toUpperCase() : null,
+    );
+
+    // Salve o cliente usando o serviço
+    await _customerService.saveCustomer(newCustomer);
+    
+    _logger.i('Cliente salvo com sucesso: $name');
+    
+    // Atualize a lista de clientes
+    await findAllCustomers();
+    
+    success();
+  } catch (e) {
+    _logger.e('Erro ao salvar cliente: $e');
+    setError('Erro ao salvar cliente: ${e.toString()}');
+    rethrow; // Relança a exceção para que ela possa ser tratada no widget
+  } finally {
+    hideLoading();
+    notifyListeners();
+  }
+}
+
+  Future<void> findAllCustomers() async {
     _logger.i('Iniciando findAllCustomers');
     try {
       showLoadingAndResetState();
       
-      // Busca todos os clientes do serviço
       final customers = await _customerService.findAllCustomers();
 
       if (customers.isNotEmpty) {
-        // Ordena os clientes por nome
         customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         filteredCustomer = customers;
         success();
@@ -76,7 +105,7 @@ class CustomerController extends DefautChangeNotifer {
   }
 
   Future<void> refreshPage() async {
-    print('Iniciando refreshPage');
+    _logger.i('Iniciando refreshPage');
     await findAllCustomers();
   }
 
@@ -91,12 +120,12 @@ class CustomerController extends DefautChangeNotifer {
       } else {
         setError('Erro ao deletar cliente');
       }
-      return deleted; // Retorna true ou false baseado no sucesso da operação
+      return deleted;
     } catch (e, s) {
-      Logger().e('Erro ao deletar cliente: $e');
-      Logger().e('Stacktrace: $s');
+      _logger.e('Erro ao deletar cliente: $e');
+      _logger.e('Stacktrace: $s');
       setError('Erro ao deletar cliente');
-      return false; // Retorna false em caso de exceção
+      return false;
     } finally {
       hideLoading();
       notifyListeners();
@@ -105,16 +134,23 @@ class CustomerController extends DefautChangeNotifer {
   }
 
   Stream<List<CustomerObject>> getAllCustomersStream() {
-    return FirebaseFirestore.instance
-        .collection('customers')
-        .snapshots()
-        .map((snapshot) {
-      List<CustomerObject> customers = snapshot.docs.map((doc) => CustomerObject.fromFirestore(doc)).toList();
-      customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      filteredCustomer = customers;
-      notifyListeners();
-      return customers;
-    });
+    if (!_isStreamInitialized) {
+      _isStreamInitialized = true;
+      return FirebaseFirestore.instance
+          .collection('customers')
+          .snapshots()
+          .map((snapshot) {
+        List<CustomerObject> customers = snapshot.docs
+            .map((doc) => CustomerObject.fromFirestore(doc))
+            .toList();
+        customers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        filteredCustomer = customers;
+        notifyListeners();
+        return customers;
+      });
+    } else {
+      return Stream.value(filteredCustomer);
+    }
   }
 
   Future<CustomerObject?> findCustomerById(String id) async {
@@ -139,24 +175,21 @@ class CustomerController extends DefautChangeNotifer {
         throw Exception('ID do cliente é nulo ou inválido');
       }
       showLoadingAndResetState();
-      // Buscar o cliente pelo ID
+      
       final selectedCustomer = await findCustomerById(object.id!);
 
       if (selectedCustomer != null) {
-        // Atualizar os campos necessários no serviço
         await _customerService.updateCustomer(object);
         await findAllCustomers();
-
-        // Notificar listeners sobre a mudança
-        notifyListeners();
         success();
       } else {
         throw Exception('Cliente não encontrado');
       }
     } catch (e) {
       setError('Erro ao editar cliente: $e');
+    } finally {
+      hideLoading();
+      notifyListeners();
     }
   }
-  
-   
 }
