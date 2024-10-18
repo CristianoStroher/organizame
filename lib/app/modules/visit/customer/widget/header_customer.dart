@@ -86,6 +86,7 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
           const SizedBox(height: 20),
           OrganizameTextformfield(
             label: 'Nome',
+            hintText: 'Nome completo',
             enabled: true,
             controller: _nameEC,
             validator: Validatorless.required('Nome é obrigatório'),
@@ -107,16 +108,12 @@ class _HeaderCustomerState extends State<HeaderCustomer> {
               return null;
             },
           ),
-          const SizedBox(height: 5),
-          Text(
-            'O telefone é opcional, mas se preenchido deve ter 11 dígitos.',
-            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-          ),
           const SizedBox(height: 10),
           OrganizameTextformfield(
             label: 'Endereço',
             enabled: true,
             controller: _addressEC,
+            hintText:  'Rua, nº, bairro, cidade',
           ),
           const SizedBox(height: 20),
           OrganizameElevatedButton(
