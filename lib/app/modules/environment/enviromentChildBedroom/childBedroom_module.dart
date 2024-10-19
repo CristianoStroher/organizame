@@ -1,6 +1,6 @@
 
 import 'package:organizame/app/core/modules/organizame_module.dart';
-import 'package:organizame/app/modules/enviromentChildBedroom/childBedroom_page.dart';
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
 
 class ChildBedroomModule extends OrganizameModule {
   ChildBedroomModule()

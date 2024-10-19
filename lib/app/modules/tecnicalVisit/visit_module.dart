@@ -1,10 +1,10 @@
 import 'package:organizame/app/core/modules/organizame_module.dart';
-import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
-import 'package:organizame/app/modules/visit/customer/customer_create_page.dart';
-import 'package:organizame/app/modules/visit/environment/enviroment_controller.dart';
-import 'package:organizame/app/modules/visit/environment/enviroment_page.dart';
-import 'package:organizame/app/modules/visit/visit_controller.dart';
-import 'package:organizame/app/modules/visit/visit_create_page.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/customer_create_page.dart';
+import 'package:organizame/app/modules/environment/enviroment_controller.dart';
+import 'package:organizame/app/modules/environment/enviroment_page.dart';
+import 'package:organizame/app/modules/tecnicalVisit/visit_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/visit_create_page.dart';
 import 'package:organizame/app/repositories/customer/customer_repository.dart';
 import 'package:organizame/app/repositories/customer/customer_repository_impl.dart';
 import 'package:organizame/app/services/customer/customer_service.dart';

@@ -6,7 +6,7 @@ import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
 import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controller.dart';
 import 'package:provider/provider.dart';
 
 class VisitHeader extends StatefulWidget {

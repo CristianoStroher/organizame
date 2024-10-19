@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/modules/visit/customer/widget/customer.dart';
-import 'package:organizame/app/modules/visit/customer/widget/header_customer.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/widget/header_customer.dart';
 import 'package:provider/provider.dart';
 
 import 'customer_controller.dart';

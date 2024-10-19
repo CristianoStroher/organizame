@@ -5,7 +5,7 @@ import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/homeTecnical/widgets/visit.dart';
-import 'package:organizame/app/modules/visit/visit_module.dart';
+import 'package:organizame/app/modules/tecnicalVisit/visit_module.dart';
 
 class TecnicalPage extends StatefulWidget {
   const TecnicalPage({super.key});

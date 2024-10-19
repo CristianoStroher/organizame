@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
-import 'package:organizame/app/modules/visit/environment/widgets/enviroment.dart';
+import 'package:organizame/app/modules/environment/widgets/enviroment.dart';
 
 class EnvironmentList extends StatelessWidget {
   final List<EnvironmentObject> environments;

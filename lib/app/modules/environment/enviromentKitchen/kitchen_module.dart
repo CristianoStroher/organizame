@@ -1,5 +1,5 @@
 import 'package:organizame/app/core/modules/organizame_module.dart';
-import 'package:organizame/app/modules/enviromentKitchen/kitchen_page.dart';
+import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_page.dart';
 
 class KitchenModule extends OrganizameModule {
   KitchenModule()

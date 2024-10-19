@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/modules/visit/customer/customer_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controller.dart';
 
 
 class Customer extends StatelessWidget {

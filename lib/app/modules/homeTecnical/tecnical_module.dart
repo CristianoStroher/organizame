@@ -1,6 +1,6 @@
 
 import 'package:organizame/app/core/modules/organizame_module.dart';
-import 'package:organizame/app/modules/visit/customer/customer_create_page.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/customer_create_page.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_page.dart';
 import 'package:provider/provider.dart';
 

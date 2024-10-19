@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/app_widget.dart';
 import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
-import 'package:organizame/app/modules/enviromentChildBedroom/childBedroom_controller.dart';
-import 'package:organizame/app/modules/visit/environment/enviroment_controller.dart';
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_controller.dart';
+import 'package:organizame/app/modules/environment/enviroment_controller.dart';
 import 'package:organizame/app/modules/homeTasks/home_controller.dart';
-import 'package:organizame/app/modules/enviromentKitchen/kitchen_controller.dart';
-import 'package:organizame/app/modules/enviromentLivingRoom/livingRoom_controller.dart';
+import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_controller.dart';
+import 'package:organizame/app/modules/environment/enviromentLivingRoom/livingRoom_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
-import 'package:organizame/app/modules/visit/visit_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/visit_controller.dart';
 import 'package:organizame/app/repositories/customer/customer_repository.dart';
 import 'package:organizame/app/repositories/customer/customer_repository_impl.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
@@ -27,7 +27,7 @@ import 'package:organizame/app/services/user/user_service_impl.dart';
 import 'package:provider/provider.dart';
 
 import 'core/auth/auth_provider.dart';
-import 'modules/visit/customer/customer_controller.dart';
+import 'modules/tecnicalVisit/customer/customer_controller.dart';
 
 //! fica estrutura base do projeto onde estarão as configurações geral do projeto
 //! e tudo que for compartilhado entre os módulos
