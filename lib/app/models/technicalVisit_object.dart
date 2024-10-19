@@ -3,7 +3,6 @@ import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/models/enviroment_object2.dart';
 
 class TechnicalVisitObject {
-
   final String id;
   final DateTime date;
   final DateTime time;
@@ -57,12 +56,18 @@ class TechnicalVisitObject {
       date: data ?? date,
       time: time ?? this.time,
       customer: customer ?? this.customer,
-      enviroments: ambientes ?? enviroments,
+      enviroments: ambientes ?? enviroments ?? [],
     );
   }
 
   @override
   String toString() {
     return 'TechnicalVisitObject(id: $id, date: $date, customer: $customer, enviroments: $enviroments)';
+  }
+
+  bool isValid() {
+    final DateTime dateTime =
+        DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    return id.isNotEmpty && !dateTime.isBefore(DateTime.now());
   }
 }
