@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:organizame/app/core/Validators/login_validators.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
-import './user_service.dart';
+import 'user_service.dart';
 
 class UserServiceImpl extends UserService {
   final UserRepository _userRepository;

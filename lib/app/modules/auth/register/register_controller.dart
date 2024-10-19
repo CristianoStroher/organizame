@@ -2,7 +2,7 @@
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/exception/auth_exception.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
-import 'package:organizame/app/services/user_service.dart';
+import 'package:organizame/app/services/user/user_service.dart';
 
 
 class RegisterController extends DefautChangeNotifer {

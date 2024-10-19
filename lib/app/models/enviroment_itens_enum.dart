@@ -19,7 +19,7 @@ enum EnviromentItensEnum {
   utensiliosDeLimpeza
 }
   
-
+//essa função serve para pegar o nome do enum e transformar em string
 extension EnviromentItensEnumExtension on EnviromentItensEnum {
   String get name {
     return this.toString().split('.').last;

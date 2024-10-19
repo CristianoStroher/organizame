@@ -22,8 +22,8 @@ import 'package:organizame/app/services/customer/customer_service.dart';
 import 'package:organizame/app/services/customer/customer_service_impl.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 import 'package:organizame/app/services/tasks/tasks_service_impl.dart';
-import 'package:organizame/app/services/user_service.dart';
-import 'package:organizame/app/services/user_service_impl.dart';
+import 'package:organizame/app/services/user/user_service.dart';
+import 'package:organizame/app/services/user/user_service_impl.dart';
 import 'package:provider/provider.dart';
 
 import 'core/auth/auth_provider.dart';

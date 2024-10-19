@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
-import 'package:organizame/app/services/user_service.dart';
+import 'package:organizame/app/services/user/user_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/auth/auth_provider.dart';

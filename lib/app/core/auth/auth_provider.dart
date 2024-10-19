@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/navigator/organizame_navigator.dart';
 
-import 'package:organizame/app/services/user_service.dart';
+import 'package:organizame/app/services/user/user_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth;
