@@ -14,6 +14,8 @@ class TechnicalVisitController extends DefautChangeNotifer {
   TechnicalVisitController({required TechnicalVisitService technicalVisitService})
       : _technicalVisitService = technicalVisitService;
 
+
+  // função para carregar todas as visitas técnicas
   Future<void> loadAllVisit() async {
     try {
       showLoadingAndResetState();
@@ -25,6 +27,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
     }
   }
 
+  // função para criar uma nova visita técnica
   Future<void> createTechnicalVisit(TechnicalVisitObject technicalVisit) async {
     try {
       showLoadingAndResetState();
@@ -36,7 +39,8 @@ class TechnicalVisitController extends DefautChangeNotifer {
       setError('Erro ao criar nova visita técnica: $e');
     }
   }
-  
+
+  // função para adicionar um ambiente a visita técnica
   void initNewVisit() {
     currentVisit = TechnicalVisitObject(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -48,4 +52,6 @@ class TechnicalVisitController extends DefautChangeNotifer {
     currentEnvironments.clear();
     notifyListeners();
   }
+
+  void addEnvironment(EnviromentObject newEnvironment) {}
 }

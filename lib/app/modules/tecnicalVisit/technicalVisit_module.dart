@@ -9,6 +9,8 @@ import 'package:organizame/app/repositories/customer/customer_repository.dart';
 import 'package:organizame/app/repositories/customer/customer_repository_impl.dart';
 import 'package:organizame/app/services/customer/customer_service.dart';
 import 'package:organizame/app/services/customer/customer_service_impl.dart';
+import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
+import 'package:organizame/app/services/technicalVisit/technical_visit_service_impl.dart';
 import 'package:provider/provider.dart';
 
 class TechnicalvisitModule extends OrganizameModule {
@@ -19,15 +21,22 @@ class TechnicalvisitModule extends OrganizameModule {
                 create: (context) => CustomerRepositoryImpl(
                     firestore:
                         context.read())), //injetando o repositório de cliente
+            Provider<TechnicalVisitService>(
+                create: (context) => TechnicalVisitServiceImpl(
+                    technicalVisitRepository: context
+                        .read())), // injetando o serviço de visita técnica
             Provider<CustomerService>(
                 create: (context) => CustomerServiceImpl(
                     customerRepository:
                         context.read())), // injetando o serviço de cliente
             ChangeNotifierProvider(
-                create: (context) =>
-                    TechnicalVisitController(technicalVisitService: context.read())), // injetando o controller da tela de visitas
+                create: (context) => TechnicalVisitController(
+                    technicalVisitService: context.read<
+                        TechnicalVisitService>())), // injetando o controller da tela de visitas
             ChangeNotifierProvider(
-                create: (context) => CustomerController(customerService: context.read())), // injetando o controller da tela de clientes
+                create: (context) => CustomerController(
+                    customerService: context.read<
+                        CustomerService>())), // injetando o controller da tela de clientes
             ChangeNotifierProvider(
                 create: (context) =>
                     EnviromentController()), // injetando o controller da tela de ambiente
@@ -35,10 +44,10 @@ class TechnicalvisitModule extends OrganizameModule {
           routers: {
             '/visit/create': (context) =>
                 TechnicalvisitCreatePage(), // rota para a tela de criação de visitas
-            '/customer/create': (context) => CustomerCreatePage(), // rota para a tela de criação de clientes
+            '/customer/create': (context) =>
+                CustomerCreatePage(), // rota para a tela de criação de clientes
             '/environment': (context) =>
-                const EnviromentPage(), // rota para a tela de ambiente
+                EnviromentPage(), // rota para a tela de ambiente
           },
         );
 }
-

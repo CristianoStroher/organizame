@@ -65,21 +65,7 @@ class _TechnicalvisitCreatePage extends State<TechnicalvisitCreatePage> {
               children: [
                 const TechnicalvisitHeader(),
                 const SizedBox(height: 10),
-                TechnicalvisitList(
-                  environments: [
-                    EnvironmentObject(
-                      name: 'QUARTO CASAL',
-                      difficulty: 'MODERADO',
-                      observation: 'Quarto casal com suíte',
-                    ),
-                    EnvironmentObject(
-                      name: 'COZINHA',
-                      difficulty: 'CRÍTICO',
-                      observation: 'Cozinha com armários planejados',
-                    ),
-                    
-                  ],
-                ),
+                TechnicalvisitList(),                
                 const SizedBox(height: 20),
                 OrganizameElevatedButton(
                   onPressed: () {},

@@ -5,20 +5,20 @@ import 'package:organizame/app/models/enviroment_itens_enum.dart';
 
 class EnviromentObject {
   final String id;
-  final String nome;
-  final String descricao;
+  final String name;
+  final String descroiption;
   final String? metragem;
-  final String? dificuldade;
-  final String? observacao;
+  final String? difficulty;
+  final String? observation;
   final Map<EnviromentItensEnum, bool> itens;
 
   EnviromentObject({
     required this.id,
-    required this.nome,
-    required this.descricao,
+    required this.name,
+    required this.descroiption,
     this.metragem,
-    this.dificuldade,
-    this.observacao,
+    this.difficulty,
+    this.observation,
     Map<EnviromentItensEnum, bool>? itens,
   }) : itens = itens ?? {};
 
@@ -26,11 +26,11 @@ class EnviromentObject {
     try {
       return EnviromentObject(
         id: map['id'] as String,
-        nome: map['nome'] as String,
-        descricao: map['descricao'] as String,
+        name: map['nome'] as String,
+        descroiption: map['descricao'] as String,
         metragem: map['metragem'] as String?,
-        dificuldade: map['dificuldade'] as String?,
-        observacao: map['observacao'] as String?,
+        difficulty: map['dificuldade'] as String?,
+        observation: map['observacao'] as String?,
         itens: (map['itens'] as Map<String, dynamic>?)?.map(
               (key, value) => MapEntry(
                   EnviromentItensEnum.values.firstWhere((e) => e.name == key),
@@ -50,11 +50,11 @@ class EnviromentObject {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nome': nome,
-      'descricao': descricao,
+      'nome': name,
+      'descricao': descroiption,
       'metragem': metragem,
-      'dificuldade': dificuldade,
-      'observacao': observacao,
+      'dificuldade': difficulty,
+      'observacao': observation,
       'itens': itens.map((key, value) => MapEntry(key.name, value)),
     };
   }
@@ -70,17 +70,17 @@ class EnviromentObject {
   }) {
     return EnviromentObject(
       id: id ?? this.id,
-      nome: nome ?? this.nome,
-      descricao: descricao ?? this.descricao,
+      name: nome ?? this.name,
+      descroiption: descricao ?? this.descroiption,
       metragem: metragem ?? this.metragem,
-      dificuldade: dificuldade ?? this.dificuldade,
-      observacao: observacao ?? this.observacao,
+      difficulty: dificuldade ?? this.difficulty,
+      observation: observacao ?? this.observation,
       itens: itens ?? Map.from(this.itens),
     );
   }
 
   bool isValid() {
-    return id.isNotEmpty && nome.isNotEmpty && descricao.isNotEmpty;
+    return id.isNotEmpty && name.isNotEmpty && descroiption.isNotEmpty;
   }
 
   bool? getItem(EnviromentItensEnum item) {
@@ -93,6 +93,6 @@ class EnviromentObject {
 
   @override
   String toString() {
-    return 'EnviromentObject2(id: $id, nome: $nome, descricao: $descricao, metragem: $metragem, dificuldade: $dificuldade, observacao: $observacao, itens: $itens)';
+    return 'EnviromentObject2(id: $id, nome: $name, descricao: $descroiption, metragem: $metragem, dificuldade: $difficulty, observacao: $observation, itens: $itens)';
   }
 }

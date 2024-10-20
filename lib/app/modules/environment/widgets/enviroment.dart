@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 
 class Enviroment extends StatelessWidget {
-  final String enviromentPhone;
   final String enviromentName;
-  final String enviromentAdress;
+  final String enviromentDifficulty;
+  final String enviromentDescription;
 
   const Enviroment({
     super.key,
     required this.enviromentName,
-    required this.enviromentPhone,
-    required this.enviromentAdress,
+    required this.enviromentDifficulty,
+    required this.enviromentDescription,
   });
 
   @override
@@ -39,8 +39,8 @@ class Enviroment extends StatelessWidget {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(enviromentPhone, style: context.titleDefaut),
-                Text(enviromentAdress, style: context.titleDefaut),
+                Text(enviromentDifficulty, style: context.titleDefaut),
+                Text(enviromentDescription, style: context.titleDefaut),
               ],
             ),
             trailing: IconButton(

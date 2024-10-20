@@ -10,12 +10,17 @@ import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_con
 import 'package:organizame/app/modules/environment/enviromentLivingRoom/livingRoom_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository_impl.dart';
+import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
+import 'package:organizame/app/repositories/technicalVisit/technical_visit_repository_impl.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
 import 'package:organizame/app/repositories/user/user_repository_impl.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 import 'package:organizame/app/services/tasks/tasks_service_impl.dart';
+import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
+import 'package:organizame/app/services/technicalVisit/technical_visit_service_impl.dart';
 import 'package:organizame/app/services/user/user_service.dart';
 import 'package:organizame/app/services/user/user_service_impl.dart';
 import 'package:provider/provider.dart';
@@ -43,14 +48,18 @@ class AppModule extends StatelessWidget {
         Provider<UserService>(create: (context) => UserServiceImpl(userRepository: context.read(),loginValidators: context.read())), //injetando o serviço do usuário
         Provider<TasksRepository>(create: (context) => TasksRepositoryImpl(sqLiteConnectionFactory: context.read())), //injetando o repositório de tarefas
         Provider<TasksService>(create: (context) =>TasksServiceImpl(tasksRepository: context.read())), //injetando o serviço de tarefas
-        ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,), //injetando o provider de autenticação
+        Provider<TechnicalVisitRepository>(create: (context) => TechnicalVisitRepositoryImpl(firestore: context.read<FirebaseFirestore>())), //injetando o controller do módulo technicalVisit
+        Provider<TechnicalVisitService>(create: (context) => TechnicalVisitServiceImpl(technicalVisitRepository: context.read<TechnicalVisitRepository>(),),),
+        ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,),//injetando o provider de autenticação
         ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
         ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
         ChangeNotifierProvider(create: (context) => TecnicalController()), //injetando o controller do módulo tecnical
         ChangeNotifierProvider(create: (context) => LivingRoomController()), //injetando o controller do módulo livingRoom
         ChangeNotifierProvider(create: (context) => ChildBedroomController()), //injetando o controller do módulo childBedroom
         ChangeNotifierProvider(create: (context) => KitchenController()), //injetando o controller do módulo kitchen
-        
+        ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read(),)), //injetando o controller do módulo customer
+        ChangeNotifierProvider(create: (context) => TechnicalVisitController(technicalVisitService: context.read<TechnicalVisitService>())), //injetando o controller do módulo technicalVisit
+  
       ],      child: const AppWidget(),
     );
   }
