@@ -11,7 +11,7 @@ import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_con
 import 'package:organizame/app/modules/environment/enviromentLivingRoom/livingRoom_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
-import 'package:organizame/app/modules/tecnicalVisit/visit_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:organizame/app/repositories/customer/customer_repository.dart';
 import 'package:organizame/app/repositories/customer/customer_repository_impl.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';

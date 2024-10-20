@@ -40,8 +40,7 @@ class OrganizameTimeButton extends StatelessWidget {
           controller.text = timeFormat.format(selectedDateTime);
           context.read<TaskController>().setSelectedTime = selectedDateTime;
 
-          // // Invoca o callback se definido
-          // onDateSelected?.call(selectedDateTime);
+          
         }
       },
       child: Container(

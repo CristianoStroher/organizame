@@ -32,8 +32,7 @@ class HomeController extends DefautChangeNotifer {
       _tasksService.getWeek(),
     ]);
 
-    // Logger().i('allTasks: $allTasks');
-
+   
     final todayTasks = (allTasks[0] as List<TaskObject>)
       ..sort((a, b) => _combineDateTime(a).compareTo(_combineDateTime(b)));
     final tomorrowTasks = (allTasks[1] as List<TaskObject>)

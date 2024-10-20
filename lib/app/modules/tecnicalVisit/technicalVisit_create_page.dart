@@ -3,22 +3,22 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
-import 'package:organizame/app/modules/tecnicalVisit/widgets/environment_list.dart';
-import 'package:organizame/app/modules/tecnicalVisit/widgets/visit_header.dart';
+import 'package:organizame/app/modules/tecnicalVisit/widgets/technicalVisit_header.dart';
+import 'package:organizame/app/modules/tecnicalVisit/widgets/technicalVisit_list.dart';
 
 
-class VisitCreatePage extends StatefulWidget {
+class TechnicalvisitCreatePage extends StatefulWidget {
 
-  VisitCreatePage({
+  TechnicalvisitCreatePage({
     super.key,
   });
 
   @override
-  State<VisitCreatePage> createState() => _VisitCreatePageState();
+  State<TechnicalvisitCreatePage> createState() => _TechnicalvisitCreatePage();
 }
 
 
-class _VisitCreatePageState extends State<VisitCreatePage> {
+class _TechnicalvisitCreatePage extends State<TechnicalvisitCreatePage> {
 
   @override
   void initState() {
@@ -63,9 +63,9 @@ class _VisitCreatePageState extends State<VisitCreatePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const VisitHeader(),
+                const TechnicalvisitHeader(),
                 const SizedBox(height: 10),
-                EnvironmentList(
+                TechnicalvisitList(
                   environments: [
                     EnvironmentObject(
                       name: 'QUARTO CASAL',

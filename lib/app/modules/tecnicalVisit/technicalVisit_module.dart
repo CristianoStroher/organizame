@@ -3,16 +3,16 @@ import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controlle
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_create_page.dart';
 import 'package:organizame/app/modules/environment/enviroment_controller.dart';
 import 'package:organizame/app/modules/environment/enviroment_page.dart';
-import 'package:organizame/app/modules/tecnicalVisit/visit_controller.dart';
-import 'package:organizame/app/modules/tecnicalVisit/visit_create_page.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_create_page.dart';
 import 'package:organizame/app/repositories/customer/customer_repository.dart';
 import 'package:organizame/app/repositories/customer/customer_repository_impl.dart';
 import 'package:organizame/app/services/customer/customer_service.dart';
 import 'package:organizame/app/services/customer/customer_service_impl.dart';
 import 'package:provider/provider.dart';
 
-class VisitModule extends OrganizameModule {
-  VisitModule()
+class TechnicalvisitModule extends OrganizameModule {
+  TechnicalvisitModule()
       : super(
           bindings: [
             Provider<CustomerRepository>(
@@ -36,7 +36,7 @@ class VisitModule extends OrganizameModule {
           ],
           routers: {
             '/visit/create': (context) =>
-                VisitCreatePage(), // rota para a tela de criação de visitas
+                TechnicalvisitCreatePage(), // rota para a tela de criação de visitas
             '/customer/create': (context) => CustomerCreatePage(), // rota para a tela de criação de clientes
             '/environment': (context) =>
                 const EnviromentPage(), // rota para a tela de ambiente

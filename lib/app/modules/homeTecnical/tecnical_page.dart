@@ -5,7 +5,7 @@ import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/homeTecnical/widgets/visit.dart';
-import 'package:organizame/app/modules/tecnicalVisit/visit_module.dart';
+
 
 class TecnicalPage extends StatefulWidget {
   const TecnicalPage({super.key});
@@ -24,24 +24,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
 
   Future<void> _goToTaskPage(BuildContext appcontext) async {
     await Navigator.of(appcontext).pushNamed('/visit/create');
-      // PageRouteBuilder(
-      //   transitionDuration: const Duration(milliseconds: 600),
-      //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      //     animation = CurvedAnimation(
-      //       parent: animation,
-      //       curve: Curves.easeInQuad,
-      //     );
-      //     return ScaleTransition(
-      //       scale: animation,
-      //       alignment: Alignment.bottomRight,
-      //       child: child,
-      //     );
-      //   },
-      //   pageBuilder: (context, animation, secondaryAnimation) {
-      //     return VisitModule().getPage('/visit/create', appcontext);
-      //   },
-      // ),
-    // );
+
   }
 
   @override

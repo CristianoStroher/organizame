@@ -3,20 +3,20 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
-import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
-import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
+import 'package:organizame/app/core/Widget/organizame_calendar_button.dart';
+import 'package:organizame/app/core/Widget/organizame_time.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controller.dart';
 import 'package:provider/provider.dart';
 
-class VisitHeader extends StatefulWidget {
-  const VisitHeader({super.key});
+class TechnicalvisitHeader extends StatefulWidget {
+  const TechnicalvisitHeader({super.key});
 
   @override
-  _VisitHeaderState createState() => _VisitHeaderState();
+  _TechnicalvisitHeader createState() => _TechnicalvisitHeader();
 }
 
-class _VisitHeaderState extends State<VisitHeader> {
+class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
   String? selectedClient;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();

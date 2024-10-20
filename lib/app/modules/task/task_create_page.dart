@@ -10,8 +10,8 @@ import 'package:organizame/app/core/notifier/defaut_listener_notifier.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
-import 'package:organizame/app/modules/task/widgets/organizame_calendar_button.dart';
-import 'package:organizame/app/modules/task/widgets/organizame_time.dart';
+import 'package:organizame/app/core/Widget/organizame_calendar_button.dart';
+import 'package:organizame/app/core/Widget/organizame_time.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 

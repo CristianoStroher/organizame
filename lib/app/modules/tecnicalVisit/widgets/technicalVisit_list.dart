@@ -4,10 +4,10 @@ import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/environment/widgets/enviroment.dart';
 
-class EnvironmentList extends StatelessWidget {
+class TechnicalvisitList extends StatelessWidget {
   final List<EnvironmentObject> environments;
 
-  const EnvironmentList({
+  const TechnicalvisitList({
     super.key,
     required this.environments,
   });
