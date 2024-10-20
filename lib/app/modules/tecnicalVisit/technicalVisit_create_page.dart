@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
-import 'package:organizame/app/models/enviroment_object.dart';
+import 'package:organizame/app/models/enviroment_object3.dart';
 import 'package:organizame/app/modules/tecnicalVisit/widgets/technicalVisit_header.dart';
 import 'package:organizame/app/modules/tecnicalVisit/widgets/technicalVisit_list.dart';
 

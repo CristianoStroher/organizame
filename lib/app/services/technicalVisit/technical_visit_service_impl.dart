@@ -12,12 +12,18 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
   }) : _technicalVisitRepository = technicalVisitRepository;
 
   @override
-  Future<void> createTechnicalVisit(TechnicalVisitObject technicalVisit) async {
+  Future<void> createTechnicalVisit(TechnicalVisitObject technicalVisitObject) async {
 
-    if (!technicalVisit.isValid()) {
+    if (!technicalVisitObject.isValid()) {
       throw ArgumentError('Visita técnica inválida');
     }
-    await _technicalVisitRepository.createTechnicalVisit(technicalVisit);
+    await _technicalVisitRepository.createTechnicalVisit(technicalVisitObject);
 
 }
+
+  @override
+  Future<List<TechnicalVisitObject>> getAllTechnicalVisits() {
+
+        return _technicalVisitRepository.getAllTechnicalVisits();
+  }
 }

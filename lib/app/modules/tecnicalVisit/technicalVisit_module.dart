@@ -25,11 +25,9 @@ class TechnicalvisitModule extends OrganizameModule {
                         context.read())), // injetando o serviço de cliente
             ChangeNotifierProvider(
                 create: (context) =>
-                    VisitController()), // injetando o controller da tela de visitas
+                    TechnicalVisitController(technicalVisitService: context.read())), // injetando o controller da tela de visitas
             ChangeNotifierProvider(
-                create: (context) => CustomerController(
-                    customerService: context
-                        .read())), // injetando o controller da tela de clientes
+                create: (context) => CustomerController(customerService: context.read())), // injetando o controller da tela de clientes
             ChangeNotifierProvider(
                 create: (context) =>
                     EnviromentController()), // injetando o controller da tela de ambiente
@@ -43,3 +41,4 @@ class TechnicalvisitModule extends OrganizameModule {
           },
         );
 }
+

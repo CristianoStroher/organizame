@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/models/enviroment_object2.dart';
+import 'package:organizame/app/models/enviroment_object.dart';
 
 class TechnicalVisitObject {
   final String id;
   final DateTime date;
   final DateTime time;
   final CustomerObject customer;
-  final List<EnviromentObject2>? enviroments;
+  final List<EnviromentObject>? enviroments;
 
   TechnicalVisitObject({
     required this.id,
@@ -24,7 +24,7 @@ class TechnicalVisitObject {
       time: (map['hora'] as Timestamp).toDate(),
       customer: CustomerObject.fromMap(map['cliente'] as Map<String, dynamic>),
       enviroments: (map['ambientes'] as List<dynamic>)
-          .map((e) => EnviromentObject2.fromMap(e as Map<String, dynamic>))
+          .map((e) => EnviromentObject.fromMap(e as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -49,7 +49,7 @@ class TechnicalVisitObject {
     DateTime? data,
     DateTime? time,
     CustomerObject? customer,
-    List<EnviromentObject2>? ambientes,
+    List<EnviromentObject>? ambientes,
   }) {
     return TechnicalVisitObject(
       id: id ?? this.id,

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
-import 'package:organizame/app/models/enviroment_object2.dart';
+import 'package:organizame/app/models/enviroment_object.dart';
 
 import './enviroment_repository.dart';
 
@@ -17,7 +17,7 @@ class EnviromentRepositoryImpl extends EnviromentRepository {
         _logger = logger ?? Logger();
 
   @override
-  Future<void> saveEnviroment(EnviromentObject2 enviroment) async {
+  Future<void> saveEnviroment(EnviromentObject enviroment) async {
     try {
 
       await _firestore
