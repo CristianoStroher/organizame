@@ -10,7 +10,8 @@ import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controlle
 import 'package:provider/provider.dart';
 
 class TechnicalvisitHeader extends StatefulWidget {
-  const TechnicalvisitHeader({super.key});
+
+  TechnicalvisitHeader({super.key});
 
   @override
   _TechnicalvisitHeader createState() => _TechnicalvisitHeader();
@@ -148,3 +149,5 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
     );
   }
 }
+
+

@@ -11,34 +11,38 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
   @override
-  Future<void> createTechnicalVisit(TechnicalVisitObject technicalVisitObject) async {
+  Future<void> saveTechnicalVisit(
+      TechnicalVisitObject technicalVisitObject) async {
     try {
       await _firestore
           .collection(_collection)
           .doc(technicalVisitObject.id)
           .set(technicalVisitObject.toMap());
     } catch (e) {
-      throw Exception('Falha ao criar visita técnica: $e');
       Logger().e('Falha ao criar visita técnica: $e');
+      throw Exception('Falha ao criar visita técnica: $e');
     }
   }
-  
+
   @override
-  Future<List<TechnicalVisitObject>> getAllTechnicalVisits() {
+  Future<List<TechnicalVisitObject>> getAllTechnicalVisits() async {
     try {
-      return _firestore.collection(_collection).get().then((querySnapshot) {
-        return querySnapshot.docs
-            .map((doc) => TechnicalVisitObject.fromMap(doc.data()))
-            .toList();
-      });
+      final querySnapshot = await _firestore.collection(_collection).get();
+      final visits = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        if (data != null) {
+          return TechnicalVisitObject.fromFirestore(doc);
+        } else {
+          Logger().w('Documento vazio ou inválido: ${doc.id}');
+          throw Exception('Documento inválido: ${doc.id}');
+        }
+      }).toList();
+
+      Logger().i('Visitas técnicas carregadas: ${visits.length}');
+      return visits;
     } catch (e) {
-      throw Exception('Falha ao buscar visitas técnicas: $e');
       Logger().e('Falha ao buscar visitas técnicas: $e');
+      throw Exception('Falha ao buscar visitas técnicas: $e');
     }
-  
   }
-  
-  
-    
-  
 }

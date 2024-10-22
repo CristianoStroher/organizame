@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 
@@ -23,22 +24,29 @@ class TechnicalVisitObject {
       date: (map['data'] as Timestamp).toDate(),
       time: (map['hora'] as Timestamp).toDate(),
       customer: CustomerObject.fromMap(map['cliente'] as Map<String, dynamic>),
-      enviroments: (map['ambientes'] as List<dynamic>)
-          .map((e) => EnviromentObject.fromMap(e as Map<String, dynamic>))
-          .toList(),
+      enviroments: map['ambientes'] != null
+          ? (map['ambientes'] as List<dynamic>)
+              .map((e) => EnviromentObject.fromMap(e as Map<String, dynamic>))
+              .toList()
+          : [],
     );
   }
 
   factory TechnicalVisitObject.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data() as Map<String, dynamic>?;
+
+    if (data == null) {
+      throw Exception('Document data is null');
+    }
+
     return TechnicalVisitObject.fromMap(data);
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'data': Timestamp.fromDate(date),
-      'hora': Timestamp.fromDate(time),
+      'data': DateFormat('yyyy-MM-dd').format(date),
+      'hora': DateFormat('HH:mm:ss').format(time),
       'cliente': customer.toMap(),
       'ambientes': enviroments?.map((e) => e.toMap()).toList(),
     };
@@ -46,17 +54,17 @@ class TechnicalVisitObject {
 
   TechnicalVisitObject copyWith({
     String? id,
-    DateTime? data,
+    DateTime? date,
     DateTime? time,
     CustomerObject? customer,
-    List<EnviromentObject>? ambientes,
+    List<EnviromentObject>? enviroments,
   }) {
     return TechnicalVisitObject(
       id: id ?? this.id,
-      date: data ?? date,
+      date: date ?? this.date,
       time: time ?? this.time,
       customer: customer ?? this.customer,
-      enviroments: ambientes ?? enviroments ?? [],
+      enviroments: enviroments ?? enviroments ?? [],
     );
   }
 
@@ -66,8 +74,8 @@ class TechnicalVisitObject {
   }
 
   bool isValid() {
-    final DateTime dateTime =
-        DateTime(date.year, date.month, date.day, time.hour, time.minute);
-    return id.isNotEmpty && !dateTime.isBefore(DateTime.now());
+    return id.isNotEmpty &&
+        customer.name.isNotEmpty &&
+        customer.name.isNotEmpty;
   }
 }

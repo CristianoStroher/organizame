@@ -70,18 +70,18 @@ class EnviromentObject {
   }) {
     return EnviromentObject(
       id: id ?? this.id,
-      name: nome ?? this.name,
-      descroiption: descricao ?? this.descroiption,
+      name: nome ?? name,
+      descroiption: descricao ?? descroiption,
       metragem: metragem ?? this.metragem,
-      difficulty: dificuldade ?? this.difficulty,
-      observation: observacao ?? this.observation,
+      difficulty: dificuldade ?? difficulty,
+      observation: observacao ?? observation,
       itens: itens ?? Map.from(this.itens),
     );
   }
 
   bool isValid() {
     return id.isNotEmpty && name.isNotEmpty && descroiption.isNotEmpty;
-  }
+  }  
 
   bool? getItem(EnviromentItensEnum item) {
     return itens[item];

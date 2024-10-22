@@ -24,7 +24,7 @@ class TechnicalvisitList extends StatelessWidget {
               const SizedBox(height: 10),
 
               if (environments.isEmpty)
-                const Text('Nenhum ambiente cadastrado')
+                Text('Nenhum ambiente cadastrado.', style: TextStyle(color: context.primaryColor))
               else
                 ListView.builder(
                   shrinkWrap: true,

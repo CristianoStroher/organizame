@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
@@ -7,51 +8,114 @@ import 'package:organizame/app/models/customer_object.dart';
 class TechnicalVisitController extends DefautChangeNotifer {
   final TechnicalVisitService _technicalVisitService;
 
-  List<TechnicalVisitObject> _technicalVisits = []; // Lista de visitas técnicas
-  TechnicalVisitObject? currentVisit; // Visita técnica atual
-  List<EnviromentObject> currentEnvironments = []; // Lista de ambientes atuais
+  bool _isSuccess = false;
+  bool get hasSuccess => _isSuccess;
 
-  TechnicalVisitController({required TechnicalVisitService technicalVisitService})
-      : _technicalVisitService = technicalVisitService;
+  List<TechnicalVisitObject> _technicalVisits = [];
+  TechnicalVisitObject? currentVisit;
+  List<EnviromentObject> currentEnvironments = [];
 
+  TechnicalVisitController({
+    required TechnicalVisitService technicalVisitService,
+  }) : _technicalVisitService = technicalVisitService;
 
-  // função para carregar todas as visitas técnicas
-  Future<void> loadAllVisit() async {
+  /// Reset _isSuccess to ensure a clean state between operations.
+  void _resetSuccessState() {
+    _isSuccess = false;
+  }
+
+  Future<void> loadAllVisits() async {
     try {
+      _resetSuccessState(); // Reset success state
       showLoadingAndResetState();
-      _technicalVisits = await _technicalVisitService.getAllTechnicalVisits();
+      
+      final visits = await _technicalVisitService.getAllTechnicalVisits();
+
+      if (visits != _technicalVisits) { 
+        _technicalVisits = visits;
+        notifyListeners();
+      }
+      
       hideLoading();
-      notifyListeners();
     } on Exception catch (e) {
+      Logger().e('Erro ao buscar as visitas técnicas: $e');
       setError('Erro ao buscar as visitas técnicas: $e');
     }
   }
 
-  // função para criar uma nova visita técnica
-  Future<void> createTechnicalVisit(TechnicalVisitObject technicalVisit) async {
+  Future<void> saveTechnicalVisit(TechnicalVisitObject technicalVisit) async {
+    if (currentVisit == null) {
+      setError('Nenhuma visita para salvar');
+      return;
+    }
+
     try {
+      _resetSuccessState(); 
       showLoadingAndResetState();
-      await _technicalVisitService.createTechnicalVisit(technicalVisit);
-      hideLoading();
-      success();
-      await loadAllVisit();
+
+      final visitToSave = currentVisit!.copyWith(enviroments: currentEnvironments);
+
+      await _technicalVisitService.saveTechnicalVisit(visitToSave);
+
+      _isSuccess = true;
+
+      
+      currentVisit = null;
+      currentEnvironments.clear();
+
+      
+      await loadAllVisits();
     } catch (e) {
-      setError('Erro ao criar nova visita técnica: $e');
+      _isSuccess = false;
+      Logger().e('Erro ao salvar visita técnica: $e');
+      setError('Erro ao salvar visita técnica: $e');
     }
   }
 
-  // função para adicionar um ambiente a visita técnica
   void initNewVisit() {
+    _resetSuccessState(); 
+
     currentVisit = TechnicalVisitObject(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       date: DateTime.now(),
       time: DateTime.now(),
-      customer: CustomerObject(id: '', name: ''), // Cliente vazio
+      customer: CustomerObject(id: '', name: ''),
       enviroments: [],
     );
     currentEnvironments.clear();
     notifyListeners();
   }
 
-  void addEnvironment(EnviromentObject newEnvironment) {}
+ 
+  void addEnvironment(EnviromentObject newEnvironment) {
+    if (newEnvironment.isValid()) { // Assume isValid() checks for validity
+      currentEnvironments.add(newEnvironment);
+      notifyListeners(); 
+    } else {
+      Logger().e('Ambiente inválido: ${newEnvironment.toString()}');
+      setError('Ambiente inválido');
+    }
+  }
+
+  void updateVisitDetails({
+    CustomerObject? customer,
+    DateTime? date,
+    DateTime? time,
+  }) {
+    if (currentVisit != null) {
+      final updatedVisit = currentVisit!.copyWith(
+        customer: customer ?? currentVisit!.customer,
+        date: date ?? currentVisit!.date,
+        time: time ?? currentVisit!.time,
+      );
+
+      if (updatedVisit != currentVisit) { 
+        currentVisit = updatedVisit;
+        notifyListeners(); // Notify only if something changed
+      }
+    }
+  }
+
+  List<TechnicalVisitObject> get technicalVisits => _technicalVisits;
+  bool get hasCurrentVisits => currentVisit != null;
 }

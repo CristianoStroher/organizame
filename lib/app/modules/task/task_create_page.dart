@@ -154,8 +154,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                     OrganizameElevatedButton(
                       label: 'Salvar',
                       onPressed: () {
-                        final formValid =
-                            _globalKey.currentState?.validate() ?? false;
+                        final formValid = _globalKey.currentState?.validate() ?? false;
 
                         if (formValid) {
                           if (widget.task != null) {
