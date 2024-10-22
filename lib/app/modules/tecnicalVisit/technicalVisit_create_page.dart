@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/models/technicalVisit_object.dart';
+
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/widgets/technicalVisit_header.dart';
 import 'package:organizame/app/modules/tecnicalVisit/widgets/technicalVisit_list.dart';
 import 'package:provider/provider.dart';
 
 class TechnicalvisitCreatePage extends StatefulWidget {
-  
-      TechnicalvisitCreatePage({Key? key}) : super(key: key);
+  const TechnicalvisitCreatePage({Key? key}) : super(key: key);
 
   @override
-  State<TechnicalvisitCreatePage> createState() => _TechnicalvisitCreatePageState();
+  State<TechnicalvisitCreatePage> createState() =>
+      _TechnicalvisitCreatePageState();
 }
 
 class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
@@ -22,9 +24,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
 
   final dateController = TextEditingController();
   final timeController = TextEditingController();
-  final selectedClient = ValueNotifier<String?>(null);
-
-  
+  final selectedClient = ValueNotifier<CustomerObject?>(null);
 
   @override
   void initState() {
@@ -33,71 +33,18 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
       context.read<TechnicalVisitController>().initNewVisit();
     });
   }
-  
+
   @override
   dispose() {
     super.dispose();
     dateController.dispose();
     timeController.dispose();
-    selectedClient.dispose();
-  }
-
-  // void _saveVisit(BuildContext context, TechnicalVisitController controller) async {
-  //   if (_globalKey.currentState!.validate()) {
-  //     try {
-  //       // Obter referência ao header
-  //       final headerState = context.findAncestorStateOfType<_TechnicalvisitHeader>();
-  //       if (headerState == null) {
-  //         throw Exception('Não foi possível acessar os dados do cabeçalho');
-  //       }
-
-  //       // Converter as strings de data e hora para DateTime
-  //       final date = DateFormat('dd/MM/yyyy').parse(headerState.dateEC.text);
-  //       final time = DateFormat('HH:mm').parse(headerState.timeEC.text);
-
-  //       // Encontrar o cliente selecionado
-  //       final selectedCustomer = headerState.selectedClient;
-  //       if (selectedCustomer == null) {
-  //         throw Exception('Por favor, selecione um cliente');
-  //       }
-
-  //       // Atualizar os detalhes da visita no controller
-  //       controller.updateVisitDetails(
-  //         customer: CustomerObject(
-  //           id: '', // O ID será gerado pelo Firestore
-  //           name: selectedCustomer,
-  //           phone: headerState.phoneController.text,
-  //           address: headerState.addressController.text,
-  //         ),
-  //         date: date,
-  //         time: time,
-  //       );
-
-  //       // Salvar a visita
-  //       await controller.saveTechnicalVisit(controller.currentVisit!);
-
-  //       if (controller.hasSuccess) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text('Visita técnica salva com sucesso!')),
-  //         );
-  //         Navigator.of(context).pop();
-  //       } else {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text('Falha ao salvar visita técnica')),
-  //         );
-  //       }
-  //     } catch (e) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Erro ao salvar visita técnica: $e')),
-  //       );
-  //     }
-  //   }
-  // }
+    selectedClient.dispose();}
 
   @override
   Widget build(BuildContext context) {
     final controller = context.read<TechnicalVisitController>();
-    
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -129,22 +76,31 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TechnicalvisitHeader(
-                    /* dateController: dateController,
-                    timeController: timeController,
-                    selectedClient: selectedClient, */
-                    // onClienteChanged: (cliente) => controller.updateVisitDetails(
-                    //   customer: CustomerObject(id: '', name: cliente),
-                    // ),
-                    // onDataChanged: (data) => controller.updateVisitDetails(date: data),
-                    // onTimeChanged: (hora) => controller.updateVisitDetails(time: hora),
+                    onClientSelected: (customer) {
+                      selectedClient.value = customer;
+                    },
                   ),
                   const SizedBox(height: 10),
                   TechnicalvisitList(),
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_globalKey.currentState!.validate() ?? false) {
+                        final newVisit = TechnicalVisitObject(
+                          id: UniqueKey().toString(), // Gere um ID único
+                          data: DateTime.parse(dateController.text), // Converta a data para DateTime
+                          hora: DateTime.parse(timeController.text), // Converta a hora para DateTime
+                          cliente: selectedClient.value!, // Obtém o cliente selecionado
+                          ambientes: [], // Preencha com os ambientes conforme necessário
+                          );
+
+                        controller.saveTechnicalVisit(newVisit);
+
+                        Navigator.of(context).pop();
+                      }
+                    },
                     label: 'Salvar',
-                    textColor: const Color(0xFFFAFFC5),                    
+                    textColor: const Color(0xFFFAFFC5),
                   ),
                   const SizedBox(height: 40),
                 ],
@@ -155,5 +111,4 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
       ),
     );
   }
-
-} 
+}

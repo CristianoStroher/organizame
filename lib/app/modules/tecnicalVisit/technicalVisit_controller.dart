@@ -19,23 +19,22 @@ class TechnicalVisitController extends DefautChangeNotifer {
     required TechnicalVisitService technicalVisitService,
   }) : _technicalVisitService = technicalVisitService;
 
-  /// Reset _isSuccess to ensure a clean state between operations.
   void _resetSuccessState() {
     _isSuccess = false;
   }
 
   Future<void> loadAllVisits() async {
     try {
-      _resetSuccessState(); // Reset success state
+      _resetSuccessState();
       showLoadingAndResetState();
-      
+
       final visits = await _technicalVisitService.getAllTechnicalVisits();
 
-      if (visits != _technicalVisits) { 
+      if (visits != _technicalVisits) {
         _technicalVisits = visits;
         notifyListeners();
       }
-      
+
       hideLoading();
     } on Exception catch (e) {
       Logger().e('Erro ao buscar as visitas técnicas: $e');
@@ -44,26 +43,14 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }
 
   Future<void> saveTechnicalVisit(TechnicalVisitObject technicalVisit) async {
-    if (currentVisit == null) {
-      setError('Nenhuma visita para salvar');
-      return;
-    }
-
     try {
-      _resetSuccessState(); 
+      _resetSuccessState();
       showLoadingAndResetState();
 
-      final visitToSave = currentVisit!.copyWith(enviroments: currentEnvironments);
-
-      await _technicalVisitService.saveTechnicalVisit(visitToSave);
+      await _technicalVisitService.saveTechnicalVisit(technicalVisit);
 
       _isSuccess = true;
 
-      
-      currentVisit = null;
-      currentEnvironments.clear();
-
-      
       await loadAllVisits();
     } catch (e) {
       _isSuccess = false;
@@ -73,24 +60,23 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }
 
   void initNewVisit() {
-    _resetSuccessState(); 
+    _resetSuccessState();
 
     currentVisit = TechnicalVisitObject(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      date: DateTime.now(),
-      time: DateTime.now(),
-      customer: CustomerObject(id: '', name: ''),
-      enviroments: [],
+      data: DateTime.now(),
+      hora: DateTime.now(),
+      cliente: CustomerObject(id: '', name: ''),
+      ambientes: [],
     );
     currentEnvironments.clear();
     notifyListeners();
   }
 
- 
   void addEnvironment(EnviromentObject newEnvironment) {
-    if (newEnvironment.isValid()) { // Assume isValid() checks for validity
+    if (newEnvironment.isValid()) {
       currentEnvironments.add(newEnvironment);
-      notifyListeners(); 
+      notifyListeners();
     } else {
       Logger().e('Ambiente inválido: ${newEnvironment.toString()}');
       setError('Ambiente inválido');
@@ -104,14 +90,14 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }) {
     if (currentVisit != null) {
       final updatedVisit = currentVisit!.copyWith(
-        customer: customer ?? currentVisit!.customer,
-        date: date ?? currentVisit!.date,
-        time: time ?? currentVisit!.time,
+        cliente: customer ?? currentVisit!.cliente,
+        data: date ?? currentVisit!.data,
+        hora: time ?? currentVisit!.hora,
       );
 
-      if (updatedVisit != currentVisit) { 
+      if (updatedVisit != currentVisit) {
         currentVisit = updatedVisit;
-        notifyListeners(); // Notify only if something changed
+        notifyListeners();
       }
     }
   }
@@ -119,3 +105,4 @@ class TechnicalVisitController extends DefautChangeNotifer {
   List<TechnicalVisitObject> get technicalVisits => _technicalVisits;
   bool get hasCurrentVisits => currentVisit != null;
 }
+

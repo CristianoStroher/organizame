@@ -10,8 +10,9 @@ import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controlle
 import 'package:provider/provider.dart';
 
 class TechnicalvisitHeader extends StatefulWidget {
+  final Function(CustomerObject?)? onClientSelected;
 
-  TechnicalvisitHeader({super.key});
+  TechnicalvisitHeader({super.key, this.onClientSelected});
 
   @override
   _TechnicalvisitHeader createState() => _TechnicalvisitHeader();
