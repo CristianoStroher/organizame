@@ -44,11 +44,7 @@ class TechnicalvisitList extends StatelessWidget {
               const SizedBox(height: 20),
               OrganizameElevatedButton(
                 onPressed: () async {
-                  final newEnvironment = await Navigator.of(context).pushNamed('/environment') as EnviromentObject?;
-                  if (newEnvironment != null) {
-                    controller.addEnvironment(newEnvironment);
-                  }
-                },
+                  final newEnvironment = await Navigator.of(context).pushNamed('/environment') as EnviromentObject?;},
                 label: 'Adicionar Ambiente',
                 textColor: const Color(0xFFFAFFC5),
               ),

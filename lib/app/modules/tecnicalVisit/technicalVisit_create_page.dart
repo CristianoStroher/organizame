@@ -12,7 +12,14 @@ import 'package:organizame/app/modules/tecnicalVisit/widgets/technicalVisit_list
 import 'package:provider/provider.dart';
 
 class TechnicalvisitCreatePage extends StatefulWidget {
-  const TechnicalvisitCreatePage({Key? key}) : super(key: key);
+  final TechnicalVisitObject? technicalVisit;
+  final TechnicalVisitController _controller;
+
+  const TechnicalvisitCreatePage({
+    super.key,
+    this.technicalVisit,
+    required controller,
+  }) : _controller = controller;
 
   @override
   State<TechnicalvisitCreatePage> createState() =>
@@ -21,30 +28,25 @@ class TechnicalvisitCreatePage extends StatefulWidget {
 
 class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
   final _globalKey = GlobalKey<FormState>();
-
-  final dateController = TextEditingController();
-  final timeController = TextEditingController();
   final selectedClient = ValueNotifier<CustomerObject?>(null);
+  final TextEditingController dateEC = TextEditingController();
+  final TextEditingController timeEC = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<TechnicalVisitController>().initNewVisit();
-    });
   }
 
   @override
   dispose() {
     super.dispose();
-    dateController.dispose();
-    timeController.dispose();
-    selectedClient.dispose();}
+    dateEC.dispose();
+    timeEC.dispose();
+    selectedClient.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<TechnicalVisitController>();
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -76,29 +78,21 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TechnicalvisitHeader(
-                    onClientSelected: (customer) {
-                      selectedClient.value = customer;
+                    onClientSelected: (cliente) {
+                      selectedClient.value = cliente;
+                    },
+                    onDateSelected: (date) {
+                      dateEC.text = date.toIso8601String();
+                    },
+                    onTimeSelected: (time) {
+                      timeEC.text = time.format(context);
                     },
                   ),
                   const SizedBox(height: 10),
                   TechnicalvisitList(),
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
-                    onPressed: () {
-                      if (_globalKey.currentState!.validate() ?? false) {
-                        final newVisit = TechnicalVisitObject(
-                          id: UniqueKey().toString(), // Gere um ID único
-                          data: DateTime.parse(dateController.text), // Converta a data para DateTime
-                          hora: DateTime.parse(timeController.text), // Converta a hora para DateTime
-                          cliente: selectedClient.value!, // Obtém o cliente selecionado
-                          ambientes: [], // Preencha com os ambientes conforme necessário
-                          );
-
-                        controller.saveTechnicalVisit(newVisit);
-
-                        Navigator.of(context).pop();
-                      }
-                    },
+                    onPressed: () => _saveVisitTechnical(context),
                     label: 'Salvar',
                     textColor: const Color(0xFFFAFFC5),
                   ),
@@ -110,5 +104,56 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         },
       ),
     );
+  }
+
+  Future<void> _saveVisitTechnical(BuildContext context) async {
+    final formValid = _globalKey.currentState?.validate() ?? false;
+
+    if (!formValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Por favor, preencha todos os campos obrigatórios.')),
+      );
+      return;
+    }
+
+    if (selectedClient.value == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, selecione um cliente.')),
+      );
+      return;
+    }
+
+    try {
+      // Processamento da data
+      final DateTime dateValue = DateTime.parse(dateEC.text);
+
+      // Converter TimeOfDay para DateTime
+      final TimeOfDay timeOfDay = TimeOfDay.now(); // Pegar o valor do timeEC
+
+      // Criar DateTime com a data selecionada e a hora atual
+      final DateTime timeValue = DateTime(
+        dateValue.year,
+        dateValue.month,
+        dateValue.day,
+        timeOfDay.hour,
+        timeOfDay.minute,
+      );
+
+      await context.read<TechnicalVisitController>().saveTechnicalVisit(
+            dateValue,
+            timeValue,
+            selectedClient.value!,
+          );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Visita técnica salva com sucesso!')),
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao salvar visita técnica: $e')),
+      );
+    }
   }
 }

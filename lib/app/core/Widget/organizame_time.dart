@@ -11,6 +11,7 @@ class OrganizameTimeButton extends StatelessWidget {
   final String? label;
   final TextEditingController controller;
   final Color color;
+  final Function(TimeOfDay)? onTimeSelected;
 
   OrganizameTimeButton({
     super.key,
@@ -19,7 +20,20 @@ class OrganizameTimeButton extends StatelessWidget {
     required this.controller,
     this.onDateSelected,
     required this.color,
+    this.onTimeSelected,
   });
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (picked != null) {
+      controller.text = picked.format(context);
+      onTimeSelected?.call(picked);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +53,6 @@ class OrganizameTimeButton extends StatelessWidget {
           // Atualiza o controlador e o campo de texto com a hora selecionada
           controller.text = timeFormat.format(selectedDateTime);
           context.read<TaskController>().setSelectedTime = selectedDateTime;
-
-          
         }
       },
       child: Container(

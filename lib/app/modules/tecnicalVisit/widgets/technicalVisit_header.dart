@@ -11,8 +11,15 @@ import 'package:provider/provider.dart';
 
 class TechnicalvisitHeader extends StatefulWidget {
   final Function(CustomerObject?)? onClientSelected;
+  final Function(DateTime)? onDateSelected;
+  final Function(TimeOfDay)? onTimeSelected;
 
-  TechnicalvisitHeader({super.key, this.onClientSelected});
+  const TechnicalvisitHeader({
+    Key? key,
+    this.onClientSelected,
+    this.onDateSelected,
+    this.onTimeSelected,
+  }) : super(key: key);
 
   @override
   _TechnicalvisitHeader createState() => _TechnicalvisitHeader();
@@ -26,33 +33,6 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
   final TextEditingController timeEC = TextEditingController();
 
   bool isFieldsEditable = true;
-
-  @override
-  void dispose() {
-    dateEC.dispose();
-    timeEC.dispose();
-    phoneController.dispose();
-    addressController.dispose();
-    super.dispose();
-  }
-
-  // Função para atualizar os dados do cliente selecionado
-  void _updateClientData(String? newValue, List<CustomerObject> clients) {
-    setState(() {
-      selectedClient = newValue;
-
-      // Procurar o cliente selecionado na lista dinâmica
-      final selectedCustomer = clients.firstWhere(
-        (customer) => customer.name == newValue,
-        orElse: () => CustomerObject(name: '', phone: '', address: ''),
-      );
-
-      // Atualizar os campos de telefone e endereço
-      phoneController.text = selectedCustomer.phone ?? '';
-      addressController.text = selectedCustomer.address ?? '';
-      isFieldsEditable = false; // Desabilita os campos
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +58,7 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                     child: OrganizameCalendarButton(
                       controller: dateEC,
                       color: const Color(0xFFFAFFC5),
+                      onDateSelected: widget.onDateSelected,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -86,12 +67,16 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                       controller: timeEC,
                       label: 'Hora',
                       color: const Color(0xFFFAFFC5),
+                      onTimeSelected: (time) {
+                        if (widget.onTimeSelected != null) {
+                          widget.onTimeSelected!(time);
+                        }
+                      },
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              // Dropdown dinâmico para selecionar clientes
               OrganizameDropdownfield(
                 label: 'Cliente',
                 options: customers.map((customer) => customer.name).toList(),
@@ -109,11 +94,10 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                 label: 'Telefone',
                 hintText: '(99) 99999-9999',
                 controller: phoneController,
-                enabled: false, // Campo completamente desabilitado
-                fillColor: context.secondaryColor
-                    .withOpacity(0.5), // Cor de fundo azul claro
-                filled: true, // Permite que o campo seja preenchido
-                readOnly: true, // Somente leitura
+                enabled: false,
+                fillColor: context.secondaryColor.withOpacity(0.5),
+                filled: true,
+                readOnly: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, informe o telefone';
@@ -126,11 +110,10 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                 label: 'Endereço',
                 hintText: 'Rua, número, bairro',
                 controller: addressController,
-                enabled: false, // Campo completamente desabilitado
-                fillColor: context.secondaryColor
-                    .withOpacity(0.5), // Cor de fundo azul claro
-                filled: true, // Permite que o campo seja preenchido
-                readOnly: true, // Somente leitura
+                enabled: false,
+                fillColor: context.secondaryColor.withOpacity(0.5),
+                filled: true,
+                readOnly: true,
               ),
               const SizedBox(height: 20),
               OrganizameElevatedButton(
@@ -148,6 +131,25 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
         },
       ),
     );
+  }
+
+  void _updateClientData(String? newValue, List<CustomerObject> clients) {
+    setState(() {
+      selectedClient = newValue;
+
+      final selectedCustomer = clients.firstWhere(
+        (customer) => customer.name == newValue,
+        orElse: () => CustomerObject(name: '', phone: '', address: ''),
+      );
+
+      phoneController.text = selectedCustomer.phone ?? '';
+      addressController.text = selectedCustomer.address ?? '';
+      isFieldsEditable = false;
+
+      if (widget.onClientSelected != null) {
+        widget.onClientSelected!(selectedCustomer);
+      }
+    });
   }
 }
 

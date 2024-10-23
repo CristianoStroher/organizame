@@ -59,7 +59,7 @@ class TechnicalvisitModule extends OrganizameModule {
             ),
           ],
           routers: {
-            '/visit/create': (context) => TechnicalvisitCreatePage(),
+            '/visit/create': (context) => TechnicalvisitCreatePage(controller: context.read<TechnicalVisitController>()),
             '/customer/create': (context) => CustomerCreatePage(),
             '/environment': (context) => EnviromentPage(),
           },

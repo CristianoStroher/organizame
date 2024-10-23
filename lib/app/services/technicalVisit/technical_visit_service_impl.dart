@@ -1,3 +1,4 @@
+import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
 
@@ -12,14 +13,9 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
   }) : _technicalVisitRepository = technicalVisitRepository;
 
   @override
-  Future<void> saveTechnicalVisit(TechnicalVisitObject technicalVisitObject) async {
-
-    if (!technicalVisitObject.isValid()) {
-      throw ArgumentError('Visita técnica inválida');
-    }
-    await _technicalVisitRepository.saveTechnicalVisit(technicalVisitObject);
-
-}
+  Future<void> saveTechnicalVisit(DateTime data, DateTime hora, CustomerObject cliente) =>
+    _technicalVisitRepository.saveTechnicalVisit(data, hora, cliente);
+  
 
   @override
   Future<List<TechnicalVisitObject>> getAllTechnicalVisits() {
