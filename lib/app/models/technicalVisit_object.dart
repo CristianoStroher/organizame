@@ -9,14 +9,14 @@ class TechnicalVisitObject {
   final DateTime data;
   final DateTime hora;
   final CustomerObject cliente;
-  final List<EnviromentObject>? ambientes;
+  /* final List<EnviromentObject>? ambientes; */
 
   TechnicalVisitObject({
     this.id,
     required this.data,
     required this.hora,
     required this.cliente,
-    this.ambientes,
+    /* this.ambientes, */
   });
 
   factory TechnicalVisitObject.fromMap(Map<String, dynamic> map) {
@@ -39,11 +39,11 @@ class TechnicalVisitObject {
         data: date,
         hora: combinedDateTime,
         cliente: CustomerObject.fromMap(map['cliente'] as Map<String, dynamic>),
-        ambientes: map['ambientes'] != null
+        /* ambientes: map['ambientes'] != null
             ? (map['ambientes'] as List<dynamic>)
                 .map((e) => EnviromentObject.fromMap(e as Map<String, dynamic>))
                 .toList()
-            : [],
+            : [], */
       );
     } on Exception catch (e) {
       Logger().e('Erro ao converter de Map para TechnicalVisitObject: $e');
@@ -52,13 +52,15 @@ class TechnicalVisitObject {
 
   }
 
+  get customer => null;
+
     Map<String, dynamic> toMap() {
       return {
         'id': id,
         'data': DateFormat('yyyy-MM-dd').format(data),
         'hora': DateFormat('HH:mm:ss').format(hora),
         'cliente': cliente.toMap(),
-        'ambientes': ambientes?.map((e) => e.toMap()).toList(),
+        /* 'ambientes': ambientes?.map((e) => e.toMap()).toList(), */
       };
     }
 
@@ -67,20 +69,21 @@ class TechnicalVisitObject {
       DateTime? data,
       DateTime? hora,
       CustomerObject? cliente,
-      List<EnviromentObject>? ambientes,
+      /* List<EnviromentObject>? ambientes, */
     }) {
       return TechnicalVisitObject(
         id: id ?? this.id,
         data: data ?? this.data,
         hora: hora ?? this.hora,
         cliente: cliente ?? this.cliente,
-        ambientes: ambientes ?? ambientes ?? [],
+        /* ambientes: ambientes ?? ambientes ?? [], */
       );
     }
 
     @override
     String toString() {
-      return 'TechnicalVisitObject(id: $id, date: $data, customer: $cliente, enviroments: $ambientes)';
+      /* return 'TechnicalVisitObject(id: $id, date: $data, customer: $cliente, enviroments: $ambientes)'; */
+      return 'TechnicalVisitObject(id: $id, date: $data, customer: $cliente)';
     }
   }
 

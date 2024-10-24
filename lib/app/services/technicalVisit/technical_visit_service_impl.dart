@@ -1,5 +1,6 @@
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
+import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
 
 import './technical_visit_service.dart';
@@ -7,6 +8,7 @@ import './technical_visit_service.dart';
 class TechnicalVisitServiceImpl extends TechnicalVisitService {
   
   final TechnicalVisitRepository _technicalVisitRepository;
+  
 
   TechnicalVisitServiceImpl({
     required TechnicalVisitRepository technicalVisitRepository,
@@ -16,10 +18,16 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
   Future<void> saveTechnicalVisit(DateTime data, DateTime hora, CustomerObject cliente) =>
     _technicalVisitRepository.saveTechnicalVisit(data, hora, cliente);
   
-
   @override
-  Future<List<TechnicalVisitObject>> getAllTechnicalVisits() {
+  Future<List<TechnicalVisitObject>> getAllTechnicalVisits() =>
+    _technicalVisitRepository.getAllTechnicalVisits();
+    
+  @override
+  Future<bool> deleteTechnicalVisit(TechnicalVisitObject technicalVisitObject) =>
+    _technicalVisitRepository.deleteTechnicalVisit(technicalVisitObject);
+   
 
-        return _technicalVisitRepository.getAllTechnicalVisits();
-  }
+   
+      
+  
 }

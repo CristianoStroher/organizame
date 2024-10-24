@@ -30,18 +30,88 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
     }
   }
 
-  @override
   Future<List<TechnicalVisitObject>> getAllTechnicalVisits() async {
-    final querySnapshot = await _firestore.collection(_collection).get();
-    return querySnapshot.docs.map((doc) {
-      final data = doc.data();
-      return TechnicalVisitObject(
-        id: doc.id,
-        data: data['data'].toDate(),
-        hora: data['hora'].toDate(),
-        cliente: CustomerObject.fromMap(data['cliente']),
-      );
-    }).toList();
+    try {
+      print('Repositório - Buscando visitas no Firestore');
+      final querySnapshot = await _firestore.collection(_collection).get();
+
+      print(
+          'Repositório - Documentos encontrados: ${querySnapshot.docs.length}');
+
+      final List<TechnicalVisitObject> visitas = [];
+
+      for (var doc in querySnapshot.docs) {
+        try {
+          final dados = doc.data();
+          print('Processando documento ${doc.id}:');
+          print('Dados brutos: $dados');
+
+          // Verifica e converte o cliente
+          final clienteMap = dados['cliente'] as Map<String, dynamic>?;
+          print('Cliente dados: $clienteMap');
+
+          if (clienteMap == null) {
+            print('AVISO: Cliente não encontrado para documento ${doc.id}');
+            continue; // Pula este documento
+          }
+
+          final cliente = CustomerObject.fromMap(clienteMap);
+
+          // Verifica e converte data e hora
+          final dataTimestamp = dados['data'];
+          final horaTimestamp = dados['hora'];
+
+          print('Data timestamp: $dataTimestamp');
+          print('Hora timestamp: $horaTimestamp');
+
+          if (dataTimestamp == null) {
+            print('ERRO: Data não encontrada para documento ${doc.id}');
+            continue;
+          }
+
+          final DateTime data = dataTimestamp is DateTime
+              ? dataTimestamp
+              : (dataTimestamp as Timestamp).toDate();
+
+          final DateTime hora = horaTimestamp is DateTime
+              ? horaTimestamp
+              : (horaTimestamp as Timestamp).toDate();
+
+          final visita = TechnicalVisitObject(
+            id: doc.id,
+            data: data,
+            hora: hora,
+            cliente: cliente,
+          );
+
+          print('Visita criada com sucesso: $visita');
+          visitas.add(visita);
+        } catch (e, stackTrace) {
+          print('Erro ao processar documento ${doc.id}: $e');
+          print('Stack trace: $stackTrace');
+          // Continue processando outros documentos
+          continue;
+        }
+      }
+
+      print('Total de visitas processadas com sucesso: ${visitas.length}');
+      return visitas;
+    } catch (e, stackTrace) {
+      print('Erro ao buscar visitas técnicas: $e');
+      print('Stack trace: $stackTrace');
+      rethrow;
+    }
   }
-  
+
+  @override
+  Future<bool> deleteTechnicalVisit(TechnicalVisitObject technicalVisit) async {
+    try {
+      _firestore.collection(_collection).doc(technicalVisit.id).delete();
+      return Future.value(true);
+    } catch (e) {
+      Logger().e('Erro ao deletar a visita técnica: $e');
+      throw Exception('Erro ao deletar a visita técnica: $e');
+      return Future.value(false);
+    }
+  }
 }

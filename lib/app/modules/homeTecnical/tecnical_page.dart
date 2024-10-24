@@ -4,8 +4,9 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
+import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/widgets/visit.dart';
-
+import 'package:provider/provider.dart';
 
 class TecnicalPage extends StatefulWidget {
   const TecnicalPage({super.key});
@@ -16,15 +17,56 @@ class TecnicalPage extends StatefulWidget {
 
 class _TecnicalPageState extends State<TecnicalPage> {
   int index = 1;
-
+  final TextEditingController _searchController = TextEditingController();
+  
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
-  Future<void> _goToTaskPage(BuildContext appcontext) async {
-    await Navigator.of(appcontext).pushNamed('/visit/create');
+  Future<void> _goToTaskPage(BuildContext context) async {
+    final result = await Navigator.of(context).pushNamed('/visit/create');
+    if (result == true) {
+      if (mounted) {
+        context.read<TechnicalController>().refreshVisits();
+      }
+    }
+  }
 
+  void _showFilterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Filtrar por cliente'),
+        content: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Nome do cliente',
+            prefixIcon: Icon(Icons.search),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _searchController.clear();
+              context.read<TechnicalController>().filterByCustomer('');
+            },
+            child: Text('Limpar'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context
+                  .read<TechnicalController>()
+                  .filterByCustomer(_searchController.text);
+            },
+            child: Text('Filtrar'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -36,71 +78,99 @@ class _TecnicalPageState extends State<TecnicalPage> {
       ),
       appBar: AppBar(
         backgroundColor: const Color(0xFFFAFFC5),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            OrganizameLogoMovie(
-              text: 'OrganizaMe',
-              part1Color: context.primaryColor,
-              part2Color: context.secondaryColor,
-            ),
-            const SizedBox(width: 5),
-          ],
+        title: OrganizameLogoMovie(
+          text: 'OrganizaMe',
+          part1Color: context.primaryColor,
+          part2Color: context.secondaryColor,
         ),
         actions: [
-          PopupMenuButton(
-            icon: Icon(OrganizameIcons.filter,
+          IconButton(
+            icon: Icon(OrganizameIcons.filter, 
                 size: 20, color: context.primaryColor),
-            onSelected: (value) => print('value'),
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem<bool>(
-                  value: true,
-                  child: Text(
-                    'Cliente',
-                    style: TextStyle(color: context.primaryColor),
-                  ),
-                ),
-              ];
-            },
+            onPressed: () => _showFilterDialog(context),
+            tooltip: 'Filtrar por cliente',
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await _goToTaskPage(context);
-          // context.read<CustomerController>().refreshPage();
-        },
+        onPressed: () => _goToTaskPage(context),
         backgroundColor: context.primaryColor,
         child: const Icon(Icons.add, color: Color(0xFFFAFFC5)),
+        tooltip: 'Adicionar visita técnica',
       ),
       bottomNavigationBar: OrganizameNavigatorbar(
         color: const Color(0xFFFAFFC5),
         initialIndex: index,
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+      body: Consumer<TechnicalController>(
+        builder: (context, controller, _) {
+          if (controller.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (!controller.hasVisits) {
+            return Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 20),
-                  Text('VISITAS TÉCNICAS', style: context.titleDefaut),
-                  const SizedBox(height: 10),
-                  // Usando uma lista de Visit para demonstrar
-                  const Visit(),
-                  const Visit(),
-                  const Visit(),
-                  const Visit(),
-                  const Visit(),
-                  const Visit(),
-                  const Visit(),
-                  const SizedBox(height: 20),
-                  // Substitua pela lista de visitas se necessário
+                  Icon(
+                    Icons.calendar_today,
+                    size: 48,
+                    color: context.primaryColor.withOpacity(0.5),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Nenhuma visita técnica encontrada',
+                    style: TextStyle(
+                      color: context.primaryColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () => _goToTaskPage(context),
+                    child: const Text('Adicionar visita'),
+                  ),
                 ],
               ),
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: controller.refreshVisits,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: controller.filteredTechnicalVisits.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Text(
+                      'VISITAS TÉCNICAS',
+                      style: context.titleDefaut,
+                    ),
+                  );
+                }
+
+                final visit = controller.filteredTechnicalVisits[index - 1];
+                if (visit.customer == null) return const SizedBox.shrink();
+
+                return Visit(
+                  controller: controller,
+                  object: visit,
+                  onEdit: (visitToEdit) async {
+                    final result = await Navigator.of(context).pushNamed(
+                      '/visit/edit',
+                      arguments: visitToEdit,
+                    );
+                    if (result == true) {
+                      controller.refreshVisits();
+                    }
+                  },
+                );
+              },
             ),
           );
         },

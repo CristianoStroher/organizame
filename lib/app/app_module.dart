@@ -53,7 +53,7 @@ class AppModule extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,),//injetando o provider de autenticação
         ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
         ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
-        ChangeNotifierProvider(create: (context) => TecnicalController()), //injetando o controller do módulo tecnical
+        ChangeNotifierProvider(create: (context) => TechnicalController(technicalVisitService: context.read())), //injetando o controller do módulo tecnical
         ChangeNotifierProvider(create: (context) => LivingRoomController()), //injetando o controller do módulo livingRoom
         ChangeNotifierProvider(create: (context) => ChildBedroomController()), //injetando o controller do módulo childBedroom
         ChangeNotifierProvider(create: (context) => KitchenController()), //injetando o controller do módulo kitchen
