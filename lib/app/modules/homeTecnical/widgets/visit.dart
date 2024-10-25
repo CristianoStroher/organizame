@@ -5,24 +5,19 @@ import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:intl/intl.dart';
 
 class Visit extends StatelessWidget {
+
   final TechnicalController controller;
   final TechnicalVisitObject object;
+  final dateFormatData = DateFormat('dd/MM/yyyy');
+  final dateFormatHora = DateFormat('HH:mm');
   final Function(TechnicalVisitObject) onEdit;
 
-  const Visit({
-    Key? key,
+  Visit({
+    super.key,
     required this.controller,
     required this.object,
     required this.onEdit,
-  }) : super(key: key);
-
-  String _formatDate(DateTime date) {
-    return DateFormat('dd/MM/yyyy').format(date);
-  }
-
-  String _formatTime(DateTime time) {
-    return DateFormat('HH:mm').format(time);
-  }
+  });
 
   Future<void> _confirmDelete(BuildContext context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -73,18 +68,17 @@ class Visit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Validação de dados críticos
-    if (object.customer == null) {
-      return const SizedBox.shrink();
-    }
-
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: InkWell(
-        onTap: () => onEdit(object),
-        child: Column(
+    // // Validação de dados críticos
+    // if (object.customer == null) {
+    //   return const SizedBox.shrink();
+    // }
+    return Column(
           children: [
+            Divider(
+              color: Colors.grey[300], // Linha cinza acima
+              thickness: 1.5,
+              height: 0,
+            ),
             ListTile(
               contentPadding: const EdgeInsets.all(12),
               title: Text(
@@ -108,7 +102,7 @@ class Visit extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        _formatDate(object.data),
+                        dateFormatData.format(object.date),
                         style: context.titleDefaut,
                       ),
                       const SizedBox(width: 16),
@@ -119,7 +113,7 @@ class Visit extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        _formatTime(object.hora),
+                        dateFormatHora.format(object.time),
                         style: context.titleDefaut,
                       ),
                     ],
@@ -169,9 +163,12 @@ class Visit extends StatelessWidget {
                 ],
               ),
             ),
+            Divider(
+              color: Colors.grey[300], // Linha cinza acima
+              thickness: 1.5,
+              height: 0,
+            ),
           ],
-        ),
-      ),
     );
   }
 }

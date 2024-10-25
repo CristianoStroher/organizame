@@ -2,27 +2,26 @@ import 'package:intl/intl.dart';
 
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/models/enviroment_object.dart';
 
 class TechnicalVisitObject {
   final String? id;
-  final DateTime data;
-  final DateTime hora;
-  final CustomerObject cliente;
+  final DateTime date;
+  final DateTime time;
+  final CustomerObject customer;
   /* final List<EnviromentObject>? ambientes; */
 
   TechnicalVisitObject({
     this.id,
-    required this.data,
-    required this.hora,
-    required this.cliente,
+    required this.date,
+    required this.time,
+    required this.customer,
     /* this.ambientes, */
   });
 
   factory TechnicalVisitObject.fromMap(Map<String, dynamic> map) {
     try {
-      final dateStr = map['data'] as String?;
-      final timeStr = map['hora'] as String?;
+      final dateStr = map['date'] as String?;
+      final timeStr = map['time'] as String?;
 
       if (dateStr == null || timeStr == null) {
         throw ArgumentError('Campos obrigatórios ausentes');
@@ -36,9 +35,9 @@ class TechnicalVisitObject {
 
       return TechnicalVisitObject(
         id: map['id'] as String?,
-        data: date,
-        hora: combinedDateTime,
-        cliente: CustomerObject.fromMap(map['cliente'] as Map<String, dynamic>),
+        date: date,
+        time: combinedDateTime,
+        customer: CustomerObject.fromMap(map['customer'] as Map<String, dynamic>),
         /* ambientes: map['ambientes'] != null
             ? (map['ambientes'] as List<dynamic>)
                 .map((e) => EnviromentObject.fromMap(e as Map<String, dynamic>))
@@ -52,14 +51,14 @@ class TechnicalVisitObject {
 
   }
 
-  get customer => null;
+  get customers => null;
 
     Map<String, dynamic> toMap() {
       return {
         'id': id,
-        'data': DateFormat('yyyy-MM-dd').format(data),
-        'hora': DateFormat('HH:mm:ss').format(hora),
-        'cliente': cliente.toMap(),
+        'date': DateFormat('yyyy-MM-dd').format(date),
+        'time': DateFormat('HH:mm:ss').format(time),
+        'customer': customer.toMap(),
         /* 'ambientes': ambientes?.map((e) => e.toMap()).toList(), */
       };
     }
@@ -73,9 +72,9 @@ class TechnicalVisitObject {
     }) {
       return TechnicalVisitObject(
         id: id ?? this.id,
-        data: data ?? this.data,
-        hora: hora ?? this.hora,
-        cliente: cliente ?? this.cliente,
+        date: date ?? this.date,
+        time: time ?? this.time,
+        customer: customer ?? this.customer,
         /* ambientes: ambientes ?? ambientes ?? [], */
       );
     }
@@ -83,7 +82,7 @@ class TechnicalVisitObject {
     @override
     String toString() {
       /* return 'TechnicalVisitObject(id: $id, date: $data, customer: $cliente, enviroments: $ambientes)'; */
-      return 'TechnicalVisitObject(id: $id, date: $data, customer: $cliente)';
+      return 'TechnicalVisitObject(id: $id, date: $date, time: $time, customer: $customer)';
     }
   }
 

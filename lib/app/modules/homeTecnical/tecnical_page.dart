@@ -102,6 +102,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
         color: const Color(0xFFFAFFC5),
         initialIndex: index,
       ),
+
       body: Consumer<TechnicalController>(
         builder: (context, controller, _) {
           if (controller.isLoading) {
@@ -109,7 +110,6 @@ class _TecnicalPageState extends State<TecnicalPage> {
               child: CircularProgressIndicator(),
             );
           }
-
           if (!controller.hasVisits) {
             return Center(
               child: Column(
@@ -128,12 +128,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: () => _goToTaskPage(context),
-                    child: const Text('Adicionar visita'),
-                  ),
-                ],
+],
               ),
             );
           }

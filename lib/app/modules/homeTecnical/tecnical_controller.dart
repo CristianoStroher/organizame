@@ -31,7 +31,7 @@ class TechnicalController extends DefautChangeNotifer {
       final visits = await _service.getAllTechnicalVisits();
       print('Controller - Visitas carregadas: ${visits.length}');
       // Ordenar por data mais recente
-      visits.sort((a, b) => b.data.compareTo(a.data));
+      visits.sort((a, b) => b.date.compareTo(a.date));
 
       _technicalVisits = visits;
       _filteredVisits = visits;

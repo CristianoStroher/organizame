@@ -17,17 +17,17 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }) : _technicalVisitService = technicalVisitService;
 
   Future<void> saveTechnicalVisit(
-      DateTime data, DateTime hora, CustomerObject cliente) async {
+      DateTime date, DateTime time, CustomerObject customer) async {
     try {
       showLoadingAndResetState();
 
       final newTechnicalVisit = TechnicalVisitObject(
-        data: data,
-        hora: hora,
-        cliente: cliente,
+        date: date,
+        time: time,
+        customer: customer,
       );
 
-      await _technicalVisitService.saveTechnicalVisit(data, hora, cliente);
+      await _technicalVisitService.saveTechnicalVisit(date, time, customer);
       Logger().i('Visita técnica salva com sucesso: $newTechnicalVisit');
       success();
     } catch (e) {

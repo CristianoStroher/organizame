@@ -13,15 +13,15 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
 
   @override
   Future<void> saveTechnicalVisit(
-    DateTime data,
-    DateTime hora,
-    CustomerObject cliente,
+    DateTime date,
+    DateTime time,
+    CustomerObject customer,
   ) async {
     try {
       await _firestore.collection(_collection).add({
-        'data': data,
-        'hora': hora,
-        'cliente': cliente.toMap(),
+        'date': date,
+        'time': time,
+        'customer': customer.toMap(),
       });
     } catch (e) {
       Logger().e('Erro ao salvar a visita técnica: $e');
@@ -47,7 +47,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           print('Dados brutos: $dados');
 
           // Verifica e converte o cliente
-          final clienteMap = dados['cliente'] as Map<String, dynamic>?;
+          final clienteMap = dados['customer'] as Map<String, dynamic>?;
           print('Cliente dados: $clienteMap');
 
           if (clienteMap == null) {
@@ -55,11 +55,11 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
             continue; // Pula este documento
           }
 
-          final cliente = CustomerObject.fromMap(clienteMap);
+          final customer = CustomerObject.fromMap(clienteMap);
 
           // Verifica e converte data e hora
-          final dataTimestamp = dados['data'];
-          final horaTimestamp = dados['hora'];
+          final dataTimestamp = dados['date'];
+          final horaTimestamp = dados['time'];
 
           print('Data timestamp: $dataTimestamp');
           print('Hora timestamp: $horaTimestamp');
@@ -69,19 +69,19 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
             continue;
           }
 
-          final DateTime data = dataTimestamp is DateTime
+          final DateTime date = dataTimestamp is DateTime
               ? dataTimestamp
               : (dataTimestamp as Timestamp).toDate();
 
-          final DateTime hora = horaTimestamp is DateTime
+          final DateTime time = horaTimestamp is DateTime
               ? horaTimestamp
               : (horaTimestamp as Timestamp).toDate();
 
           final visita = TechnicalVisitObject(
             id: doc.id,
-            data: data,
-            hora: hora,
-            cliente: cliente,
+            date: date,
+            time: time,
+            customer: customer,
           );
 
           print('Visita criada com sucesso: $visita');
