@@ -337,7 +337,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
                         object: visit,
                         onEdit: (visitToEdit) async {
                           final result = await Navigator.of(context).pushNamed(
-                            '/visit/edit',
+                            '/visit/create',
                             arguments: visitToEdit,
                           );
                           if (result == true) {
