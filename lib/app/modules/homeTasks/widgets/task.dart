@@ -99,7 +99,10 @@ class Task extends StatelessWidget {
                     builder: (context) => AlertDialog(
                       title: Text('Excluir tarefa', style: context.titleMedium),
                       content:
-                          Text('Deseja excluir a tarefa ${object.descricao}?'),
+                          Text(
+                            'Deseja excluir a tarefa ${object.descricao}?',
+                            style: TextStyle(
+                              color: context.primaryColor),),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),

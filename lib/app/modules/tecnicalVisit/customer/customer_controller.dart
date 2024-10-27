@@ -40,7 +40,6 @@ class CustomerController extends DefautChangeNotifer {
       await refreshCustomers();
       success();
     } catch (e) {
-      _logger.e('Erro ao salvar cliente: $e');
       setError('Erro ao salvar cliente: ${e.toString()}');
       rethrow;
     } finally {

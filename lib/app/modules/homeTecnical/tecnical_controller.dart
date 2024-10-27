@@ -31,7 +31,25 @@ class TechnicalController extends DefautChangeNotifer {
       final visits = await _service.getAllTechnicalVisits();
       print('Controller - Visitas carregadas: ${visits.length}');
       // Ordenar por data mais recente
-      visits.sort((a, b) => b.date.compareTo(a.date));
+      visits.sort((a, b) {
+        final dateTimeA = DateTime(
+          a.date.year,
+          a.date.month,
+          a.date.day,
+          a.time.hour,
+          a.time.minute,
+        );
+
+        final dateTimeB = DateTime(
+          b.date.year,
+          b.date.month,
+          b.date.day,
+          b.time.hour,
+          b.time.minute,
+        );
+
+        return dateTimeB.compareTo(dateTimeA); // Mais recentes primeiro
+      });
 
       _technicalVisits = visits;
       _filteredVisits = visits;
@@ -107,5 +125,4 @@ class TechnicalController extends DefautChangeNotifer {
     _filteredVisits = List.from(_technicalVisits);
     notifyListeners();
   }
-  
 }

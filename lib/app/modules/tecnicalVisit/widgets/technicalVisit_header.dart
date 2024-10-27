@@ -72,6 +72,8 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                           widget.onTimeSelected!(time);
                         }
                       },
+                      
+                      
                     ),
                   ),
                 ],
@@ -97,13 +99,7 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                 enabled: false,
                 fillColor: context.secondaryColor.withOpacity(0.5),
                 filled: true,
-                readOnly: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o telefone';
-                  }
-                  return null;
-                },
+                readOnly: true,                
               ),
               const SizedBox(height: 10),
               OrganizameTextformfield(

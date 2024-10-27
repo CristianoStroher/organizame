@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
@@ -25,21 +26,21 @@ class Visit extends StatelessWidget {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirmar exclusão'),
-        content: const Text('Deseja realmente excluir esta visita técnica?'),
+        title: Text('Confirmar exclusão', style: context.titleMedium),
+        content: Text('Deseja realmente excluir esta visita técnica?', style: TextStyle(color: context.primaryColor)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
               'Cancelar',
-              style: TextStyle(color: context.primaryColor),
+              style: context.titleDefaut,
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
               'Excluir',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: context.primaryColor, fontSize: 16),
             ),
           ),
         ],
@@ -49,29 +50,16 @@ class Visit extends StatelessWidget {
     if (confirm ?? false) {
       try {
         await controller.deleteTechnicalVisit(object);
-        scaffoldMessenger.showSnackBar(
-          const SnackBar(
-            content: Text('Visita técnica excluída com sucesso'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        Messages.of(context).showInfo('Visita técnica excluída com sucesso');
       } catch (e) {
-        scaffoldMessenger.showSnackBar(
-          const SnackBar(
-            content: Text('Erro ao excluir visita técnica'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        Messages.of(context).showError('Erro ao excluir visita técnica');
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // // Validação de dados críticos
-    // if (object.customer == null) {
-    //   return const SizedBox.shrink();
-    // }
+  
     return Column(
           children: [
             Divider(
@@ -80,7 +68,7 @@ class Visit extends StatelessWidget {
               height: 0,
             ),
             ListTile(
-              contentPadding: const EdgeInsets.all(12),
+              contentPadding: const EdgeInsets.all(5),
               title: Text(
                 object.customer?.name.toUpperCase() ?? 'Cliente não informado',
                 style: TextStyle(
@@ -92,7 +80,7 @@ class Visit extends StatelessWidget {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
                       Icon(
@@ -119,7 +107,7 @@ class Visit extends StatelessWidget {
                     ],
                   ),
                   if (object.customer?.address?.isNotEmpty ?? false) ...[
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 5),
                     Row(
                       children: [
                         Icon(

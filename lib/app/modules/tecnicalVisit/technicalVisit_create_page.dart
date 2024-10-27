@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
@@ -110,17 +111,13 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     final formValid = _globalKey.currentState?.validate() ?? false;
 
     if (!formValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Por favor, preencha todos os campos obrigatórios.')),
-      );
+      Messages.of(context)
+          .showError('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
     if (selectedClient.value == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, selecione um cliente.')),
-      );
+      Messages.of(context).showError('Por favor, selecione um cliente.');
       return;
     }
 
@@ -146,14 +143,10 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
             selectedClient.value!,
           );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Visita técnica salva com sucesso!')),
-      );
-      Navigator.of(context).pop();
+      Messages.of(context).showInfo('Visita técnica salva com sucesso!');
+      Navigator.of(context).pop(true);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao salvar visita técnica: $e')),
-      );
+      Messages.of(context).showError('Erro ao salvar visita técnica: $e');
     }
   }
 }

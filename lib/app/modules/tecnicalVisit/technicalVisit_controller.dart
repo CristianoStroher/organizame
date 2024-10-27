@@ -28,10 +28,12 @@ class TechnicalVisitController extends DefautChangeNotifer {
       );
 
       await _technicalVisitService.saveTechnicalVisit(date, time, customer);
-      Logger().i('Visita técnica salva com sucesso: $newTechnicalVisit');
-      success();
+
+      success();    
+      
+      
     } catch (e) {
-      Logger().e('Erro ao salvar visita técnica: $e');
+
       setError('Erro ao salvar visita técnica: $e');
       rethrow;
     } finally {

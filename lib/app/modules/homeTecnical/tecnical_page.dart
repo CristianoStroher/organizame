@@ -95,8 +95,8 @@ class _TecnicalPageState extends State<TecnicalPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _goToTaskPage(context),
         backgroundColor: context.primaryColor,
-        child: const Icon(Icons.add, color: Color(0xFFFAFFC5)),
         tooltip: 'Adicionar visita técnica',
+        child: const Icon(Icons.add, color: Color(0xFFFAFFC5)),
       ),
       bottomNavigationBar: OrganizameNavigatorbar(
         color: const Color(0xFFFAFFC5),
