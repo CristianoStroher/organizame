@@ -120,6 +120,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
     try {
       if (technicalVisit.id == null) {
         throw Exception('Não é possível atualizar uma visita sem ID');
+        Logger().e('Não é possível atualizar uma visita sem ID');
       }
 
       // Cria o map com os dados atualizados
@@ -128,6 +129,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
         'time': technicalVisit.time,
         'customer': technicalVisit.customer.toMap(),
       };
+      Logger().i('Dados atualizados: $updateData');
 
       // Atualiza o documento no Firestore
       await _firestore
