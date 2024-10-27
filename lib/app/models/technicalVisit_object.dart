@@ -65,9 +65,9 @@ class TechnicalVisitObject {
 
     TechnicalVisitObject copyWith({
       String? id,
-      DateTime? data,
-      DateTime? hora,
-      CustomerObject? cliente,
+      DateTime? date,
+      DateTime? hour,
+      CustomerObject? customer,
       /* List<EnviromentObject>? ambientes, */
     }) {
       return TechnicalVisitObject(
