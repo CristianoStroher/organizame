@@ -50,7 +50,7 @@ class Task extends StatelessWidget {
               height: 0,
             ),
             ListTile(
-              contentPadding: const EdgeInsets.all(.8),
+              contentPadding: EdgeInsets.zero,
               leading: Checkbox(
                 checkColor: context.primaryColor,
                 activeColor: context.primaryColorLight,
@@ -118,14 +118,34 @@ class Task extends StatelessWidget {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
+                          style: TextButton.styleFrom(
+                            backgroundColor: context.primaryColorLight,
+                            side: BorderSide(
+                                color: context.primaryColor, width: 1),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                          ),
                           child: Text('Cancelar', style: context.titleDefaut),
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(true),
+                          style: TextButton.styleFrom(
+                            backgroundColor: context.primaryColor,
+                            side: BorderSide(
+                                color: context.primaryColor, width: 1),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                          ),
                           child: Text(
                             'Excluir',
                             style: TextStyle(
-                                color: context.primaryColor, fontSize: 16),
+                                color: context.primaryColorLight , fontSize: 16),
                           ),
                         ),
                       ],

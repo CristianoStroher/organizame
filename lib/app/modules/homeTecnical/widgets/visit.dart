@@ -25,12 +25,20 @@ class Visit extends StatelessWidget {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Confirmar exclusão', style: context.titleMedium),
+        title: Text('Confirmar Exclusão', style: context.titleMedium),
         content: Text('Deseja realmente excluir esta visita técnica?',
-            style: TextStyle(color: context.primaryColor)),
+            style: TextStyle(color: context.primaryColor, fontSize: 16)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
+            style: TextButton.styleFrom(
+              backgroundColor: Color(0xFFFAFFC5),
+              side: BorderSide(color: context.primaryColor, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
             child: Text(
               'Cancelar',
               style: context.titleDefaut,
@@ -38,9 +46,17 @@ class Visit extends StatelessWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              backgroundColor: context.primaryColor,
+              side: BorderSide(color: context.primaryColor, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
             child: Text(
               'Excluir',
-              style: TextStyle(color: context.primaryColor, fontSize: 16),
+              style: TextStyle(color: Color(0xFFFAFFC5), fontSize: 16),
             ),
           ),
         ],

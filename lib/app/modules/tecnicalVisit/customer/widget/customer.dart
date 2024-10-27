@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
-import 'package:provider/provider.dart';
-
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/customer_object.dart';
@@ -13,11 +10,11 @@ class Customer extends StatelessWidget {
   final Function(CustomerObject) onEdit;
 
   const Customer({
-    Key? key,
+    super.key,
     required this.controller,
     required this.object,
     required this.onEdit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +72,6 @@ class Customer extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Expanded(
-                      // Wrap com Expanded
                       child: Text(
                         object.address ?? '',
                         style: context.titleDefaut,
@@ -103,7 +99,62 @@ class Customer extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.delete, color: context.secondaryColor),
                     onPressed: () async {
-                      // ... resto do código do botão delete
+                      await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('Excluir Cliente',
+                                style: context.titleMedium),
+                            content: Text(
+                                'Deseja realmente excluir o cliente ${object.name}?',
+                                style: TextStyle(
+                                    fontSize: 16, color: context.primaryColor)),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Color(0xFFFAFFC5),
+                                  side: BorderSide(
+                                      color: context.primaryColor, width: 1),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                ),
+                                child: Text('Cancelar',
+                                    style: TextStyle(
+                                        color: context.secondaryColor)),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  try {
+                                    Navigator.of(context).pop();
+                                    controller.deleteCustomer(object);
+                                    Messages.of(context).showInfo('Cliente excluído com sucesso'); 
+                                  } on Exception catch (e) {
+                                    Messages.of(context).showError('Erro ao excluir cliente: $e');
+                                  }
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: context.primaryColor,
+                                  side: BorderSide(
+                                      color: context.primaryColor, width: 1),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                ),
+                                child: Text('Excluir',
+                                    style: TextStyle(color: Color(0xFFFAFFC5))),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                   ),
                 ],
