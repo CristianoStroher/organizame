@@ -40,5 +40,6 @@ class TechnicalVisitController extends DefautChangeNotifer {
       hideLoading();
       notifyListeners();
     }
-  }
+  }  
+
 }

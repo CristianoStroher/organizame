@@ -74,6 +74,12 @@ class Task extends StatelessWidget {
               ),
               subtitle: Row(
                 children: [
+                  Icon(
+                    Icons.calendar_today,
+                    size: 16,
+                    color: context.secondaryColor,
+                  ),
+                  const SizedBox(width: 4),
                   Text(
                     dateFormatData.format(object.data),
                     style: TextStyle(
@@ -81,7 +87,13 @@ class Task extends StatelessWidget {
                       color: context.secondaryColor,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 16),
+                  Icon(
+                    Icons.access_time,
+                    size: 16,
+                    color: context.secondaryColor,
+                  ),
+                  const SizedBox(width: 4),
                   Text(
                     dateFormatHora.format(object.hora),
                     style: TextStyle(
@@ -98,11 +110,10 @@ class Task extends StatelessWidget {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text('Excluir tarefa', style: context.titleMedium),
-                      content:
-                          Text(
-                            'Deseja excluir a tarefa ${object.descricao}?',
-                            style: TextStyle(
-                              color: context.primaryColor),),
+                      content: Text(
+                        'Deseja excluir a tarefa ${object.descricao}?',
+                        style: TextStyle(color: context.primaryColor),
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),

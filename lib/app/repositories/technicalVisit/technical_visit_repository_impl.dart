@@ -114,4 +114,38 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       return Future.value(false);
     }
   }
+
+  @override
+  Future<List<TechnicalVisitObject>> getTechnicalVisitsByCustomer(
+      String customerName) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(_collection)
+          .where('customer.name', isEqualTo: customerName)
+          .get();
+      return querySnapshot.docs
+          .map((doc) => TechnicalVisitObject.fromMap(doc.data()))
+          .toList();
+    } on Exception catch (e) {
+      Logger().e('Erro ao buscar visitas técnicas por cliente: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<TechnicalVisitObject>> getTechnicalVisitsByDate(
+      DateTime date) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(_collection)
+          .where('date', isEqualTo: date)
+          .get();
+      return querySnapshot.docs
+          .map((doc) => TechnicalVisitObject.fromMap(doc.data()))
+          .toList();
+    } on Exception catch (e) {
+      Logger().e('Erro ao buscar visitas técnicas por data: $e');
+      rethrow;
+    }
+  }
 }
