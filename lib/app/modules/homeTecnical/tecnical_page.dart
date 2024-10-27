@@ -7,7 +7,6 @@ import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/widgets/visit.dart';
-import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:provider/provider.dart';
 
 class TecnicalPage extends StatefulWidget {

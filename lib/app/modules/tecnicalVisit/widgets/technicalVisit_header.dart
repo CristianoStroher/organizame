@@ -44,7 +44,10 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
         valueListenable: customerController.customersNotifier,
         builder: (context, customers, child) {
           if (customers.isEmpty) {
-            return CircularProgressIndicator();
+            
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           return Column(
@@ -72,8 +75,6 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                           widget.onTimeSelected!(time);
                         }
                       },
-                      
-                      
                     ),
                   ),
                 ],
@@ -99,7 +100,7 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                 enabled: false,
                 fillColor: context.secondaryColor.withOpacity(0.5),
                 filled: true,
-                readOnly: true,                
+                readOnly: true,
               ),
               const SizedBox(height: 10),
               OrganizameTextformfield(
@@ -148,5 +149,3 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
     });
   }
 }
-
-

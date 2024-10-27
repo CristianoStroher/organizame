@@ -90,9 +90,9 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
                   setState(() {
                     selectedCustomer = null;
                   });
-                }                
+                }
                 controller.refreshCustomers();
-                
+
                 if (clearFormCallback != null) {
                   clearFormCallback!();
                 }
@@ -102,32 +102,55 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
               },
             ),
             const SizedBox(height: 20),
-            Text('RELAÇÃO DE CLIENTES', style: context.titleDefaut),
-            const SizedBox(height: 10),
             Expanded(
               child: ValueListenableBuilder<List<CustomerObject>>(
                 valueListenable: customerController.customersNotifier,
                 builder: (context, customers, child) {
+                  // Movemos o título para dentro do builder para ter acesso à lista customers
                   if (customers.isEmpty) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                context.primaryColor),
+                          ),
+                          const SizedBox(height: 16),
+                          Text('Carregando clientes...',
+                              style: TextStyle(
+                                  color: context.primaryColor, fontSize: 16)),
+                        ],
+                      ),
+                    );
                   }
-                  return ListView.builder(
-                    itemCount: customers.length,
-                    itemBuilder: (context, index) {
-                      final customer = customers[index];
-                      return Customer(
-                        object: customer,
-                        controller: context.read<CustomerController>(),
-                        onEdit: (editedCustomer) {
-                          setState(() {
-                            selectedCustomer = editedCustomer;
-                          });
-                          // Rola a tela para o topo para mostrar o formulário de edição
-                          Scrollable.ensureVisible(context,
-                              duration: Duration(milliseconds: 300));
-                        },
-                      );
-                    },
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('RELAÇÃO DE CLIENTES (${customers.length})',
+                          style: context.titleDefaut),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: customers.length,
+                          itemBuilder: (context, index) {
+                            final customer = customers[index];
+                            return Customer(
+                              object: customer,
+                              controller: context.read<CustomerController>(),
+                              onEdit: (editedCustomer) {
+                                setState(() {
+                                  selectedCustomer = editedCustomer;
+                                });
+                                Scrollable.ensureVisible(context,
+                                    duration: Duration(milliseconds: 300));
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),

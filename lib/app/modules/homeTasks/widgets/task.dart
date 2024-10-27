@@ -74,6 +74,7 @@ class Task extends StatelessWidget {
               ),
               subtitle: Row(
                 children: [
+                  const SizedBox(height: 5),
                   Icon(
                     Icons.calendar_today,
                     size: 16,

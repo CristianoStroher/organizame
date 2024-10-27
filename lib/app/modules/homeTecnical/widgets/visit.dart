@@ -107,7 +107,7 @@ class Visit extends StatelessWidget {
                     ],
                   ),
                   if (object.customer?.address?.isNotEmpty ?? false) ...[
-                    const SizedBox(height: 5),
+                    // const SizedBox(height: 5),
                     Row(
                       children: [
                         Icon(
