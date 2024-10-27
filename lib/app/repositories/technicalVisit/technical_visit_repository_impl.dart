@@ -113,5 +113,32 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       throw Exception('Erro ao deletar a visita técnica: $e');
       return Future.value(false);
     }
-  } 
+  }
+
+  @override
+  Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit) async {
+    try {
+      if (technicalVisit.id == null) {
+        throw Exception('Não é possível atualizar uma visita sem ID');
+      }
+
+      // Cria o map com os dados atualizados
+      final Map<String, dynamic> updateData = {
+        'date': technicalVisit.date,
+        'time': technicalVisit.time,
+        'customer': technicalVisit.customer.toMap(),
+      };
+
+      // Atualiza o documento no Firestore
+      await _firestore
+          .collection(_collection)
+          .doc(technicalVisit.id)
+          .update(updateData);
+
+      Logger().i('Visita técnica atualizada com sucesso');
+    } catch (e) {
+      Logger().e('Erro ao atualizar a visita técnica: $e');
+      throw Exception('Erro ao atualizar a visita técnica: $e');
+    }
+  }
 }
