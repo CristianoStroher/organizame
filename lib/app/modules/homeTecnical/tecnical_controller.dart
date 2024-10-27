@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
@@ -184,5 +185,70 @@ class TechnicalController extends DefautChangeNotifer {
   void clearFilters() {
     _filteredVisits = List.from(_technicalVisits);
     notifyListeners();
+  }
+
+  Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit) async {
+    try {
+      Logger().i('Controller - Iniciando atualização da visita técnica');
+      showLoadingAndResetState();
+
+      await _service.updateTechnicalVisit(technicalVisit);
+
+      // Atualiza a lista principal
+      final index =
+          _technicalVisits.indexWhere((v) => v.id == technicalVisit.id);
+      if (index != -1) {
+        _technicalVisits[index] = technicalVisit;
+      }
+
+      // Atualiza a lista filtrada se a visita estiver nela
+      final filteredIndex =
+          _filteredVisits.indexWhere((v) => v.id == technicalVisit.id);
+      if (filteredIndex != -1) {
+        _filteredVisits[filteredIndex] = technicalVisit;
+      }
+
+      // Reordena as listas após a atualização
+      _reorderLists();
+
+      Logger().i('Controller - Visita técnica atualizada com sucesso');
+      success();
+    } catch (e, stackTrace) {
+      Logger().e('Controller - Erro ao atualizar visita: $e');
+      Logger().e('Controller - Stack trace: $stackTrace');
+      setError('Erro ao atualizar visita técnica');
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  }
+
+// Método auxiliar para reordenar as listas mantendo a consistência
+  void _reorderLists() {
+    final sortVisits = (List<TechnicalVisitObject> visits) {
+      visits.sort((a, b) {
+        final dateTimeA = DateTime(
+          a.date.year,
+          a.date.month,
+          a.date.day,
+          a.time.hour,
+          a.time.minute,
+        );
+
+        final dateTimeB = DateTime(
+          b.date.year,
+          b.date.month,
+          b.date.day,
+          b.time.hour,
+          b.time.minute,
+        );
+
+        return dateTimeB
+            .compareTo(dateTimeA); // Mantém a ordenação mais recente primeiro
+      });
+    };
+
+    sortVisits(_technicalVisits);
+    sortVisits(_filteredVisits);
   }
 }
