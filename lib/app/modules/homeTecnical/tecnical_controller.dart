@@ -88,28 +88,61 @@ class TechnicalController extends DefautChangeNotifer {
     }
   }
 
-  Future<void> getTechnicalVisitsByCustomer(String customerName) async {
+  //
+
+  Future<void> filterVisits({
+    String? customerName,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     try {
-      print('Controller - Iniciando filtro por cliente: $customerName');
+      print('Controller - Iniciando filtro combinado');
+      print('Nome: $customerName, Início: $startDate, Fim: $endDate');
       showLoadingAndResetState();
 
-      if (customerName.isEmpty) {
+      if (customerName == null && startDate == null && endDate == null) {
         _filteredVisits = List.from(_technicalVisits);
-        print(
-            'Controller - Filtro removido, mostrando todas as ${_filteredVisits.length} visitas');
         success();
         notifyListeners();
         return;
       }
 
-      // Filtra localmente
-      _filteredVisits = _technicalVisits
-          .where((visit) => visit.customer.name
-              .toLowerCase()
-              .contains(customerName.toLowerCase()))
-          .toList();
+      _filteredVisits = _technicalVisits.where((visit) {
+        bool matchesName = true;
+        bool matchesDate = true;
 
-      // Ordena por data/hora após o filtro
+        // Filtro por nome
+        if (customerName != null && customerName.length >= 3) {
+          matchesName = visit.customer.name
+              .toLowerCase()
+              .contains(customerName.toLowerCase());
+        }
+
+        // Filtro por período
+        if (startDate != null || endDate != null) {
+          final visitDate = DateTime(
+            visit.date.year,
+            visit.date.month,
+            visit.date.day,
+          );
+
+          if (startDate != null && endDate != null) {
+            matchesDate = visitDate.isAtSameMomentAs(startDate) ||
+                visitDate.isAtSameMomentAs(endDate) ||
+                (visitDate.isAfter(startDate) && visitDate.isBefore(endDate));
+          } else if (startDate != null) {
+            matchesDate = visitDate.isAtSameMomentAs(startDate) ||
+                visitDate.isAfter(startDate);
+          } else if (endDate != null) {
+            matchesDate = visitDate.isAtSameMomentAs(endDate) ||
+                visitDate.isBefore(endDate);
+          }
+        }
+
+        return matchesName && matchesDate;
+      }).toList();
+
+      // Ordenar por data/hora
       _filteredVisits.sort((a, b) {
         final dateTimeA = DateTime(
           a.date.year,
@@ -131,10 +164,7 @@ class TechnicalController extends DefautChangeNotifer {
       });
 
       print(
-          'Controller - Encontradas ${_filteredVisits.length} visitas com o filtro "$customerName"');
-      _filteredVisits.forEach((visit) => print(
-          'Controller - Visita filtrada: ${visit.customer.name} em ${DateFormat('dd/MM/yyyy HH:mm').format(visit.date)}'));
-
+          'Controller - Encontradas ${_filteredVisits.length} visitas após filtro');
       success();
     } catch (e) {
       print('Controller - Erro ao filtrar: $e');

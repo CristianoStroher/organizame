@@ -106,7 +106,6 @@ class _CustomerCreatePageState extends State<CustomerCreatePage> {
               child: ValueListenableBuilder<List<CustomerObject>>(
                 valueListenable: customerController.customersNotifier,
                 builder: (context, customers, child) {
-                  // Movemos o título para dentro do builder para ter acesso à lista customers
                   if (customers.isEmpty) {
                     return Center(
                       child: Column(

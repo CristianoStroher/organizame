@@ -25,13 +25,4 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
   Future<bool> deleteTechnicalVisit(
           TechnicalVisitObject technicalVisitObject) =>
       _technicalVisitRepository.deleteTechnicalVisit(technicalVisitObject);
-
-  @override
-  Future<List<TechnicalVisitObject>> getTechnicalVisitsByCustomer(
-          String customerName) =>
-      _technicalVisitRepository.getTechnicalVisitsByCustomer(customerName);
-
-  @override
-  Future<List<TechnicalVisitObject>> getTechnicalVisitsByDate(DateTime date) =>
-      _technicalVisitRepository.getTechnicalVisitsByDate(date);
-}
+  }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/organizame_icons.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
@@ -35,52 +36,138 @@ class _TecnicalPageState extends State<TecnicalPage> {
     }
   }
 
+  
   void _showFilterDialog(BuildContext context) {
     final controller = context.read<TechnicalController>();
+    DateTime? startDate;
+    DateTime? endDate;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Filtrar por cliente', style: context.titleMedium),
-        content: TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            hintText: 'Nome do cliente',
-            prefixIcon: Icon(Icons.search, color: context.secondaryColor),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text('Filtrar visitas', style: context.titleMedium),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Campo de busca por nome
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Nome do cliente',
+                  hintStyle: TextStyle(color: context.secondaryColor),
+                  prefixIcon: Icon(Icons.search, color: context.secondaryColor),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Seleção de data inicial
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  'Data inicial',
+                  style: TextStyle(color: context.primaryColor),
+                ),
+                subtitle: Text(
+                  startDate != null
+                      ? DateFormat('dd/MM/yyyy').format(startDate!)
+                      : 'Selecione a data inicial',
+                      style: TextStyle(color: context.secondaryColor),
+                ),
+                trailing:
+                    Icon(Icons.calendar_today, color: context.secondaryColor),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: startDate ?? DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2025),
+                  );
+                  if (picked != null) {
+                    setState(() => startDate = picked);
+                  }
+                },
+              ),
+              // Seleção de data final
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  'Data final',
+                  style: TextStyle(color: context.primaryColor),
+                ),
+                subtitle: Text(
+                  endDate != null
+                      ? DateFormat('dd/MM/yyyy').format(endDate!)
+                      : 'Selecione a data final',
+                      style: TextStyle(color: context.secondaryColor),
+                ),
+                trailing:
+                    Icon(Icons.calendar_today, color: context.secondaryColor),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: endDate ?? DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2025),
+                  );
+                  if (picked != null) {
+                    setState(() => endDate = picked);
+                  }
+                },
+              ),
+            ],
           ),
-          onChanged: (value) {
-            if (value.length >= 3) {
-              controller.getTechnicalVisitsByCustomer(value);
-            }
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              _searchController.clear();
-              controller.clearFilters();
-              Navigator.pop(context);
-              Messages.of(context).showInfo('Filtro removido');
-            },
-            child:
-                Text('Limpar', style: TextStyle(color: context.secondaryColor)),
-          ),
-          TextButton(
-            onPressed: () {
-              String searchQuery = _searchController.text.trim();
-              if (searchQuery.length >= 3) {
-                controller.getTechnicalVisitsByCustomer(searchQuery);
+          actions: [
+            TextButton(
+              onPressed: () {
+                _searchController.clear();
+                controller.clearFilters();
                 Navigator.pop(context);
-                Messages.of(context).showInfo('Filtro aplicado');
-              } else {
-                Messages.of(context)
-                    .showError('Digite pelo menos 3 caracteres para pesquisar');
-              }
-            },
-            child:
-                Text('Filtrar', style: TextStyle(color: context.primaryColor)),
-          ),
-        ],
+                Messages.of(context).showInfo('Filtro removido');
+              },
+              style: TextButton.styleFrom(
+                  backgroundColor: Color (0xFFFAFFC5),
+                  side: BorderSide(color: context.primaryColor, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),),
+                ),
+              child: Text('Limpar',
+                  style: TextStyle(color: context.primaryColor)),
+            ),
+            TextButton(
+                onPressed: () {
+                  final searchQuery = _searchController.text.trim();
+              
+                  if (startDate != null &&
+                      endDate != null &&
+                      endDate!.isBefore(startDate!)) {
+                    Messages.of(context).showError(
+                        'Data final deve ser posterior à data inicial');
+                    return;
+                  }
+              
+                  controller.filterVisits(
+                    customerName: searchQuery.isNotEmpty ? searchQuery : null,
+                    startDate: startDate,
+                    endDate: endDate,
+                  );
+              
+                  Navigator.pop(context);
+                  Messages.of(context).showInfo('Filtro aplicado');
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: context.primaryColor,
+                  side: BorderSide(color: context.primaryColor, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),),
+                ),
+                child: Text('Filtrar',
+                    style: TextStyle(color: Color (0xFFFAFFC5)),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -118,7 +205,6 @@ class _TecnicalPageState extends State<TecnicalPage> {
         color: const Color(0xFFFAFFC5),
         initialIndex: index,
       ),
-      
       body: Consumer<TechnicalController>(
         builder: (context, controller, _) {
           print(
