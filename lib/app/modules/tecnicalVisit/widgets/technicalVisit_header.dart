@@ -47,7 +47,7 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
 
   @override
   void initState() {
-    super.initState();    
+    super.initState();
   }
 
   @override
@@ -82,7 +82,7 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
     }
   }
 
-   @override
+  @override
   void dispose() {
     phoneController.dispose();
     addressController.dispose();
@@ -109,7 +109,10 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.technicalVisit != null ? 'EDITAR VISITA': 'NOVA VISITA',
+              Text(
+                  widget.initialClient != null
+                      ? 'EDITAR VISITA TÉCNICA'
+                      : 'NOVA VISITA TÉCNICA',
                   style: context.titleDefaut),
               const SizedBox(height: 20),
               Row(
