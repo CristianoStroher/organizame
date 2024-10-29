@@ -120,7 +120,8 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
                     onPressed: () => _saveVisitTechnical(context),
-                    label: widget.technicalVisit != null ? 'Atualizar' : 'Salvar',
+                    label:
+                        widget.technicalVisit != null ? 'Atualizar' : 'Salvar',
                     textColor: const Color(0xFFFAFFC5),
                   ),
                   const SizedBox(height: 40),
@@ -148,8 +149,8 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     }
 
     try {
-      // Parse da data usando DateFormat
-      final DateTime dateValue = DateFormat('dd/MM/yyyy').parse(dateEC.text);
+      // Parse da data - Ajustado para lidar com o formato ISO
+      final DateTime dateValue = DateTime.parse(dateEC.text);
 
       // Parse da hora
       final timeParts = timeEC.text.split(':');
@@ -171,8 +172,8 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         // Modo edição
         final updatedVisit = TechnicalVisitObject(
           id: widget.technicalVisit!.id,
-          date: dateValue, // Usa apenas a data
-          time: timeValue, // Data combinada com hora
+          date: dateValue,
+          time: timeValue,
           customer: selectedClient.value!,
         );
 
@@ -181,8 +182,8 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
       } else {
         // Modo criação
         await widget._controller.saveTechnicalVisit(
-          dateValue, // Usa apenas a data
-          timeValue, // Data combinada com hora
+          dateValue,
+          timeValue,
           selectedClient.value!,
         );
         Messages.of(context).showInfo('Visita técnica salva com sucesso!');

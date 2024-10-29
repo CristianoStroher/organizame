@@ -109,7 +109,7 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.technicalVisit != null ? 'Editar Visita': 'Nova Visita',
+              Text(widget.technicalVisit != null ? 'EDITAR VISITA': 'NOVA VISITA',
                   style: context.titleDefaut),
               const SizedBox(height: 20),
               Row(
