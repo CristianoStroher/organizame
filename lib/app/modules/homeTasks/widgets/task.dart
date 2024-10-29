@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
@@ -59,7 +60,7 @@ class Task extends StatelessWidget {
                 value: object.finalizado,
                 onChanged: (value) async {
                   await context.read<HomeController>().finishTask(object);
-                  print(object.finalizado);
+                  Logger().i('Tarefa finalizada: ${object.descricao}');
                 },
               ),
               title: Text(

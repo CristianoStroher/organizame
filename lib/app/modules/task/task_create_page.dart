@@ -108,7 +108,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(widget.task == null ? 'NOVA TAREFA' : 'ALTERAR TAREFA',
+                    Text(widget.task == null ? 'NOVA TAREFA' : 'EDITAR TAREFA',
                         style: context.titleDefaut),
                     const SizedBox(height: 20),
                     OrganizameTextformfield(
