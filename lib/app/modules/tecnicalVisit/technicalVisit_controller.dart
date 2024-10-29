@@ -32,7 +32,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       success();
     } catch (e) {
       _logger.i('Erro ao salvar visita técnica: $e');
-      setError('Erro ao salvar visita técnica: $e');
+      setError('Função save - Erro ao salvar visita técnica: $e');
       rethrow;
     } finally {
       hideLoading();

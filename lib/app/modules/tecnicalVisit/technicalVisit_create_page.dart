@@ -134,6 +134,68 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     );
   }
 
+  // Future<void> _saveVisitTechnical(BuildContext context) async {
+  //   final formValid = _globalKey.currentState?.validate() ?? false;
+
+  //   if (!formValid) {
+  //     Messages.of(context)
+  //         .showError('Por favor, preencha todos os campos obrigatórios.');
+  //     return;
+  //   }
+
+  //   if (selectedClient.value == null) {
+  //     Messages.of(context).showError('Por favor, selecione um cliente.');
+  //     return;
+  //   }
+
+  //   try {
+  //     // Parse da data - Ajustado para lidar com o formato ISO
+  //     final DateTime dateValue = DateTime.parse(dateEC.text);
+
+  //     // Parse da hora
+  //     final timeParts = timeEC.text.split(':');
+  //     final TimeOfDay timeOfDay = TimeOfDay(
+  //       hour: int.parse(timeParts[0]),
+  //       minute: int.parse(timeParts[1]),
+  //     );
+
+  //     // Combina data e hora
+  //     final DateTime timeValue = DateTime(
+  //       dateValue.year,
+  //       dateValue.month,
+  //       dateValue.day,
+  //       timeOfDay.hour,
+  //       timeOfDay.minute,
+  //     );
+
+  //     if (widget.technicalVisit != null) {
+  //       // Modo edição
+  //       final updatedVisit = TechnicalVisitObject(
+  //         id: widget.technicalVisit!.id,
+  //         date: dateValue,
+  //         time: timeValue,
+  //         customer: selectedClient.value!,
+  //       );
+
+  //       await widget._controller.updateVisit(updatedVisit);
+  //       Messages.of(context).showInfo('Visita técnica atualizada com sucesso!');
+  //     } else {
+  //       // Modo criação
+  //       await widget._controller.saveTechnicalVisit(
+  //         dateValue,
+  //         timeValue,
+  //         selectedClient.value!,
+  //       );
+  //       Messages.of(context).showInfo('Visita técnica salva com sucesso!');
+  //     }
+
+  //     Navigator.of(context).pop(true);
+  //   } catch (e, s) {
+  //     Logger().e('Erro ao salvar visita técnica: $e');
+  //     Logger().e(s);
+  //     Messages.of(context).showError('Erro ao salvar visita técnica: $e');
+  //   }
+  // }
   Future<void> _saveVisitTechnical(BuildContext context) async {
     final formValid = _globalKey.currentState?.validate() ?? false;
 
@@ -149,15 +211,30 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     }
 
     try {
-      // Parse da data - Ajustado para lidar com o formato ISO
+      // Parse da data usando DateTime.parse para a data ISO
       final DateTime dateValue = DateTime.parse(dateEC.text);
 
-      // Parse da hora
-      final timeParts = timeEC.text.split(':');
-      final TimeOfDay timeOfDay = TimeOfDay(
-        hour: int.parse(timeParts[0]),
-        minute: int.parse(timeParts[1]),
-      );
+      // Parse da hora de forma segura
+      TimeOfDay timeOfDay;
+      if (timeEC.text.isEmpty) {
+        timeOfDay = TimeOfDay.now();
+      } else {
+        try {
+          final timeStr = timeEC.text.trim();
+          final timeParts = timeStr.split(':');
+          if (timeParts.length == 2) {
+            timeOfDay = TimeOfDay(
+              hour: int.tryParse(timeParts[0]) ?? 0,
+              minute: int.tryParse(timeParts[1]) ?? 0,
+            );
+          } else {
+            timeOfDay = TimeOfDay.now();
+          }
+        } catch (e) {
+          Logger().e('Erro ao fazer parse da hora: $e');
+          timeOfDay = TimeOfDay.now();
+        }
+      }
 
       // Combina data e hora
       final DateTime timeValue = DateTime(
