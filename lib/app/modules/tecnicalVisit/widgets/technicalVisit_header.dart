@@ -53,7 +53,8 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('NOVA VISITA TÉCNICA', style: context.titleDefaut),
+              Text('NOVA VISITA TÉCNICA',
+              style: context.titleDefaut),
               const SizedBox(height: 20),
               Row(
                 children: [
