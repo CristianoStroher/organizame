@@ -99,30 +99,17 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
 
   @override
   Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit) async {
-    try {
-      if (technicalVisit.id == null) {
-        throw Exception('Não é possível atualizar uma visita sem ID');
-        Logger().e('Não é possível atualizar uma visita sem ID');
-      }
 
-      // Cria o map com os dados atualizados
-      final Map<String, dynamic> updateData = {
+    try {
+      await _firestore.collection(_collection).doc(technicalVisit.id).update({
         'date': technicalVisit.date,
         'time': technicalVisit.time,
         'customer': technicalVisit.customer.toMap(),
-      };
-      Logger().i('Dados atualizados: $updateData');
-
-      // Atualiza o documento no Firestore
-      await _firestore
-          .collection(_collection)
-          .doc(technicalVisit.id)
-          .update(updateData);
-
-      Logger().i('Visita técnica atualizada com sucesso');
+      });
+      Logger().i('Repositorio - Visita técnica atualizada com sucesso id: ${technicalVisit.id}');
     } catch (e) {
-      Logger().e('Erro ao atualizar a visita técnica: $e');
-      throw Exception('Erro ao atualizar a visita técnica: $e');
+      Logger().e('Repositorio - Erro ao atualizar a visita técnica: $e');
+      throw Exception('Repositorio - Erro ao atualizar a visita técnica: $e');
     }
   }
 
@@ -148,4 +135,5 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       throw Exception('Erro ao buscar visita técnica: $e');
     }
   }
+
 }

@@ -18,13 +18,6 @@ class TasksRepositoryImpl extends TasksRepository {
     final formattedDate = DateFormat('yyyy-MM-dd').format(date);
     final formattedTime = DateFormat('HH:mm:ss').format(time);
 
-    // Logs de depuração
-    // Logger().i('Salvando tarefa:');
-    // Logger().i('Descrição: $description');
-    // Logger().i('Data: $formattedDate');
-    // Logger().i('Hora: $formattedTime');
-    // Logger().i('Observações: $observations');
-
     await connection.insert('compromisso', {
       'id': null,
       'descricao': description,
@@ -43,9 +36,7 @@ class TasksRepositoryImpl extends TasksRepository {
     // Logs de depuração
     final formattedStartFilter = DateFormat('yyyy-MM-dd').format(startFilter);
     final formattedEndFilter = DateFormat('yyyy-MM-dd').format(endFilter);
-    // Logger().i('Buscando tarefas entre:');
-    // Logger().i('Início: $formattedStartFilter');
-    // Logger().i('Fim: $formattedEndFilter');
+    
 
     final conn = await _sqLiteConnectionFactory.openConnection();
     final result = await conn.rawQuery(
