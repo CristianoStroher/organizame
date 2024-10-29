@@ -112,8 +112,15 @@ class OrganizameCalendarButton extends StatelessWidget {
     required this.color,
     this.initialValue,
   }) {
+    
     if (initialValue != null) {
-      controller.text = dateFormat.format(initialValue!);
+      
+      final formattedDate = dateFormat.format(initialValue!);
+      controller.text =
+          DateFormat('yyyy-MM-dd').parse(formattedDate).toIso8601String();
+
+      
+      onDateSelected?.call(initialValue!);
     }
   }
 
@@ -157,12 +164,21 @@ class OrganizameCalendarButton extends StatelessWidget {
               child: Selector<TaskController, DateTime?>(
                 selector: (context, controller) => controller.getSelectedDate,
                 builder: (context, selectedDate, child) {
+                  String displayText;
+                  if (controller.text.isEmpty) {
+                    displayText = 'Data';
+                  } else {
+                    try {
+                      // Converte a data ISO para exibição em dd/MM/yyyy
+                      final date = DateTime.parse(controller.text);
+                      displayText = dateFormat.format(date);
+                    } catch (e) {
+                      displayText = controller.text;
+                    }
+                  }
+
                   return Text(
-                    controller.text.isEmpty
-                        ? 'Data'
-                        : selectedDate != null
-                            ? dateFormat.format(selectedDate)
-                            : controller.text,
+                    displayText,
                     style: TextStyle(
                       color: context.primaryColor,
                       fontSize: 16,
