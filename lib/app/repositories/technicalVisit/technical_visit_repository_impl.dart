@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
+import 'package:mockito/annotations.dart';
 
 class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
   final FirebaseFirestore _firestore;
@@ -32,26 +33,18 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
 
   Future<List<TechnicalVisitObject>> getAllTechnicalVisits() async {
     try {
-      print('Repositório - Buscando visitas no Firestore');
       final querySnapshot = await _firestore.collection(_collection).get();
-
-      print(
-          'Repositório - Documentos encontrados: ${querySnapshot.docs.length}');
 
       final List<TechnicalVisitObject> visitas = [];
 
       for (var doc in querySnapshot.docs) {
         try {
           final dados = doc.data();
-          print('Processando documento ${doc.id}:');
-          print('Dados brutos: $dados');
 
           // Verifica e converte o cliente
           final clienteMap = dados['customer'] as Map<String, dynamic>?;
-          print('Cliente dados: $clienteMap');
 
           if (clienteMap == null) {
-            print('AVISO: Cliente não encontrado para documento ${doc.id}');
             continue; // Pula este documento
           }
 
@@ -61,11 +54,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           final dataTimestamp = dados['date'];
           final horaTimestamp = dados['time'];
 
-          print('Data timestamp: $dataTimestamp');
-          print('Hora timestamp: $horaTimestamp');
-
           if (dataTimestamp == null) {
-            print('ERRO: Data não encontrada para documento ${doc.id}');
             continue;
           }
 
@@ -84,21 +73,14 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
             customer: customer,
           );
 
-          print('Visita criada com sucesso: $visita');
           visitas.add(visita);
         } catch (e, stackTrace) {
-          print('Erro ao processar documento ${doc.id}: $e');
-          print('Stack trace: $stackTrace');
-          // Continue processando outros documentos
           continue;
         }
       }
 
-      print('Total de visitas processadas com sucesso: ${visitas.length}');
       return visitas;
     } catch (e, stackTrace) {
-      print('Erro ao buscar visitas técnicas: $e');
-      print('Stack trace: $stackTrace');
       rethrow;
     }
   }
@@ -159,7 +141,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           customer: data?['customer'] ?? '',
         );
       } else {
-        throw Exception('Visita técnica não encontrada');
+        throw Exception('Visita técnica não encontrada & id: $id');
       }
     } on Exception catch (e) {
       Logger().e('Erro ao buscar visita técnica: $e');

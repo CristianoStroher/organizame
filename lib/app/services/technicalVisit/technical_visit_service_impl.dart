@@ -96,5 +96,8 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
     }
   }
 
+  @override
+  Future<TechnicalVisitObject> findTechnicalVisitById(String id) =>
+      _technicalVisitRepository.findTechnicalVisitById(id);
 
 }
