@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 
 import 'package:organizame/app/core/ui/theme_extensions.dart';
@@ -32,6 +33,8 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
   final selectedClient = ValueNotifier<CustomerObject?>(null);
   final TextEditingController dateEC = TextEditingController();
   final TextEditingController timeEC = TextEditingController();
+  bool _initialized = false;
+  final dateFormat = DateFormat('dd/MM/yyyy');
 
   @override
   void initState() {
@@ -39,7 +42,24 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
   }
 
   @override
-  dispose() {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized && widget.technicalVisit != null) {
+      _loadVisitData();
+      _initialized = true;
+    }
+  }
+
+  void _loadVisitData() {
+    selectedClient.value = widget.technicalVisit!.customer;
+    // Formatando apenas a data, sem a hora
+    dateEC.text = DateFormat('dd/MM/yyyy').format(widget.technicalVisit!.date);
+    timeEC.text =
+        TimeOfDay.fromDateTime(widget.technicalVisit!.time).format(context);
+  }
+
+  @override
+  void dispose() {
     super.dispose();
     dateEC.dispose();
     timeEC.dispose();
@@ -79,6 +99,11 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TechnicalvisitHeader(
+                    initialClient: widget.technicalVisit?.customer,
+                    initialDate: widget.technicalVisit?.date,
+                    initialTime: widget.technicalVisit != null
+                        ? TimeOfDay.fromDateTime(widget.technicalVisit!.time)
+                        : null,
                     onClientSelected: (cliente) {
                       selectedClient.value = cliente;
                     },
@@ -94,7 +119,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
                     onPressed: () => _saveVisitTechnical(context),
-                    label: 'Salvar',
+                    label: widget.technicalVisit != null ? 'Atualizar' : 'Salvar',
                     textColor: const Color(0xFFFAFFC5),
                   ),
                   const SizedBox(height: 40),
@@ -122,13 +147,17 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     }
 
     try {
-      // Processamento da data
-      final DateTime dateValue = DateTime.parse(dateEC.text);
+      // Parse da data usando DateFormat
+      final DateTime dateValue = DateFormat('dd/MM/yyyy').parse(dateEC.text);
 
-      // Converter TimeOfDay para DateTime
-      final TimeOfDay timeOfDay = TimeOfDay.now(); // Pegar o valor do timeEC
+      // Parse da hora
+      final timeParts = timeEC.text.split(':');
+      final TimeOfDay timeOfDay = TimeOfDay(
+        hour: int.parse(timeParts[0]),
+        minute: int.parse(timeParts[1]),
+      );
 
-      // Criar DateTime com a data selecionada e a hora atual
+      // Combina data e hora
       final DateTime timeValue = DateTime(
         dateValue.year,
         dateValue.month,
@@ -137,13 +166,27 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         timeOfDay.minute,
       );
 
-      await context.read<TechnicalVisitController>().saveTechnicalVisit(
-            dateValue,
-            timeValue,
-            selectedClient.value!,
-          );
+      if (widget.technicalVisit != null) {
+        // Modo edição
+        final updatedVisit = TechnicalVisitObject(
+          id: widget.technicalVisit!.id,
+          date: dateValue, // Usa apenas a data
+          time: timeValue, // Data combinada com hora
+          customer: selectedClient.value!,
+        );
 
-      Messages.of(context).showInfo('Visita técnica salva com sucesso!');
+        await widget._controller.updateVisit(updatedVisit);
+        Messages.of(context).showInfo('Visita técnica atualizada com sucesso!');
+      } else {
+        // Modo criação
+        await widget._controller.saveTechnicalVisit(
+          dateValue, // Usa apenas a data
+          timeValue, // Data combinada com hora
+          selectedClient.value!,
+        );
+        Messages.of(context).showInfo('Visita técnica salva com sucesso!');
+      }
+
       Navigator.of(context).pop(true);
     } catch (e) {
       Messages.of(context).showError('Erro ao salvar visita técnica: $e');

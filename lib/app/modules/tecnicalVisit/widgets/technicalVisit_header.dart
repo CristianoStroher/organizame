@@ -6,22 +6,33 @@ import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/core/Widget/organizame_calendar_button.dart';
 import 'package:organizame/app/core/Widget/organizame_time.dart';
 import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:provider/provider.dart';
 
 class TechnicalvisitHeader extends StatefulWidget {
+  final CustomerObject? initialClient;
+  final DateTime? initialDate;
+  final TimeOfDay? initialTime;
+  final TechnicalVisitObject? technicalVisit;
   final Function(CustomerObject?)? onClientSelected;
   final Function(DateTime)? onDateSelected;
   final Function(TimeOfDay)? onTimeSelected;
 
   const TechnicalvisitHeader({
-    Key? key,
+    super.key,
     this.onClientSelected,
     this.onDateSelected,
     this.onTimeSelected,
-  }) : super(key: key);
+    this.technicalVisit,
+    this.initialClient,
+    this.initialDate,
+    this.initialTime,
+  });
 
   @override
+  // ignore: library_private_types_in_public_api
   _TechnicalvisitHeader createState() => _TechnicalvisitHeader();
 }
 
@@ -31,8 +42,54 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController dateEC = TextEditingController();
   final TextEditingController timeEC = TextEditingController();
-
   bool isFieldsEditable = true;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();    
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initializeData();
+      _initialized = true;
+    }
+  }
+
+  void _initializeData() {
+    if (widget.initialClient != null) {
+      selectedClient = widget.initialClient!.name;
+      phoneController.text = widget.initialClient!.phone ?? '';
+      addressController.text = widget.initialClient!.address ?? '';
+      isFieldsEditable = false;
+    }
+
+    if (widget.initialDate != null) {
+      dateEC.text = widget.initialDate!.toIso8601String();
+      if (widget.onDateSelected != null) {
+        widget.onDateSelected!(widget.initialDate!);
+      }
+    }
+
+    if (widget.initialTime != null) {
+      timeEC.text = widget.initialTime!.format(context);
+      if (widget.onTimeSelected != null) {
+        widget.onTimeSelected!(widget.initialTime!);
+      }
+    }
+  }
+
+   @override
+  void dispose() {
+    phoneController.dispose();
+    addressController.dispose();
+    dateEC.dispose();
+    timeEC.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +101,6 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
         valueListenable: customerController.customersNotifier,
         builder: (context, customers, child) {
           if (customers.isEmpty) {
-            
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -53,8 +109,8 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('NOVA VISITA TÉCNICA',
-              style: context.titleDefaut),
+              Text(widget.technicalVisit != null ? 'Editar Visita': 'Nova Visita',
+                  style: context.titleDefaut),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -121,7 +177,7 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                     context.read<CustomerController>().refreshCustomers();
                   }
                 },
-                label: 'Cadastrar Cliente',
+                label: 'Novo Cliente',
                 textColor: const Color(0xFFFAFFC5),
               ),
             ],

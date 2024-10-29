@@ -336,10 +336,11 @@ class _TecnicalPageState extends State<TecnicalPage> {
                         controller: controller,
                         object: visit,
                         onEdit: (visitToEdit) async {
-                          final result = await Navigator.of(context).pushNamed(
-                            '/visit/create',
-                            arguments: visitToEdit,
-                          );
+                          final result = await Navigator.of(context)
+                              .pushNamed('/visit/create', arguments: {
+                            'visit':
+                                visitToEdit // Passa o objeto dentro de um Map
+                          });
                           if (result == true) {
                             controller.refreshVisits();
                           }

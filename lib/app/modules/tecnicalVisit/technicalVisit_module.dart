@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:organizame/app/core/modules/organizame_module.dart';
+import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_create_page.dart';
 import 'package:organizame/app/modules/environment/enviroment_controller.dart';
@@ -46,7 +48,7 @@ class TechnicalvisitModule extends OrganizameModule {
             // Controllers
             ChangeNotifierProvider(
               create: (context) => TechnicalVisitController(
-                technicalVisitService: context.read(),
+                service: context.read(),
               ),
             ),
             ChangeNotifierProvider(
@@ -59,9 +61,17 @@ class TechnicalvisitModule extends OrganizameModule {
             ),
           ],
           routers: {
-            '/visit/create': (context) => TechnicalvisitCreatePage(controller: context.read<TechnicalVisitController>()),
+            // '/visit/create': (context) => TechnicalvisitCreatePage(controller: context.read<TechnicalVisitController>()),
             '/customer/create': (context) => CustomerCreatePage(),
             '/environment': (context) => EnviromentPage(),
+            '/visit/create': (context) {
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>?;
+              return TechnicalvisitCreatePage(
+                technicalVisit: args?['visit'] as TechnicalVisitObject?,
+                controller: context.read<TechnicalVisitController>(),
+              );
+            },
           },
         );
 }
