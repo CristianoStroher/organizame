@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 
 import 'package:organizame/app/core/ui/theme_extensions.dart';
@@ -188,7 +189,9 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
       }
 
       Navigator.of(context).pop(true);
-    } catch (e) {
+    } catch (e, s) {
+      Logger().e('Erro ao salvar visita técnica: $e');
+      Logger().e(s);
       Messages.of(context).showError('Erro ao salvar visita técnica: $e');
     }
   }

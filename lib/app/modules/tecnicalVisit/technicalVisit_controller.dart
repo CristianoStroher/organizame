@@ -10,6 +10,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
   List<TechnicalVisitObject> _technicalVisits = [];
   TechnicalVisitObject? currentVisit;
   List<EnviromentObject> currentEnvironments = [];
+  final Logger _logger = Logger();
 
   TechnicalVisitController({
     required TechnicalVisitService service,
@@ -30,7 +31,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
       success();
     } catch (e) {
-      Logger().e('Erro ao salvar visita técnica: $e');
+      _logger.i('Erro ao salvar visita técnica: $e');
       setError('Erro ao salvar visita técnica: $e');
       rethrow;
     } finally {
