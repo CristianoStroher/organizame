@@ -143,4 +143,27 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       throw Exception('Erro ao atualizar a visita técnica: $e');
     }
   }
+
+  @override
+  Future<TechnicalVisitObject> findTechnicalVisitById(String id) async {
+    try {
+      final docSnapshot =
+          await _firestore.collection(_collection).doc(id).get();
+
+      if (docSnapshot.exists && docSnapshot.data() != null) {
+        final data = docSnapshot.data();
+        return TechnicalVisitObject(
+          id: docSnapshot.id,
+          date: data?['date'] ?? '',
+          time: data?['time'] ?? '',
+          customer: data?['customer'] ?? '',
+        );
+      } else {
+        throw Exception('Visita técnica não encontrada');
+      }
+    } on Exception catch (e) {
+      Logger().e('Erro ao buscar visita técnica: $e');
+      throw Exception('Erro ao buscar visita técnica: $e');
+    }
+  }
 }

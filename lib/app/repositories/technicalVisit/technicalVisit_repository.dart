@@ -7,5 +7,6 @@ abstract class TechnicalVisitRepository {
   Future<List<TechnicalVisitObject>> getAllTechnicalVisits();
   Future<bool> deleteTechnicalVisit(TechnicalVisitObject technicalVisit);
   Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit);
+  Future<TechnicalVisitObject> findTechnicalVisitById(String id);
  
 }
