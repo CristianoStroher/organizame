@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
@@ -74,22 +72,21 @@ class TechnicalVisitManager {
     }
   }
 
-  //remove um ambiente da visita tecnica
-  void removeEnvironment(String environmentId) {
-    try {
-      final removido =
-          _environments.removeWhere((element) => element.id == environmentId);
-      if (removido) {
-        _logger.i('Ambiente removido com sucesso');
-      } else {
-        _logger.w('Ambiente não encontrado');
-        throw Exception('Ambiente não encontrado');
-      }
-    } catch (e) {
-      _logger.e('Erro ao remover ambiente: $e');
-      rethrow;
-    }
+  // Remove um ambiente
+void removeEnviroment(String enviromentId) {
+  try {
+    final ambiente = _environments.firstWhere(
+      (env) => env.id == enviromentId,
+      orElse: () => throw Exception('Ambiente não encontrado: $enviromentId'),
+    );
+    
+    _environments.remove(ambiente);
+    _logger.i('Ambiente removido: $enviromentId');
+  } catch (e) {
+    _logger.e('Erro ao remover ambiente: $e');
+    rethrow;
   }
+}
 
   // Atualiza um ambiente da visita tecnica
   void updateEnvironment({
