@@ -26,11 +26,11 @@ class EnviromentObject {
     try {
       return EnviromentObject(
         id: map['id'] as String,
-        name: map['nome'] as String,
-        descroiption: map['descricao'] as String,
+        name: map['name'] as String,
+        descroiption: map['description'] as String,
         metragem: map['metragem'] as String?,
-        difficulty: map['dificuldade'] as String?,
-        observation: map['observacao'] as String?,
+        difficulty: map['difficulty'] as String?,
+        observation: map['observation'] as String?,
         itens: (map['itens'] as Map<String, dynamic>?)?.map(
               (key, value) => MapEntry(
                   EnviromentItensEnum.values.firstWhere((e) => e.name == key),
@@ -50,31 +50,31 @@ class EnviromentObject {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nome': name,
-      'descricao': descroiption,
+      'name': name,
+      'description': descroiption,
       'metragem': metragem,
-      'dificuldade': difficulty,
-      'observacao': observation,
+      'difficulty': difficulty,
+      'observation': observation,
       'itens': itens.map((key, value) => MapEntry(key.name, value)),
     };
   }
 
   EnviromentObject copyWith({
     String? id,
-    String? nome,
-    String? descricao,
+    String? name,
+    String? descroiption,
     String? metragem,
-    String? dificuldade,
-    String? observacao,
+    String? difficulty,
+    String? observation,
     Map<EnviromentItensEnum, bool>? itens,
   }) {
     return EnviromentObject(
       id: id ?? this.id,
-      name: nome ?? name,
-      descroiption: descricao ?? descroiption,
+      name: name ?? this.name,
+      descroiption: descroiption ?? this.descroiption,
       metragem: metragem ?? this.metragem,
-      difficulty: dificuldade ?? difficulty,
-      observation: observacao ?? observation,
+      difficulty: difficulty ?? difficulty,
+      observation: observation ?? observation,
       itens: itens ?? Map.from(this.itens),
     );
   }

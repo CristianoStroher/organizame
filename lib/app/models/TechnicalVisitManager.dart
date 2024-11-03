@@ -73,7 +73,63 @@ class TechnicalVisitManager {
     }
   }
 
-  
+  //remove um ambiente da visita tecnica
+  void removeEnvironment(String environmentId) {
+    try {
+      final removido = _environments.removeWhere((element) => element.id == environmentId);
+      if (removido) {
+        _logger.i('Ambiente removido com sucesso');
+      } else {
+        _logger.w('Ambiente não encontrado');
+        throw Exception('Ambiente não encontrado');
+      }
+    } catch (e) {
+      _logger.e('Erro ao remover ambiente: $e');
+      rethrow;
+    }
+  }
+
+  // Atualiza um ambiente da visita tecnica
+  void updateEnvironment({
+    required String id,
+    String? name,
+    String? description,
+    String? metragem,
+    String? difficulty,
+    String? observation,
+    Map<EnviromentItensEnum, bool>? itens,
+  }) {
+    try {
+      final environmentIndex = _environments.indexWhere((element) => element.id == id);
+      if (environmentIndex == -1) {
+        _logger.w('Ambiente não encontrado');
+        throw Exception('Ambiente não encontrado');
+      }
+
+      final enviromentNow = _environments[environmentIndex];
+      final upadateEnvironment = enviromentNow.copyWith(
+        name: name,
+        descroiption: description,
+        metragem: metragem,
+        difficulty: difficulty,
+        observation: observation,
+        itens: itens,
+      );
+
+      if (!upadateEnvironment.isValid()) {
+        _logger.e('Ambiente inválido: $upadateEnvironment');
+        throw Exception('Ambiente inválido: $upadateEnvironment - campos obrigatórios não preenchidos');
+      }
+
+      _environments[environmentIndex] = upadateEnvironment;
+    } catch (e) {
+      _logger.e('Erro ao atualizar ambiente: $e');
+      rethrow;
+    }
+  }
+
+
+
   
 
 
