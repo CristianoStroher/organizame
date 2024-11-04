@@ -2,21 +2,22 @@ import 'package:intl/intl.dart';
 
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/models/enviroment_object.dart';
 
 class TechnicalVisitObject {
   final String? id;
   final DateTime date;
   final DateTime time;
   final CustomerObject customer;
-  /* final List<EnviromentObject>? ambientes; */
+  final List<EnviromentObject>? enviroment;
 
   TechnicalVisitObject({
     this.id,
     required this.date,
     required this.time,
     required this.customer,
-    /* this.ambientes, */
-  });
+    List<EnviromentObject>? enviroment,
+  }) : enviroment = enviroment ?? [];
 
   factory TechnicalVisitObject.fromMap(Map<String, dynamic> map) {
     try {
@@ -38,11 +39,11 @@ class TechnicalVisitObject {
         date: date,
         time: combinedDateTime,
         customer: CustomerObject.fromMap(map['customer'] as Map<String, dynamic>),
-        /* ambientes: map['ambientes'] != null
+        enviroment: map['ambientes'] != null
             ? (map['ambientes'] as List<dynamic>)
                 .map((e) => EnviromentObject.fromMap(e as Map<String, dynamic>))
                 .toList()
-            : [], */
+            : [],
       );
     } on Exception catch (e) {
       Logger().e('Erro ao converter de Map para TechnicalVisitObject: $e');
@@ -59,7 +60,7 @@ class TechnicalVisitObject {
         'date': DateFormat('yyyy-MM-dd').format(date),
         'time': DateFormat('HH:mm:ss').format(time),
         'customer': customer.toMap(),
-        /* 'ambientes': ambientes?.map((e) => e.toMap()).toList(), */
+        'ambientes': enviroment?.map((e) => e.toMap()).toList(),
       };
     }
 
@@ -68,21 +69,20 @@ class TechnicalVisitObject {
       DateTime? date,
       DateTime? time,
       CustomerObject? customer,
-      /* List<EnviromentObject>? ambientes, */
+      List<EnviromentObject>? enviroment,
     }) {
       return TechnicalVisitObject(
         id: id ?? this.id,
         date: date ?? this.date,
         time: time ?? this.time,
         customer: customer ?? this.customer,
-        /* ambientes: ambientes ?? ambientes ?? [], */
+        enviroment: enviroment ?? this.enviroment,
       );
     }
 
     @override
     String toString() {
-      /* return 'TechnicalVisitObject(id: $id, date: $data, customer: $cliente, enviroments: $ambientes)'; */
-      return 'TechnicalVisitObject(id: $id, date: $date, time: $time, customer: $customer)';
+      return 'TechnicalVisitObject(id: $id, date: $date, time: $time, customer: $customer enviroments: $enviroment)';
     }
   }
 

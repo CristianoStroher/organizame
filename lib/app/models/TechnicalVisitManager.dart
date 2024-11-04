@@ -7,7 +7,7 @@ import 'package:organizame/app/models/technicalVisit_object.dart';
 
 class TechnicalVisitManager {
   TechnicalVisitObject _technicalVisit;
-  final List<EnviromentObject> _environments = [];
+  final List<EnviromentObject> _enviroments = [];
   final Logger _logger = Logger();
 
   TechnicalVisitManager({
@@ -18,28 +18,30 @@ class TechnicalVisitManager {
           date: date,
           time: time,
           customer: customer,
+          enviroment: [], // Inicializa com lista vazia
         );
 
-  //getters
-  TechnicalVisitObject get technicalVisit => _technicalVisit;
-  List<EnviromentObject> get environments => List.unmodifiable(_environments);
+  // Getters
+  TechnicalVisitObject get visitaTecnica => _technicalVisit.copyWith(
+        enviroment: List.unmodifiable(_enviroments),
+      );
+  List<EnviromentObject> get enviroments => List.unmodifiable(_enviroments);
 
-
-  // Atualiza dados basicos da visita tecnica
-  void updateTechnicalVisit({
+  // Atualiza dados básicos da visita
+  void updateVisitData({
     DateTime? date,
     DateTime? time,
     CustomerObject? customer,
   }) {
     _technicalVisit = _technicalVisit.copyWith(
-      date: date ?? _technicalVisit.date,
-      time: time ?? _technicalVisit.time,
-      customer: customer ?? _technicalVisit.customer,
+      date: date,
+      time: time,
+      customer: customer,
     );
   }
 
-  // Adiciona um ambiente a visita tecnica
-  void addEnvironment({
+  // Adiciona um ambiente
+  void addEnviroment({
     required String id,
     required String name,
     required String description,
@@ -49,7 +51,7 @@ class TechnicalVisitManager {
     Map<EnviromentItensEnum, bool>? itens,
   }) {
     try {
-      final environment = EnviromentObject(
+      final enviroment = EnviromentObject(
         id: id,
         name: name,
         descroiption: description,
@@ -59,13 +61,12 @@ class TechnicalVisitManager {
         itens: itens,
       );
 
-      if (!environment.isValid()) {
-        _logger.e('Ambiente inválido: $environment');
-        throw Exception(
-            'Ambiente inválido: $environment - campos obrigatórios não preenchidos');
+      if (!enviroment.isValid()) {
+        throw Exception('Ambiente inválido: campos obrigatórios não preenchidos');
       }
 
-      _environments.add(environment);
+      _enviroments.add(enviroment);
+      _logger.i('Ambiente adicionado: ${enviroment.name}');
     } catch (e) {
       _logger.e('Erro ao adicionar ambiente: $e');
       rethrow;
@@ -73,23 +74,23 @@ class TechnicalVisitManager {
   }
 
   // Remove um ambiente
-void removeEnviroment(String enviromentId) {
-  try {
-    final ambiente = _environments.firstWhere(
-      (env) => env.id == enviromentId,
-      orElse: () => throw Exception('Ambiente não encontrado: $enviromentId'),
-    );
-    
-    _environments.remove(ambiente);
-    _logger.i('Ambiente removido: $enviromentId');
-  } catch (e) {
-    _logger.e('Erro ao remover ambiente: $e');
-    rethrow;
+  void removeEnviroment(String enviromentId) {
+    try {
+      final enviroment = _enviroments.firstWhere(
+        (env) => env.id == enviromentId,
+        orElse: () => throw Exception('Ambiente não encontrado: $enviromentId'),
+      );
+      
+      _enviroments.remove(enviroment);
+      _logger.i('Ambiente removido: $enviromentId');
+    } catch (e) {
+      _logger.e('Erro ao remover ambiente: $e');
+      rethrow;
+    }
   }
-}
 
-  // Atualiza um ambiente da visita tecnica
-  void updateEnvironment({
+  // Atualiza um ambiente existente
+  void updateEnviroment({
     required String id,
     String? name,
     String? description,
@@ -99,15 +100,13 @@ void removeEnviroment(String enviromentId) {
     Map<EnviromentItensEnum, bool>? itens,
   }) {
     try {
-      final environmentIndex =
-          _environments.indexWhere((element) => element.id == id);
-      if (environmentIndex == -1) {
-        _logger.w('Ambiente não encontrado');
-        throw Exception('Ambiente não encontrado');
+      final index = _enviroments.indexWhere((env) => env.id == id);
+      if (index == -1) {
+        throw Exception('Ambiente não encontrado: $id');
       }
 
-      final enviromentNow = _environments[environmentIndex];
-      final upadateEnvironment = enviromentNow.copyWith(
+      final enviromentAtual = _enviroments[index];
+      final enviromentAtualizado = enviromentAtual.copyWith(
         name: name,
         descroiption: description,
         metragem: metragem,
@@ -116,39 +115,25 @@ void removeEnviroment(String enviromentId) {
         itens: itens,
       );
 
-      if (!upadateEnvironment.isValid()) {
-        _logger.e('Ambiente inválido: $upadateEnvironment');
-        throw Exception(
-            'Ambiente inválido: $upadateEnvironment - campos obrigatórios não preenchidos');
+      if (!enviromentAtualizado.isValid()) {
+        throw Exception('Atualização inválida: campos obrigatórios não preenchidos');
       }
 
-      _environments[environmentIndex] = upadateEnvironment;
+      _enviroments[index] = enviromentAtualizado;
+      _logger.i('Ambiente atualizado: ${enviromentAtualizado.name}');
     } catch (e) {
       _logger.e('Erro ao atualizar ambiente: $e');
       rethrow;
     }
   }
 
-  // Atualiza um item específico de um ambiente
-  void updateEnviromentItem(
-      String enviromentId, EnviromentItensEnum item, bool value) {
-    try {
-      final ambiente =
-          _environments.firstWhere((env) => env.id == enviromentId);
-      ambiente.setItem(item, value);
-      _logger.i(
-          'Item ${item.name} atualizado para $value no ambiente ${ambiente.name}');
-    } catch (e) {
-      _logger.e('Erro ao atualizar item do ambiente: $e');
-      rethrow;
-    }
-  }
 
   // Prepara os dados para salvar no Firebase
   Map<String, dynamic> toMap() {
-    final visitaMap = _technicalVisit.toMap();
-    visitaMap['ambientes'] = _environments.map((e) => e.toMap()).toList();
-    return visitaMap;
+    return {
+      ..._technicalVisit.toMap(),
+      'ambientes': _enviroments.map((e) => e.toMap()).toList(),
+    };
   }
 
   // Carrega uma visita técnica existente
@@ -161,23 +146,20 @@ void removeEnviroment(String enviromentId) {
         customer: visitaTecnica.customer,
       );
 
-      if (map['enviroment'] != null) {
-        final ambientes = (map['enviroment'] as List<dynamic>)
-            .map((e) => EnviromentObject.fromMap(e as Map<String, dynamic>))
-            .toList();
-        // Adiciona cada ambiente individualmente
-        for (final ambiente in ambientes) {
-          manager.addEnvironment(
-            id: ambiente.id,
-            name: ambiente.name,
-            description: ambiente.descroiption,
-            metragem: ambiente.metragem,
-            difficulty: ambiente.difficulty,
-            observation: ambiente.observation,
-            itens: ambiente.itens,
+      if (visitaTecnica.enviroment != null) {
+        for (final enviroment in visitaTecnica.enviroment!) {
+          manager.addEnviroment(
+            id: enviroment.id,
+            name: enviroment.name,
+            description: enviroment.descroiption,
+            metragem: enviroment.metragem,
+            difficulty: enviroment.difficulty,
+            observation: enviroment.observation,
+            itens: enviroment.itens,
           );
         }
       }
+
       return manager;
     } catch (e) {
       Logger().e('Erro ao criar TechnicalVisitManager from Map: $e');
@@ -187,13 +169,13 @@ void removeEnviroment(String enviromentId) {
 
   // Valida se a visita está pronta para ser salva
   bool validateForSave() {
-    if (_environments.isEmpty) {
+    if (_enviroments.isEmpty) {
       throw Exception('A visita técnica deve ter pelo menos um ambiente');
     }
 
-    for (final ambiente in _environments) {
-      if (!ambiente.isValid()) {
-        throw Exception('Ambiente inválido encontrado: ${ambiente.id}');
+    for (final enviroment in _enviroments) {
+      if (!enviroment.isValid()) {
+        throw Exception('Ambiente inválido encontrado: ${enviroment.id}');
       }
     }
 
@@ -203,7 +185,7 @@ void removeEnviroment(String enviromentId) {
   // Obtém um ambiente específico
   EnviromentObject? getEnviroment(String id) {
     try {
-      return _environments.firstWhere((env) => env.id == id);
+      return _enviroments.firstWhere((env) => env.id == id);
     } catch (e) {
       return null;
     }
@@ -211,6 +193,6 @@ void removeEnviroment(String enviromentId) {
 
   // Verifica se um ambiente existe
   bool hasEnviroment(String id) {
-    return _environments.any((env) => env.id == id);
+    return _enviroments.any((env) => env.id == id);
   }
 }
