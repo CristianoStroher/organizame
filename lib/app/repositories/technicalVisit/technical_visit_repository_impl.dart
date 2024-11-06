@@ -20,51 +20,47 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
   ) async {
     try {
       await _firestore.collection(_collection).add({
-        'date': date,
-        'time': time,
+        'date': Timestamp.fromDate(date),
+        'time': Timestamp.fromDate(time),
         'customer': customer.toMap(),
       });
     } catch (e) {
       Logger().e('Erro ao salvar a visita técnica: $e');
       throw Exception('Erro ao salvar a visita técnica: $e');
-      rethrow;
     }
   }
 
+  @override
   Future<List<TechnicalVisitObject>> getAllTechnicalVisits() async {
     try {
       final querySnapshot = await _firestore.collection(_collection).get();
-
       final List<TechnicalVisitObject> visitas = [];
 
       for (var doc in querySnapshot.docs) {
         try {
           final dados = doc.data();
+          Logger().d('Dados do documento ${doc.id}: $dados');
 
           // Verifica e converte o cliente
           final clienteMap = dados['customer'] as Map<String, dynamic>?;
-
           if (clienteMap == null) {
-            continue; // Pula este documento
+            Logger().w('Cliente não encontrado para visita ${doc.id}');
+            continue;
           }
 
           final customer = CustomerObject.fromMap(clienteMap);
 
           // Verifica e converte data e hora
-          final dataTimestamp = dados['date'];
-          final horaTimestamp = dados['time'];
+          final dataTimestamp = dados['date'] as Timestamp?;
+          final horaTimestamp = dados['time'] as Timestamp?;
 
-          if (dataTimestamp == null) {
+          if (dataTimestamp == null || horaTimestamp == null) {
+            Logger().w('Data ou hora não encontrada para visita ${doc.id}');
             continue;
           }
 
-          final DateTime date = dataTimestamp is DateTime
-              ? dataTimestamp
-              : (dataTimestamp as Timestamp).toDate();
-
-          final DateTime time = horaTimestamp is DateTime
-              ? horaTimestamp
-              : (horaTimestamp as Timestamp).toDate();
+          final DateTime date = dataTimestamp.toDate();
+          final DateTime time = horaTimestamp.toDate();
 
           final visita = TechnicalVisitObject(
             id: doc.id,
@@ -74,16 +70,22 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           );
 
           visitas.add(visita);
+          Logger().d('Visita adicionada: ${visita.toString()}');
         } catch (e, stackTrace) {
+          Logger().e('Erro ao processar documento: $e');
+          Logger().e('Stack trace: $stackTrace');
           continue;
         }
       }
 
       return visitas;
     } catch (e, stackTrace) {
+      Logger().e('Erro ao buscar visitas: $e');
+      Logger().e('Stack trace: $stackTrace');
       rethrow;
     }
   }
+
 
   @override
   Future<bool> deleteTechnicalVisit(TechnicalVisitObject technicalVisit) async {
@@ -99,17 +101,30 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
 
   @override
   Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit) async {
-
     try {
-      await _firestore.collection(_collection).doc(technicalVisit.id).update({
-        'date': technicalVisit.date,
-        'time': technicalVisit.time,
+      Logger().d(
+          'Repositório - Iniciando atualização da visita: ${technicalVisit.id}');
+      Logger().d('Data: ${technicalVisit.date}');
+      Logger().d('Hora: ${technicalVisit.time}');
+
+      // Converte para o formato correto antes de enviar ao Firestore
+      final Map<String, dynamic> updateData = {
+        'date': Timestamp.fromDate(technicalVisit.date),
+        'time': Timestamp.fromDate(technicalVisit.time),
         'customer': technicalVisit.customer.toMap(),
-      });
-      Logger().i('Repositorio - Visita técnica atualizada com sucesso id: ${technicalVisit.id}');
-    } catch (e) {
-      Logger().e('Repositorio - Erro ao atualizar a visita técnica: $e');
-      throw Exception('Repositorio - Erro ao atualizar a visita técnica: $e');
+      };
+
+      await _firestore
+          .collection(_collection)
+          .doc(technicalVisit.id)
+          .update(updateData);
+
+      Logger().i(
+          'Repositório - Visita técnica atualizada com sucesso id: ${technicalVisit.id}');
+    } catch (e, stackTrace) {
+      Logger().e('Repositório - Erro ao atualizar a visita técnica: $e');
+      Logger().e('Stack trace: $stackTrace');
+      throw Exception('Repositório - Erro ao atualizar a visita técnica: $e');
     }
   }
 
@@ -135,5 +150,4 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       throw Exception('Erro ao buscar visita técnica: $e');
     }
   }
-
 }

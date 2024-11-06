@@ -22,40 +22,40 @@ class OrganizameTimeButton extends StatelessWidget {
     this.onDateSelected,
     required this.color,
     this.onTimeSelected,
-    
   });
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (picked != null) {
-      controller.text = picked.format(context);
-      onTimeSelected?.call(picked);
-    }
-  }
-  
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(3),
       onTap: () async {
+        // Pega o horário atual do controller se existir
+        TimeOfDay initialTime;
+        try {
+          if (controller.text.isNotEmpty) {
+            final time = timeFormat.parse(controller.text);
+            initialTime = TimeOfDay(hour: time.hour, minute: time.minute);
+          } else {
+            initialTime = TimeOfDay.now();
+          }
+        } catch (e) {
+          initialTime = TimeOfDay.now();
+        }
+
         final TimeOfDay? selectedTime = await showTimePicker(
           context: context,
-          initialTime: TimeOfDay.now(),
+          initialTime: initialTime,
         );
 
         if (selectedTime != null) {
-          final now = DateTime.now();
-          final selectedDateTime = DateTime(now.year, now.month, now.day,
-              selectedTime.hour, selectedTime.minute);
+          // Atualiza o controlador com o novo horário
+          final formattedTime = selectedTime.format(context);
+          controller.text = formattedTime;
 
-          // Atualiza o controlador e o campo de texto com a hora selecionada
-          controller.text = timeFormat.format(selectedDateTime);
-          context.read<TaskController>().setSelectedTime = selectedDateTime;
+          // Notifica sobre a mudança
+          if (onTimeSelected != null) {
+            onTimeSelected!(selectedTime);
+          }
         }
       },
       child: Container(
@@ -75,25 +75,12 @@ class OrganizameTimeButton extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             if (label != null)
-              Selector<TaskController, DateTime?>(
-                selector: (context, controller) => controller.getSelectedTime,
-                builder: (context, selectedTime, child) {
-                  if (controller.text.isEmpty) {
-                    return Text(
-                      label!,
-                      style:
-                          TextStyle(color: context.primaryColor, fontSize: 16),
-                    );
-                  } else {
-                    return Text(
-                      selectedTime != null
-                          ? timeFormat.format(selectedTime)
-                          : controller.text,
-                      style:
-                          TextStyle(color: context.primaryColor, fontSize: 16),
-                    );
-                  }
-                },
+              Text(
+                controller.text.isNotEmpty ? controller.text : label!,
+                style: TextStyle(
+                  color: context.primaryColor,
+                  fontSize: 16,
+                ),
               ),
           ],
         ),

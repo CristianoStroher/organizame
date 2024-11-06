@@ -36,6 +36,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
   final TextEditingController timeEC = TextEditingController();
   bool _initialized = false;
   final dateFormat = DateFormat('dd/MM/yyyy');
+  final selectedTime = ValueNotifier<TimeOfDay?>(null); // Novo
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     dateEC.dispose();
     timeEC.dispose();
     selectedClient.dispose();
+    selectedTime.dispose(); // Novo
   }
 
   @override
@@ -114,6 +116,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
                     },
                     onTimeSelected: (time) {
                       timeEC.text = time.format(context);
+                      selectedTime.value = time; // Novo
                     },
                   ),
                   const SizedBox(height: 10),

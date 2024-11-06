@@ -62,6 +62,8 @@ class TechnicalVisitController extends DefautChangeNotifer {
         _technicalVisits[index] = visit;
       }
 
+      await refreshVisits();
+
       success();
     } catch (e) {
       final errorMsg = 'Erro ao atualizar visita técnica: $e';
@@ -90,8 +92,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       showLoadingAndResetState();
       Logger().i('Recarregando lista de visitas');
 
-      // Aqui você precisará implementar a lógica para buscar as visitas novamente
-      // _technicalVisits = await _service.getAllTechnicalVisits();
+      _technicalVisits = await _service.getAllTechnicalVisits();
 
       success();
     } catch (e) {
@@ -103,4 +104,5 @@ class TechnicalVisitController extends DefautChangeNotifer {
       notifyListeners();
     }
   }
+
 }

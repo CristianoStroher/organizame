@@ -130,7 +130,7 @@ class _TechnicalvisitHeader extends State<TechnicalvisitHeader> {
                       controller: timeEC,
                       label: 'Hora',
                       color: const Color(0xFFFAFFC5),
-                      onTimeSelected: (time) {
+                      onTimeSelected: (TimeOfDay time) {
                         if (widget.onTimeSelected != null) {
                           widget.onTimeSelected!(time);
                         }
