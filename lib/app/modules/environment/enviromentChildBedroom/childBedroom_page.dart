@@ -6,6 +6,8 @@ import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
+import 'package:organizame/app/models/enviroment_itens_enum.dart';
+import 'package:organizame/app/models/enviroment_object.dart';
 
 class ChildBedroomPage extends StatefulWidget {
   const ChildBedroomPage({super.key});
@@ -15,7 +17,25 @@ class ChildBedroomPage extends StatefulWidget {
 }
 
 class _ChildBedroomPageState extends State<ChildBedroomPage> {
-  String? selectedDifficulty; // Armazena a dificuldade selecionada
+  final _formkey = GlobalKey<FormState>();
+  final _metragemController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _observationController = TextEditingController();
+  final Map<EnviromentItensEnum, bool> _selectedItens = {};
+
+  String? _selectedDifficulty; // Armazena a dificuldade selecionada
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedItens[EnviromentItensEnum.roupas] = false;
+    _selectedItens[EnviromentItensEnum.calcados] = false;
+    _selectedItens[EnviromentItensEnum.brinquedos] = false;
+    _selectedItens[EnviromentItensEnum.roupasDeCama] = false;
+    _selectedItens[EnviromentItensEnum.outros] = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<String> options = [
@@ -49,6 +69,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         ],
       ),
       body: Form(
+        key: _formkey,
         child: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -59,9 +80,17 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 // Text(widget.enviroment == null ? 'NOVO AMBIENTE' : 'ALTERAR AMBIENTE',
                 //         style: context.titleDefaut),
                 const SizedBox(height: 20),
-                OrganizameTextformfield(label: 'Descrição', enabled: true),
+                OrganizameTextformfield(
+                  label: 'Descrição',
+                  enabled: true,
+                  controller: _descriptionController,
+                ),
                 const SizedBox(height: 10),
-                OrganizameTextformfield(label: 'Metragem 2', enabled: true),
+                OrganizameTextformfield(
+                  label: 'Metragem 2',
+                  enabled: true,
+                  controller: _metragemController,
+                ),
                 const SizedBox(height: 10),
                 OrganizameDropdownfield(
                   label: 'Dificuldade',
@@ -70,10 +99,10 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                     'Moderado',
                     'Crítico',
                   ],
-                  selectedOptions: selectedDifficulty,
+                  selectedOptions: _selectedDifficulty, // Valor selecionado
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedDifficulty = newValue;
+                      _selectedDifficulty = newValue;
                     });
                   },
                 ),
@@ -82,10 +111,12 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                   options: options,
                   color: const Color(0xFFFAFFC5),
                 ),
-                const SizedBox(
-                  height: 10,
+                const SizedBox(height: 10),
+                OrganizameTextField(
+                  label: 'Observações',
+                  maxLines: 4,
+                  controller: _observationController,
                 ),
-                OrganizameTextField(label: 'Observações', maxLines: 4),
                 const SizedBox(height: 20),
                 Text('IMAGENS', style: context.titleDefaut),
                 const SizedBox(height: 20),
@@ -96,7 +127,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 ),
                 const SizedBox(height: 20),
                 OrganizameElevatedButton(
-                  onPressed: () {},
+                  onPressed: _saveEnvironment,
                   label: 'Adicionar',
                   textColor: const Color(0xFFFAFFC5),
                 ),
@@ -107,5 +138,21 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         ),
       ),
     );
+  }
+
+  void _saveEnvironment() {
+    if (_formkey.currentState!.validate()) {
+      final environment = EnviromentObject(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: 'Quarto Criança', // Nome já definido
+        descroiption: _descriptionController.text,
+        metragem: _metragemController.text,
+        difficulty: _selectedDifficulty,
+        observation: _observationController.text,
+        itens: _selectedItens,
+      );
+
+      Navigator.of(context).pop(environment);
+    }
   }
 }
