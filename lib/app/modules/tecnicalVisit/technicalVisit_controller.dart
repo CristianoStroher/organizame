@@ -29,9 +29,22 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
       await _service.saveTechnicalVisit(date, time, customer);
 
+      // Busca todas as visitas para obter a que acabou de ser salva
+      final allVisits = await _service.getAllTechnicalVisits();
+      _technicalVisits = allVisits;
+
+      // Encontra a visita recém salva e atualiza currentVisit
+      currentVisit = allVisits.firstWhere((visit) =>
+          visit.date.day == date.day &&
+          visit.date.month == date.month &&
+          visit.date.year == date.year &&
+          visit.time.hour == time.hour &&
+          visit.time.minute == time.minute &&
+          visit.customer.id == customer.id);
+
+      Logger().d('Visita salva e definida como atual: ${currentVisit?.id}');
+
       success();
-      
-    
     } catch (e) {
       _logger.i('Erro ao salvar visita técnica: $e');
       setError('Função save - Erro ao salvar visita técnica: $e');
@@ -94,6 +107,14 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
       _technicalVisits = await _service.getAllTechnicalVisits();
 
+      // Se estiver editando uma visita, atualiza a currentVisit
+      if (currentVisit != null) {
+        currentVisit = _technicalVisits.firstWhere(
+          (visit) => visit.id == currentVisit!.id,
+          orElse: () => currentVisit!,
+        );
+      }
+
       success();
     } catch (e) {
       final errorMsg = 'Erro ao recarregar visitas: $e';
@@ -105,4 +126,16 @@ class TechnicalVisitController extends DefautChangeNotifer {
     }
   }
 
+  // Método para carregar uma visita existente
+  void loadExistingVisit(TechnicalVisitObject visit) {
+    currentVisit = visit;
+    notifyListeners();
+  }
+
+  //metodo para verificar se pode acionar o botão de adicionar ambientes
+  bool canAddEnvironments() {
+    return currentVisit?.id != null;
+  }
+
+  void addEnvironment(EnviromentObject value) {}
 }

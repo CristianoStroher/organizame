@@ -28,6 +28,8 @@ class _TecnicalPageState extends State<TecnicalPage> {
   }
 
   Future<void> _goToTaskPage(BuildContext context) async {
+    final controller = context.read<TechnicalController>();
+    controller.currentVisit = null;
     final result = await Navigator.of(context).pushNamed('/visit/create');
     if (result == true) {
       if (mounted) {
@@ -263,9 +265,6 @@ class _TecnicalPageState extends State<TecnicalPage> {
       ),
       body: Consumer<TechnicalController>(
         builder: (context, controller, _) {
-          print(
-              'UI - Estado atual: isLoading=${controller.isLoading}, totalVisitas=${controller.filteredTechnicalVisits.length}');
-
           if (controller.isLoading) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -273,7 +272,6 @@ class _TecnicalPageState extends State<TecnicalPage> {
           }
 
           final visits = controller.filteredTechnicalVisits;
-          print('UI - Renderizando lista com ${visits.length} visitas');
 
           if (visits.isEmpty) {
             return Center(
@@ -338,7 +336,8 @@ class _TecnicalPageState extends State<TecnicalPage> {
                         onEdit: (visitToEdit) async {
                           final result = await Navigator.of(context)
                               .pushNamed('/visit/create', arguments: {
-                            'visit': visitToEdit // Passa o objeto dentro de um Map
+                            'visit':
+                                visitToEdit // Passa o objeto dentro de um Map
                           });
                           if (result == true) {
                             controller.refreshVisits();

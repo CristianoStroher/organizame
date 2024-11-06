@@ -11,6 +11,8 @@ class OrganizameElevatedButton extends StatelessWidget {
   final double? fontSize;
   final BorderRadiusGeometry? borderRadius;
   final Color? borderColor;
+  final bool? enabled;
+  final Color? disabledColor;
 
   const OrganizameElevatedButton({
     super.key,
@@ -23,6 +25,8 @@ class OrganizameElevatedButton extends StatelessWidget {
     this.fontSize,
     this.borderRadius,
     this.borderColor,
+    this.enabled,
+    this.disabledColor,
   });
 
   @override
@@ -35,6 +39,8 @@ class OrganizameElevatedButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor ?? context.primaryColor,
           foregroundColor: textColor ?? context.primaryColorLight,
+          disabledBackgroundColor: disabledColor ?? Colors.grey[400],
+          disabledForegroundColor: Colors.grey[700],
           textStyle: TextStyle(
             fontSize: fontSize ?? 18,
             fontWeight: FontWeight.bold,

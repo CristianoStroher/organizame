@@ -14,6 +14,7 @@ class TechnicalvisitList extends StatelessWidget {
     return Consumer<TechnicalVisitController>(
       builder: (context, controller, _) {
         final environments = controller.currentEnvironments;
+        final bool canAddEnvironment = controller.canAddEnvironments();
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -22,10 +23,9 @@ class TechnicalvisitList extends StatelessWidget {
             children: [
               Text('AMBIENTES', style: context.titleDefaut),
               const SizedBox(height: 10),
-
               if (environments.isEmpty)
                 Text('Nenhum ambiente cadastrado.',
-                style: TextStyle(color: context.primaryColor))
+                    style: TextStyle(color: context.primaryColor))
               else
                 ListView.builder(
                   shrinkWrap: true,
@@ -41,14 +41,28 @@ class TechnicalvisitList extends StatelessWidget {
                     );
                   },
                 ),
-
               const SizedBox(height: 20),
               OrganizameElevatedButton(
-                onPressed: () async {
-                  final newEnvironment = await Navigator.of(context).pushNamed('/environment') as EnviromentObject?;},
+                onPressed: () {
+                  // Se puder adicionar ambientes, permite o clique
+                  if (controller.canAddEnvironments()) {
+                    Navigator.of(context)
+                        .pushNamed('/environment')
+                        .then((value) {
+                      if (value != null) {
+                        controller.addEnvironment(value as EnviromentObject);
+                      }
+                    });
+                  }
+                },
                 label: 'Adicionar Ambiente',
-                textColor: const Color(0xFFFAFFC5),
-              ),
+                textColor: controller.canAddEnvironments()
+                    ? const Color(0xFFFAFFC5)
+                    : const Color.fromARGB(255, 253, 253, 253),
+                backgroundColor: controller.canAddEnvironments()
+                    ? context.primaryColor
+                    : const Color.fromARGB(255, 189, 189, 222),
+              )
             ],
           ),
         );

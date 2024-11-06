@@ -8,6 +8,7 @@ class TechnicalController extends DefautChangeNotifer {
   final TechnicalVisitService _service;
   List<TechnicalVisitObject> _technicalVisits = [];
   List<TechnicalVisitObject> _filteredVisits = [];
+  TechnicalVisitObject? _currentVisit;
 
   // Getter para visitas filtradas
   List<TechnicalVisitObject> get filteredTechnicalVisits => _filteredVisits;
@@ -15,6 +16,12 @@ class TechnicalController extends DefautChangeNotifer {
   bool get isLoading => loading;
   bool get hasVisits => _technicalVisits.isNotEmpty;
   bool get hasFilteredVisits => _filteredVisits.isNotEmpty;
+  TechnicalVisitObject? get currentVisit => _currentVisit;
+
+  set currentVisit(TechnicalVisitObject? visit) {
+    _currentVisit = visit;
+    notifyListeners();
+  }
 
   TechnicalController({
     required TechnicalVisitService technicalVisitService,

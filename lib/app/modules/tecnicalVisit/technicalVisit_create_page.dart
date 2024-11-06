@@ -41,6 +41,9 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
   @override
   void initState() {
     super.initState();
+    if (widget.technicalVisit != null) {
+      widget._controller.currentVisit = widget.technicalVisit;
+    }
   }
 
   @override
@@ -194,10 +197,11 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
           date: dateValue,
           time: timeValue,
           customer: selectedClient.value!,
+          enviroment: widget.technicalVisit!.enviroment,
         );
 
         await widget._controller.updateVisit(updatedVisit);
-        await widget._controller.refreshVisits();
+        // await widget._controller.refreshVisits();
         Messages.of(context).showInfo('Visita técnica atualizada com sucesso!');
       } else {
         // Modo criação
@@ -209,9 +213,13 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         await widget._controller.refreshVisits();
         Messages.of(context).showInfo('Visita técnica salva com sucesso!');
       }
-      if (context.mounted) {
-      Navigator.of(context).pop(true);
+    //   if (context.mounted) {
+    //   Navigator.of(context).pop(true);
+    // }
+    if (mounted) {
+      setState(() {});
     }
+
     } catch (e, s) {
       Logger().e('Erro ao salvar visita técnica: $e');
       Logger().e(s);
