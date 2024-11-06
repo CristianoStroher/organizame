@@ -339,9 +339,9 @@ class _TecnicalPageState extends State<TecnicalPage> {
                             'visit':
                                 visitToEdit // Passa o objeto dentro de um Map
                           });
-                          if (result == true) {
-                            controller.refreshVisits();
-                          }
+                          
+                            await controller.refreshVisits();
+                          
                         },
                       );
                     },

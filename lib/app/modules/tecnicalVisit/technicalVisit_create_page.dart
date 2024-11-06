@@ -201,8 +201,15 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         );
 
         await widget._controller.updateVisit(updatedVisit);
-        // await widget._controller.refreshVisits();
-        Messages.of(context).showInfo('Visita técnica atualizada com sucesso!');
+        await widget._controller.refreshVisits();
+
+        widget._controller.currentVisit = updatedVisit;
+
+        if (mounted) {
+          Messages.of(context)
+              .showInfo('Visita técnica atualizada com sucesso!');
+          setState(() {}); // Força atualização da UI
+        }
       } else {
         // Modo criação
         await widget._controller.saveTechnicalVisit(
@@ -213,13 +220,12 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         await widget._controller.refreshVisits();
         Messages.of(context).showInfo('Visita técnica salva com sucesso!');
       }
-    //   if (context.mounted) {
-    //   Navigator.of(context).pop(true);
-    // }
-    if (mounted) {
-      setState(() {});
-    }
-
+      //   if (context.mounted) {
+      //   Navigator.of(context).pop(true);
+      // }
+      if (mounted) {
+        setState(() {});
+      }
     } catch (e, s) {
       Logger().e('Erro ao salvar visita técnica: $e');
       Logger().e(s);
