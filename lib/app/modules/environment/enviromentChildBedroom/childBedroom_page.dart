@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_checkboxlist.dart';
 import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
@@ -141,10 +143,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   }
 
   void _saveEnvironment() {
-    if (_formkey.currentState!.validate()) {
+  if (_formkey.currentState!.validate()) {
+    try {
       final environment = EnviromentObject(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: 'Quarto Criança', // Nome já definido
+        name: 'Quarto Criança',
         descroiption: _descriptionController.text,
         metragem: _metragemController.text,
         difficulty: _selectedDifficulty,
@@ -152,7 +155,20 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         itens: _selectedItens,
       );
 
+      // Log para debug
+      Logger().d('Ambiente criado: ${environment.toString()}');
+
+      // Retorna o ambiente para a página anterior
       Navigator.of(context).pop(environment);
+
+      // Mostra mensagem de sucesso
+      Messages.of(context).showInfo('Ambiente salvo com sucesso!');
+      
+    } catch (e, s) {
+      Logger().e('Erro ao salvar ambiente: $e');
+      Logger().e(s);
+      Messages.of(context).showError('Erro ao salvar ambiente');
     }
   }
+}
 }

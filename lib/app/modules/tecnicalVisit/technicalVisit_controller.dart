@@ -137,5 +137,33 @@ class TechnicalVisitController extends DefautChangeNotifer {
     return currentVisit?.id != null;
   }
 
-  void addEnvironment(EnviromentObject value) {}
+  Future<void> addEnvironment(EnviromentObject environment) async {
+    try {
+      Logger().i('Iniciando adição do ambiente à visita');
+      Logger().d('Ambiente: ${environment.toString()}');
+
+      if (currentVisit == null) {
+        throw Exception('Nenhuma visita selecionada');
+      }
+
+      // Adiciona à lista local
+      currentEnvironments.add(environment);
+
+      // Atualiza a visita
+      final updatedVisit = currentVisit!.copyWith(
+        enviroment: List.from(currentEnvironments),
+      );
+
+      Logger().d('Visita atualizada: ${updatedVisit.toString()}');
+
+      // Salva no banco
+      await updateVisit(updatedVisit);
+
+      Logger().i('Ambiente adicionado com sucesso');
+      notifyListeners();
+    } catch (e) {
+      Logger().e('Erro ao adicionar ambiente: $e');
+      rethrow;
+    }
+  }
 }
