@@ -30,6 +30,8 @@ class TechnicalVisitController extends DefautChangeNotifer {
       await _service.saveTechnicalVisit(date, time, customer);
 
       success();
+      
+    
     } catch (e) {
       _logger.i('Erro ao salvar visita técnica: $e');
       setError('Função save - Erro ao salvar visita técnica: $e');
