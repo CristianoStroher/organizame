@@ -49,13 +49,13 @@ class AppModule extends StatelessWidget {
         Provider<TasksRepository>(create: (context) => TasksRepositoryImpl(sqLiteConnectionFactory: context.read())), //injetando o repositório de tarefas
         Provider<TasksService>(create: (context) =>TasksServiceImpl(tasksRepository: context.read())), //injetando o serviço de tarefas
         Provider<TechnicalVisitRepository>(create: (context) => TechnicalVisitRepositoryImpl(firestore: context.read<FirebaseFirestore>())), //injetando o controller do módulo technicalVisit
-        Provider<TechnicalVisitService>(create: (context) => TechnicalVisitServiceImpl(technicalVisitRepository: context.read<TechnicalVisitRepository>(),),),
+        Provider<TechnicalVisitService>(create: (context) => TechnicalVisitServiceImpl(repository: context.read<TechnicalVisitRepository>(),),),
         ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,),//injetando o provider de autenticação
         ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
         ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
         ChangeNotifierProvider(create: (context) => TechnicalController(technicalVisitService: context.read())), //injetando o controller do módulo tecnical
         ChangeNotifierProvider(create: (context) => LivingRoomController()), //injetando o controller do módulo livingRoom
-        ChangeNotifierProvider(create: (context) => ChildBedroomController()), //injetando o controller do módulo childBedroom
+        ChangeNotifierProvider(create: (context) => ChildBedroomController(technicalVisitController:context.read())), //injetando o controller do módulo childBedroom
         ChangeNotifierProvider(create: (context) => KitchenController()), //injetando o controller do módulo kitchen
         ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read(),)), //injetando o controller do módulo customer
         ChangeNotifierProvider(create: (context) => TechnicalVisitController(service: context.read<TechnicalVisitService>())), //injetando o controller do módulo technicalVisit

@@ -41,7 +41,7 @@ class TechnicalvisitModule extends OrganizameModule {
             ),
             Provider<TechnicalVisitService>(
               create: (context) => TechnicalVisitServiceImpl(
-                technicalVisitRepository: context.read(),
+                repository: context.read(),
               ),
             ),
 

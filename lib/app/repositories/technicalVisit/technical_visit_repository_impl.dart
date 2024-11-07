@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
 import 'package:mockito/annotations.dart';
@@ -86,7 +87,6 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
     }
   }
 
-
   @override
   Future<bool> deleteTechnicalVisit(TechnicalVisitObject technicalVisit) async {
     try {
@@ -148,6 +148,34 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
     } on Exception catch (e) {
       Logger().e('Erro ao buscar visita técnica: $e');
       throw Exception('Erro ao buscar visita técnica: $e');
+    }
+  }
+
+  @override
+  Future<void> addEnvironmentToVisit(
+      String visitId, EnviromentObject environment) async {
+    try {
+      Logger()
+          .i('Repository - Iniciando adição do ambiente à visita: $visitId');
+
+      final visitRef = _firestore.collection(_collection).doc(visitId);
+      final visitDoc = await visitRef.get();
+
+      if (!visitDoc.exists) {
+        throw Exception('Visita não encontrada');
+      }
+
+      List<Map<String, dynamic>> currentEnvironments =
+          List<Map<String, dynamic>>.from(visitDoc.data()?['ambientes'] ?? []);
+
+      currentEnvironments.add(environment.toMap());
+
+      await visitRef.update({'ambientes': currentEnvironments});
+
+      Logger().i('Repository - Ambiente adicionado com sucesso');
+    } catch (e) {
+      Logger().e('Repository - Erro ao adicionar ambiente: $e');
+      rethrow;
     }
   }
 }

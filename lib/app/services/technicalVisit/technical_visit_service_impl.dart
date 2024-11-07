@@ -1,31 +1,31 @@
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
-import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
 
 import './technical_visit_service.dart';
 
 class TechnicalVisitServiceImpl extends TechnicalVisitService {
-  final TechnicalVisitRepository _technicalVisitRepository;
+  final TechnicalVisitRepository _repository;
 
   TechnicalVisitServiceImpl({
-    required TechnicalVisitRepository technicalVisitRepository,
-  }) : _technicalVisitRepository = technicalVisitRepository;
+    required TechnicalVisitRepository repository,
+  }) : _repository = repository;
 
   @override
   Future<void> saveTechnicalVisit(
           DateTime data, DateTime hora, CustomerObject cliente) =>
-      _technicalVisitRepository.saveTechnicalVisit(data, hora, cliente);
+      _repository.saveTechnicalVisit(data, hora, cliente);
 
   @override
   Future<List<TechnicalVisitObject>> getAllTechnicalVisits() =>
-      _technicalVisitRepository.getAllTechnicalVisits();
+      _repository.getAllTechnicalVisits();
 
   @override
   Future<bool> deleteTechnicalVisit(
           TechnicalVisitObject technicalVisitObject) =>
-      _technicalVisitRepository.deleteTechnicalVisit(technicalVisitObject);
+      _repository.deleteTechnicalVisit(technicalVisitObject);
 
   @override
   Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit) async {
@@ -37,7 +37,7 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
       }
 
       // Atualiza a visita
-      await _technicalVisitRepository.updateTechnicalVisit(technicalVisit);
+      await _repository.updateTechnicalVisit(technicalVisit);
       Logger().i('Visita atualizada com sucesso: ${technicalVisit.id}');
     } catch (e) {
       Logger().e('Erro ao atualizar visita técnica: $e');
@@ -47,5 +47,24 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
 
   @override
   Future<TechnicalVisitObject> findTechnicalVisitById(String id) =>
-      _technicalVisitRepository.findTechnicalVisitById(id);
+      _repository.findTechnicalVisitById(id);
+
+
+  @override
+  Future<void> addEnvironmentToVisit(String visitId, EnviromentObject environment) async {
+    try {
+      Logger().i('Service - Iniciando adição do ambiente');
+      await _repository.addEnvironmentToVisit(visitId, environment);
+      Logger().i('Service - Ambiente adicionado com sucesso');
+    } catch (e) {
+      Logger().e('Service - Erro ao adicionar ambiente: $e');
+      rethrow;
+    }
+  }
+
 }
+
+      
+ 
+
+

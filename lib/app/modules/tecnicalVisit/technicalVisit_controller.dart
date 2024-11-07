@@ -140,26 +140,22 @@ class TechnicalVisitController extends DefautChangeNotifer {
   Future<void> addEnvironment(EnviromentObject environment) async {
     try {
       Logger().i('Iniciando adição do ambiente à visita');
+      Logger().d('CurrentVisit: ${currentVisit?.id}'); // Novo log
       Logger().d('Ambiente: ${environment.toString()}');
 
-      if (currentVisit == null) {
+      if (currentVisit?.id == null) {
         throw Exception('Nenhuma visita selecionada');
       }
 
+      // Chama o método específico no service
+      await _service.addEnvironmentToVisit(currentVisit!.id!, environment);
       // Adiciona à lista local
       currentEnvironments.add(environment);
 
-      // Atualiza a visita
-      final updatedVisit = currentVisit!.copyWith(
-        enviroment: List.from(currentEnvironments),
-      );
-
-      Logger().d('Visita atualizada: ${updatedVisit.toString()}');
-
-      // Salva no banco
-      await updateVisit(updatedVisit);
+      success();
 
       Logger().i('Ambiente adicionado com sucesso');
+      await refreshVisits(); // Atualiza a lista após adicionar
       notifyListeners();
     } catch (e) {
       Logger().e('Erro ao adicionar ambiente: $e');

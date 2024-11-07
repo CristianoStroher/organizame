@@ -9,16 +9,21 @@ import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
-import 'package:organizame/app/models/enviroment_object.dart';
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 
 class ChildBedroomPage extends StatefulWidget {
-  const ChildBedroomPage({super.key});
+  final TechnicalVisitController technicalVisitController;
+
+  const ChildBedroomPage({super.key, required this.technicalVisitController});
 
   @override
   State<ChildBedroomPage> createState() => _ChildBedroomPageState();
 }
 
 class _ChildBedroomPageState extends State<ChildBedroomPage> {
+  late final ChildBedroomController controller;
+
   final _formkey = GlobalKey<FormState>();
   final _metragemController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -30,6 +35,9 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   @override
   void initState() {
     super.initState();
+
+    controller = ChildBedroomController(
+        technicalVisitController: widget.technicalVisitController);
 
     _selectedItens[EnviromentItensEnum.roupas] = false;
     _selectedItens[EnviromentItensEnum.calcados] = false;
@@ -142,33 +150,25 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     );
   }
 
-  void _saveEnvironment() {
-  if (_formkey.currentState!.validate()) {
-    try {
-      final environment = EnviromentObject(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: 'Quarto Criança',
-        descroiption: _descriptionController.text,
-        metragem: _metragemController.text,
-        difficulty: _selectedDifficulty,
-        observation: _observationController.text,
-        itens: _selectedItens,
-      );
+  void _saveEnvironment() async {
+    if (_formkey.currentState!.validate()) {
+      try {
+        final environment = await controller.saveEnvironment(
+          description: _descriptionController.text,
+          metragem: _metragemController.text,
+          difficulty: _selectedDifficulty,
+          observation: _observationController.text,
+          selectedItens: _selectedItens,
+        );
 
-      // Log para debug
-      Logger().d('Ambiente criado: ${environment.toString()}');
-
-      // Retorna o ambiente para a página anterior
-      Navigator.of(context).pop(environment);
-
-      // Mostra mensagem de sucesso
-      Messages.of(context).showInfo('Ambiente salvo com sucesso!');
-      
-    } catch (e, s) {
-      Logger().e('Erro ao salvar ambiente: $e');
-      Logger().e(s);
-      Messages.of(context).showError('Erro ao salvar ambiente');
+        if (mounted) {
+          Messages.of(context).showInfo('Ambiente salvo com sucesso!');
+          Navigator.of(context).pop(environment);
+        }
+      } catch (e) {
+        Logger().e('Erro ao salvar ambiente: $e');
+        Messages.of(context).showError('Erro ao salvar ambiente');
+      }
     }
   }
-}
 }
