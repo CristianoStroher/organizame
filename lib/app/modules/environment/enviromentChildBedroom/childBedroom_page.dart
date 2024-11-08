@@ -65,7 +65,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         backgroundColor: const Color(0xFFFAFFC5),
         automaticallyImplyLeading: false,
         title: OrganizameLogoMovie(
-          text: 'Quarto de Crianças',
+          text: 'QUARTO DE CRIANÇA',
           part1Color: context.primaryColor,
           part2Color: context.primaryColor,
         ),
