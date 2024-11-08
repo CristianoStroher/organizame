@@ -1,14 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
+import 'package:organizame/app/modules/environment/enviroment_page.dart';
 import 'package:organizame/app/modules/environment/widgets/enviroment.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:provider/provider.dart';
 
-class TechnicalvisitList extends StatelessWidget {
+class TechnicalvisitList extends StatefulWidget {
   const TechnicalvisitList({Key? key}) : super(key: key);
 
+  @override
+  State<TechnicalvisitList> createState() => _TechnicalvisitListState();
+}
+
+Future<void> _navigateToEnvironmentPage(
+    BuildContext context, TechnicalVisitController controller) async {
+  if (controller.canAddEnvironments()) {
+    final currentVisit = controller.currentVisit;
+if (currentVisit != null) {
+        controller.setCurrentVisit(currentVisit); // Garante que o ID está salvo
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider<TechnicalVisitController>.value(
+              value: controller,
+              child: EnviromentPage(technicalVisitController: controller), // Primeiro abre a página de seleção de ambiente
+            ),
+          ),
+        );
+      }
+  }
+}
+
+class _TechnicalvisitListState extends State<TechnicalvisitList> {
   @override
   Widget build(BuildContext context) {
     return Consumer<TechnicalVisitController>(
@@ -44,16 +69,7 @@ class TechnicalvisitList extends StatelessWidget {
               const SizedBox(height: 20),
               OrganizameElevatedButton(
                 onPressed: () {
-                  // Se puder adicionar ambientes, permite o clique
-                  if (controller.canAddEnvironments()) {
-                    Navigator.of(context)
-                        .pushNamed('/environment')
-                        .then((value) {
-                      if (value != null) {
-                        controller.addEnvironment(value as EnviromentObject);
-                      }
-                    });
-                  }
+                  _navigateToEnvironmentPage(context, controller);
                 },
                 label: 'Adicionar Ambiente',
                 textColor: controller.canAddEnvironments()

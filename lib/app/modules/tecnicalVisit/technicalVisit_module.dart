@@ -61,9 +61,8 @@ class TechnicalvisitModule extends OrganizameModule {
             ),
           ],
           routers: {
-            // '/visit/create': (context) => TechnicalvisitCreatePage(controller: context.read<TechnicalVisitController>()),
             '/customer/create': (context) => CustomerCreatePage(),
-            '/environment': (context) => EnviromentPage(),
+            '/environment': (context) => EnviromentPage(technicalVisitController: context.read(),),
             '/visit/create': (context) {
               final args = ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>?;

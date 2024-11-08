@@ -8,7 +8,9 @@ class ChildBedroomController extends DefautChangeNotifer {
   final TechnicalVisitController _technicalVisitController;
 
   ChildBedroomController({required TechnicalVisitController technicalVisitController})
-      : _technicalVisitController = technicalVisitController;
+      : _technicalVisitController = technicalVisitController {
+        _technicalVisitController.ensureCurrentVisit();
+  }
 
   Future<EnviromentObject> saveEnvironment({
     required String description,
@@ -19,7 +21,7 @@ class ChildBedroomController extends DefautChangeNotifer {
   }) async {
     try {
       showLoadingAndResetState();
-
+      Logger().d('ChildBedroomController construído com visita: ${_technicalVisitController.currentVisit?.id}');
       final environment = EnviromentObject(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: 'Quarto Criança',
@@ -30,6 +32,10 @@ class ChildBedroomController extends DefautChangeNotifer {
         itens: selectedItens,
       );
 
+      if (_technicalVisitController.currentVisit == null) {
+        throw Exception('Visita não selecionada no controller');
+      }
+
       await _technicalVisitController.addEnvironment(environment);
 
       success();
@@ -37,6 +43,7 @@ class ChildBedroomController extends DefautChangeNotifer {
     } catch (e) {
       setError('Erro ao salvar ambiente: $e');
       Logger().e('Erro ao salvar ambiente: $e');
+      Logger().e('Estado do controller: ${_technicalVisitController.currentVisit?.id}');
       rethrow;
     } finally {
       hideLoading();

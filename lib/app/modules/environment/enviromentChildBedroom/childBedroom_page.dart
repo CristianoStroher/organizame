@@ -35,10 +35,13 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   @override
   void initState() {
     super.initState();
-
-    controller = ChildBedroomController(
-        technicalVisitController: widget.technicalVisitController);
-
+    Logger().d('ChildBedroomPage initState - Controller tem visita: ${widget.technicalVisitController.currentVisit?.id}');
+    Logger().d('ID da visita no controller recebido: ${widget.technicalVisitController.currentVisit?.id}');
+    
+    widget.technicalVisitController.ensureCurrentVisit();
+    
+    controller = ChildBedroomController(technicalVisitController: widget.technicalVisitController);
+    
     _selectedItens[EnviromentItensEnum.roupas] = false;
     _selectedItens[EnviromentItensEnum.calcados] = false;
     _selectedItens[EnviromentItensEnum.brinquedos] = false;
@@ -46,6 +49,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     _selectedItens[EnviromentItensEnum.outros] = false;
   }
 
+  
   @override
   Widget build(BuildContext context) {
     final List<String> options = [

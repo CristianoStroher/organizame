@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
+import 'package:organizame/app/modules/environment/enviroment_page.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
 import 'package:organizame/app/models/customer_object.dart';
 
@@ -11,6 +13,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
   TechnicalVisitObject? currentVisit;
   List<EnviromentObject> currentEnvironments = [];
   final Logger _logger = Logger();
+  String? _currentVisitId;
 
   TechnicalVisitController({
     required TechnicalVisitService service,
@@ -139,18 +142,27 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
   Future<void> addEnvironment(EnviromentObject environment) async {
     try {
-      Logger().i('Iniciando adição do ambiente à visita');
+      Logger().d('Tentando adicionar ambiente. CurrentVisit: ${currentVisit?.id}');
       Logger().d('CurrentVisit: ${currentVisit?.id}'); // Novo log
       Logger().d('Ambiente: ${environment.toString()}');
 
       if (currentVisit?.id == null) {
         throw Exception('Nenhuma visita selecionada');
+        Logger().e('CurrentVisit é null ao tentar adicionar ambiente');
       }
 
       // Chama o método específico no service
       await _service.addEnvironmentToVisit(currentVisit!.id!, environment);
       // Adiciona à lista local
       currentEnvironments.add(environment);
+
+      final updatedVisit = currentVisit!.copyWith(
+        enviroment: List.from(currentEnvironments),
+      );
+
+      Logger().d('Visita atualizada: ${updatedVisit.id}');
+
+      await updateVisit(updatedVisit);
 
       success();
 
@@ -162,4 +174,42 @@ class TechnicalVisitController extends DefautChangeNotifer {
       rethrow;
     }
   }
+
+  Future<void> navigateToEnvironment(BuildContext context) async {
+  Logger().d('Navegando para ambiente. CurrentVisit: ${currentVisit?.id}');
+  
+  if (currentVisit == null) {
+    Logger().e('Tentando navegar sem visita selecionada');
+    return;
+  }
+
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => EnviromentPage(
+        technicalVisitController: this,
+      ),
+    ),
+  );
+
+  Logger().d('Retornou da navegação. CurrentVisit ainda é: ${currentVisit?.id}');
+}
+
+ void setCurrentVisit(TechnicalVisitObject visit) {
+    currentVisit = visit;
+    _currentVisitId = visit.id;
+    Logger().d('CurrentVisit definido com ID: $_currentVisitId');
+    notifyListeners();
+  }
+
+  Future<void> ensureCurrentVisit() async {
+    if (currentVisit == null && _currentVisitId != null) {
+      currentVisit = await findVisitById(_currentVisitId!);
+      Logger().d('CurrentVisit restaurado com ID: $_currentVisitId');
+      notifyListeners();
+    }
+  }
+
+
+
 }

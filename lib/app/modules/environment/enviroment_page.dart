@@ -1,20 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
-import 'package:organizame/app/modules/environment/widgets/enviroment_card.dart'; // Certifique-se de importar o EnviromentCard corretamente
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
+import 'package:organizame/app/modules/environment/widgets/enviroment_card.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
+import 'package:provider/provider.dart'; // Certifique-se de importar o EnviromentCard corretamente
 
-class EnviromentPage extends StatelessWidget {
-  const EnviromentPage({super.key});
+class EnviromentPage extends StatefulWidget {
+  final TechnicalVisitController technicalVisitController;
+  const EnviromentPage({
+    super.key,
+    required this.technicalVisitController,
+  });
+
+  @override
+  State<EnviromentPage> createState() => _EnviromentPageState();
+}
+
+class _EnviromentPageState extends State<EnviromentPage> {
+
+  void _navigateToEnvironment(BuildContext context, Map<String, dynamic> environment) {
+    final controller = context.read<TechnicalVisitController>();
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider<TechnicalVisitController>.value(
+          value: controller,
+          child: ChildBedroomPage(
+            technicalVisitController: controller,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Lista dos ambientes (textos e ícones)
     final environments = [
-      {'text': 'Quarto criança', 'icon': Icons.bedroom_baby, 'route': '/childBedroom'},
+      {'text': 'Quarto criança','icon': Icons.bedroom_baby,'route': '/childBedroom'},
       {'text': 'Cozinha', 'icon': Icons.kitchen, 'route': '/kitchen'},
       {'text': 'Quarto Casal', 'icon': Icons.weekend, 'route': '/livingRoom'},
-      
-      // Adicione mais ambientes conforme necessário
+
     ];
 
     return Scaffold(
@@ -55,8 +81,10 @@ class EnviromentPage extends StatelessWidget {
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3, // Dois cards por linha
-                  crossAxisSpacing: 10, // Espaçamento entre os cards horizontalmente
-                  mainAxisSpacing: 10, // Espaçamento entre os cards verticalmente
+                  crossAxisSpacing:
+                      10, // Espaçamento entre os cards horizontalmente
+                  mainAxisSpacing:
+                      10, // Espaçamento entre os cards verticalmente
                   childAspectRatio: 1, // Mantém os cards quadrados
                 ),
                 itemCount: environments.length, // Número de ambientes
@@ -65,9 +93,8 @@ class EnviromentPage extends StatelessWidget {
                   return EnviromentCard(
                     text: environment['text'] as String,
                     icon: environment['icon'] as IconData,
-                    onTap: () {
-                      Navigator.of(context).pushNamed(environment['route'] as String);
-                    }, color: const Color(0xFFFAFFC5),
+                    onTap: () => _navigateToEnvironment(context, environment),
+                    color: const Color(0xFFFAFFC5),
                   );
                 },
               ),
