@@ -98,6 +98,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                   label: 'Descrição',
                   enabled: true,
                   controller: _descriptionController,
+                  validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 10),
                 OrganizameTextformfield(
