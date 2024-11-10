@@ -53,8 +53,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           final ambientesData =
               dados['environments'] ?? dados['enviroment'] ?? [];
 
-          Logger()
-              .d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
+          Logger().d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
 
           // Converter ambientes
           List<EnviromentObject> ambientes = [];

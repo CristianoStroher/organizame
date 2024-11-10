@@ -26,7 +26,7 @@ class EnviromentObject {
     try {
       return EnviromentObject(
         id: map['id'] as String,
-        name: map['name'] as String,
+        name: (map['name'] as String).toUpperCase(),
         descroiption: map['description'] as String,
         metragem: map['metragem'] as String?,
         difficulty: map['difficulty'] as String?,

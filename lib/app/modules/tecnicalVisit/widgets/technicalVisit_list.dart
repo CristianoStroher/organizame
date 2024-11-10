@@ -82,7 +82,7 @@ class _TechnicalvisitListState extends State<TechnicalvisitList> {
                     return Enviroment(
                       enviromentName: environment.name,
                       enviromentDifficulty: environment.difficulty ?? '',
-                      enviromentDescription: environment.observation ?? '',
+                      enviromentDescription: environment.descroiption ?? '',
                       // onDelete: () => controller.removeEnvironment(environment),
                     );
                   },
