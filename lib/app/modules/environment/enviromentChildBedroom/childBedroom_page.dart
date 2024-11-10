@@ -11,6 +11,7 @@ import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_create_page.dart';
 
 class ChildBedroomPage extends StatefulWidget {
   final TechnicalVisitController technicalVisitController;
@@ -35,13 +36,16 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   @override
   void initState() {
     super.initState();
-    Logger().d('ChildBedroomPage initState - Controller tem visita: ${widget.technicalVisitController.currentVisit?.id}');
-    Logger().d('ID da visita no controller recebido: ${widget.technicalVisitController.currentVisit?.id}');
-    
+    Logger().d(
+        'ChildBedroomPage initState - Controller tem visita: ${widget.technicalVisitController.currentVisit?.id}');
+    Logger().d(
+        'ID da visita no controller recebido: ${widget.technicalVisitController.currentVisit?.id}');
+
     widget.technicalVisitController.ensureCurrentVisit();
-    
-    controller = ChildBedroomController(technicalVisitController: widget.technicalVisitController);
-    
+
+    controller = ChildBedroomController(
+        technicalVisitController: widget.technicalVisitController);
+
     _selectedItens[EnviromentItensEnum.roupas] = false;
     _selectedItens[EnviromentItensEnum.calcados] = false;
     _selectedItens[EnviromentItensEnum.brinquedos] = false;
@@ -49,7 +53,6 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     _selectedItens[EnviromentItensEnum.outros] = false;
   }
 
-  
   @override
   Widget build(BuildContext context) {
     final List<String> options = [
@@ -98,7 +101,8 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                   label: 'Descrição',
                   enabled: true,
                   controller: _descriptionController,
-                  validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 10),
                 OrganizameTextformfield(
@@ -168,7 +172,13 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 
         if (mounted) {
           Messages.of(context).showInfo('Ambiente salvo com sucesso!');
+          Navigator.of(context).pop();
           Navigator.of(context).pop(environment);
+
+          await widget.technicalVisitController.refreshVisits();
+          
+          
+          
         }
       } catch (e) {
         Logger().e('Erro ao salvar ambiente: $e');

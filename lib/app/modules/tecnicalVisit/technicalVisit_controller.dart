@@ -166,15 +166,16 @@ class TechnicalVisitController extends DefautChangeNotifer {
       Logger().d('Visita atualizada: ${updatedVisit.id}');
 
       await updateVisit(updatedVisit);
+      await refreshVisits(); // Atualiza a lista após adicionar
 
       success();
-
+      
       Logger().i('Ambiente adicionado com sucesso');
-      await refreshVisits(); // Atualiza a lista após adicionar
-      notifyListeners();
+    
     } catch (e) {
       Logger().e('Erro ao adicionar ambiente: $e');
       rethrow;
+      
     }
   }
 
