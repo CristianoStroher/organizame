@@ -53,7 +53,8 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           final ambientesData =
               dados['environments'] ?? dados['enviroment'] ?? [];
 
-          Logger().d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
+          Logger()
+              .d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
 
           // Converter ambientes
           List<EnviromentObject> ambientes = [];
@@ -220,6 +221,45 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       Logger().d('Ambiente adicionado com sucesso');
     } catch (e) {
       Logger().e('Erro ao adicionar ambiente: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> removeEnvironmentFromVisit(String visitId, String environmentId) async {
+    try {
+      Logger().d('Repository - Iniciando remoção do ambiente $environmentId da visita $visitId');
+
+      final docRef = _firestore.collection(_collection).doc(visitId);
+      final docSnap = await docRef.get();
+
+      if (!docSnap.exists) {
+        throw Exception('Visita não encontrada');
+      }
+
+      final dados = docSnap.data()!;
+      Logger().d('Dados atuais da visita: $dados');
+
+      // Pega a lista atual de ambientes
+      final List<dynamic> ambientesAtuais =
+          dados['environments'] ?? dados['enviroment'] ?? [];
+
+      Logger().d('Ambientes antes da remoção: ${ambientesAtuais.length}');
+
+      // Remove o ambiente com o ID especificado
+      final ambientesAtualizados = ambientesAtuais
+          .where((ambiente) =>
+              ambiente['id'].toString() != environmentId.toString())
+          .toList();
+
+      Logger().d('Ambientes após remoção: ${ambientesAtualizados.length}');
+
+      // Atualiza o documento com a nova lista de ambientes
+      await docRef.update({'environments': ambientesAtualizados});
+
+      Logger().d('Repository - Ambiente removido com sucesso');
+    } catch (e) {
+      Logger().e('Repository - Erro ao remover ambiente: $e');
       rethrow;
     }
   }

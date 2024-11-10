@@ -62,6 +62,18 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
     }
   }
 
+  @override
+  Future<void> removeEnvironmentFromVisit(String visitId, String environmentId) async {
+    try {
+      Logger().i('Service - Iniciando remoção do ambiente');
+      await _repository.removeEnvironmentFromVisit(visitId, environmentId);
+      Logger().i('Service - Ambiente removido com sucesso');
+    } catch (e) {
+      Logger().e('Service - Erro ao remover ambiente: $e');
+      rethrow;
+    }
+  }
+
 }
 
       
