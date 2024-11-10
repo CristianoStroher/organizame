@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/modules/environment/enviroment_page.dart';
@@ -17,27 +18,49 @@ Future<void> _navigateToEnvironmentPage(
     BuildContext context, TechnicalVisitController controller) async {
   if (controller.canAddEnvironments()) {
     final currentVisit = controller.currentVisit;
-if (currentVisit != null) {
-        controller.setCurrentVisit(currentVisit); // Garante que o ID está salvo
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider<TechnicalVisitController>.value(
-              value: controller,
-              child: EnviromentPage(technicalVisitController: controller), // Primeiro abre a página de seleção de ambiente
-            ),
+    if (currentVisit != null) {
+      Logger()
+          .d('Navegando para EnviromentPage com visita: ${currentVisit.id}');
+      Logger().d(
+          'Ambientes antes da navegação: ${currentVisit.enviroment?.length ?? 0}');
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) =>
+              ChangeNotifierProvider<TechnicalVisitController>.value(
+            value: controller,
+            child: EnviromentPage(
+                technicalVisitController:
+                    controller), // Primeiro abre a página de seleção de ambiente
           ),
-        );
-      }
+        ),
+      );
+      await controller.refreshVisits();
+    }
   }
 }
 
 class _TechnicalvisitListState extends State<TechnicalvisitList> {
   @override
+  void initState() {
+    super.initState();
+    // Carrega os dados ao iniciar
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TechnicalVisitController>().refreshVisits();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<TechnicalVisitController>(
       builder: (context, controller, _) {
+        final currentVisit = controller.currentVisit;
         final environments = controller.currentEnvironments;
         final bool canAddEnvironment = controller.canAddEnvironments();
+        
+        Logger().d('Construindo TechnicalvisitList');
+        Logger().d('Visita atual: ${currentVisit?.id}');
+        Logger().d('Número de ambientes: ${environments.length}');
+        Logger().d('Ambientes: $environments');
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),

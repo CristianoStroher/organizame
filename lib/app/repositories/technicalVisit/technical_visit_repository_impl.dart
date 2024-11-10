@@ -24,6 +24,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
         'date': Timestamp.fromDate(date),
         'time': Timestamp.fromDate(time),
         'customer': customer.toMap(),
+        'environments': [], // Inicializa com array vazio
       });
     } catch (e) {
       Logger().e('Erro ao salvar a visita técnica: $e');
@@ -34,55 +35,68 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
   @override
   Future<List<TechnicalVisitObject>> getAllTechnicalVisits() async {
     try {
+      Logger().d('Iniciando busca de visitas técnicas');
       final querySnapshot = await _firestore.collection(_collection).get();
       final List<TechnicalVisitObject> visitas = [];
 
       for (var doc in querySnapshot.docs) {
         try {
           final dados = doc.data();
-          Logger().d('Dados do documento ${doc.id}: $dados');
+          Logger().d('Dados do documento ${doc.id}:');
+          Logger().d('Dados completos: $dados');
 
-          // Verifica e converte o cliente
           final clienteMap = dados['customer'] as Map<String, dynamic>?;
-          if (clienteMap == null) {
-            Logger().w('Cliente não encontrado para visita ${doc.id}');
-            continue;
-          }
-
-          final customer = CustomerObject.fromMap(clienteMap);
-
-          // Verifica e converte data e hora
           final dataTimestamp = dados['date'] as Timestamp?;
           final horaTimestamp = dados['time'] as Timestamp?;
 
-          if (dataTimestamp == null || horaTimestamp == null) {
-            Logger().w('Data ou hora não encontrada para visita ${doc.id}');
-            continue;
+          // Tenta carregar ambientes de qualquer um dos campos
+          final ambientesData =
+              dados['environments'] ?? dados['enviroment'] ?? [];
+
+          Logger()
+              .d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
+
+          // Converter ambientes
+          List<EnviromentObject> ambientes = [];
+          if (ambientesData is List) {
+            for (var amb in ambientesData) {
+              try {
+                Logger().d('Processando ambiente: $amb');
+                if (amb is Map<String, dynamic>) {
+                  final ambiente = EnviromentObject.fromMap(amb);
+                  ambientes.add(ambiente);
+                  Logger().d('Ambiente processado com sucesso: ${ambiente.id}');
+                }
+              } catch (e) {
+                Logger().e('Erro ao converter ambiente: $e', error: e);
+              }
+            }
           }
 
-          final DateTime date = dataTimestamp.toDate();
-          final DateTime time = horaTimestamp.toDate();
+          if (clienteMap != null &&
+              dataTimestamp != null &&
+              horaTimestamp != null) {
+            final visita = TechnicalVisitObject(
+              id: doc.id,
+              date: dataTimestamp.toDate(),
+              time: horaTimestamp.toDate(),
+              customer: CustomerObject.fromMap(clienteMap),
+              enviroment: ambientes,
+            );
 
-          final visita = TechnicalVisitObject(
-            id: doc.id,
-            date: date,
-            time: time,
-            customer: customer,
-          );
-
-          visitas.add(visita);
-          Logger().d('Visita adicionada: ${visita.toString()}');
-        } catch (e, stackTrace) {
-          Logger().e('Erro ao processar documento: $e');
-          Logger().e('Stack trace: $stackTrace');
+            Logger().d(
+                'Visita ${doc.id} carregada com ${ambientes.length} ambientes');
+            visitas.add(visita);
+          }
+        } catch (e) {
+          Logger().e('Erro processando documento ${doc.id}: $e');
           continue;
         }
       }
 
       return visitas;
-    } catch (e, stackTrace) {
+    } catch (e) {
       Logger().e('Erro ao buscar visitas: $e');
-      Logger().e('Stack trace: $stackTrace');
       rethrow;
     }
   }
@@ -99,19 +113,17 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
     }
   }
 
-  @override
   Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit) async {
     try {
       Logger().d(
           'Repositório - Iniciando atualização da visita: ${technicalVisit.id}');
-      Logger().d('Data: ${technicalVisit.date}');
-      Logger().d('Hora: ${technicalVisit.time}');
 
-      // Converte para o formato correto antes de enviar ao Firestore
       final Map<String, dynamic> updateData = {
         'date': Timestamp.fromDate(technicalVisit.date),
         'time': Timestamp.fromDate(technicalVisit.time),
         'customer': technicalVisit.customer.toMap(),
+        'environments':
+            technicalVisit.enviroment?.map((e) => e.toMap()).toList(),
       };
 
       await _firestore
@@ -131,21 +143,44 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
   @override
   Future<TechnicalVisitObject> findTechnicalVisitById(String id) async {
     try {
+      Logger().d('Buscando visita técnica por ID: $id');
       final docSnapshot =
           await _firestore.collection(_collection).doc(id).get();
 
       if (docSnapshot.exists && docSnapshot.data() != null) {
-        final data = docSnapshot.data();
+        final data = docSnapshot.data()!;
+        Logger().d('Dados da visita encontrada: $data');
+
+        // Tenta carregar ambientes de qualquer um dos campos
+        final ambientesData = data['environments'] ?? data['enviroment'] ?? [];
+
+        List<EnviromentObject> ambientes = [];
+        if (ambientesData is List) {
+          for (var amb in ambientesData) {
+            try {
+              if (amb is Map<String, dynamic>) {
+                final ambiente = EnviromentObject.fromMap(amb);
+                ambientes.add(ambiente);
+                Logger().d('Ambiente carregado: ${ambiente.id}');
+              }
+            } catch (e) {
+              Logger().e('Erro ao converter ambiente: $e');
+            }
+          }
+        }
+
         return TechnicalVisitObject(
           id: docSnapshot.id,
-          date: data?['date'] ?? '',
-          time: data?['time'] ?? '',
-          customer: data?['customer'] ?? '',
+          date: (data['date'] as Timestamp).toDate(),
+          time: (data['time'] as Timestamp).toDate(),
+          customer: CustomerObject.fromMap(data['customer']),
+          enviroment:
+              ambientes, // Certifique-se que está passando a lista de ambientes
         );
       } else {
-        throw Exception('Visita técnica não encontrada & id: $id');
+        throw Exception('Visita técnica não encontrada com id: $id');
       }
-    } on Exception catch (e) {
+    } catch (e) {
       Logger().e('Erro ao buscar visita técnica: $e');
       throw Exception('Erro ao buscar visita técnica: $e');
     }
@@ -155,26 +190,37 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
   Future<void> addEnvironmentToVisit(
       String visitId, EnviromentObject environment) async {
     try {
-      Logger()
-          .i('Repository - Iniciando adição do ambiente à visita: $visitId');
+      Logger().d('Iniciando adição de ambiente à visita $visitId');
+      Logger().d('Ambiente a ser adicionado: ${environment.toMap()}');
 
-      final visitRef = _firestore.collection(_collection).doc(visitId);
-      final visitDoc = await visitRef.get();
+      final docRef = _firestore.collection(_collection).doc(visitId);
+      final docSnap = await docRef.get();
 
-      if (!visitDoc.exists) {
+      if (!docSnap.exists) {
         throw Exception('Visita não encontrada');
       }
 
-      List<Map<String, dynamic>> currentEnvironments =
-          List<Map<String, dynamic>>.from(visitDoc.data()?['ambientes'] ?? []);
+      final dados = docSnap.data()!;
+      Logger().d('Dados atuais da visita: $dados');
 
-      currentEnvironments.add(environment.toMap());
+      // Tenta carregar ambientes de qualquer um dos campos
+      final List<dynamic> ambientesAtuais =
+          dados['environments'] ?? dados['enviroment'] ?? [];
 
-      await visitRef.update({'ambientes': currentEnvironments});
+      Logger().d('Ambientes atuais: $ambientesAtuais');
 
-      Logger().i('Repository - Ambiente adicionado com sucesso');
+      // Adiciona o novo ambiente
+      final List<Map<String, dynamic>> ambientesAtualizados = [
+        ...ambientesAtuais.map((e) => e as Map<String, dynamic>),
+        environment.toMap()
+      ];
+
+      // Atualiza usando o novo nome do campo
+      await docRef.update({'environments': ambientesAtualizados});
+
+      Logger().d('Ambiente adicionado com sucesso');
     } catch (e) {
-      Logger().e('Repository - Erro ao adicionar ambiente: $e');
+      Logger().e('Erro ao adicionar ambiente: $e');
       rethrow;
     }
   }

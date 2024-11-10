@@ -112,10 +112,13 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
       // Se estiver editando uma visita, atualiza a currentVisit
       if (currentVisit != null) {
-        currentVisit = _technicalVisits.firstWhere(
+        var updatedVisit = _technicalVisits.firstWhere(
           (visit) => visit.id == currentVisit!.id,
           orElse: () => currentVisit!,
         );
+
+        setCurrentVisit(updatedVisit);
+        
       }
 
       success();
@@ -175,6 +178,8 @@ class TechnicalVisitController extends DefautChangeNotifer {
     }
   }
 
+  List<EnviromentObject> get environments => currentEnvironments;
+  
   Future<void> navigateToEnvironment(BuildContext context) async {
   Logger().d('Navegando para ambiente. CurrentVisit: ${currentVisit?.id}');
   
@@ -198,8 +203,18 @@ class TechnicalVisitController extends DefautChangeNotifer {
  void setCurrentVisit(TechnicalVisitObject visit) {
     currentVisit = visit;
     _currentVisitId = visit.id;
+    // Pega os ambientes da visita
+    currentEnvironments = List.from(visit.enviroment ?? []);
     Logger().d('CurrentVisit definido com ID: $_currentVisitId');
+    Logger().d(
+        'Ambientes carregados na setCurrentVisit: ${currentEnvironments.length}');
+    if (currentEnvironments.isNotEmpty) {
+      currentEnvironments.forEach((env) {
+        Logger().d('Ambiente carregado: ${env.name} - ${env.id}');
+      });
+    }
     notifyListeners();
+    
   }
 
   Future<void> ensureCurrentVisit() async {

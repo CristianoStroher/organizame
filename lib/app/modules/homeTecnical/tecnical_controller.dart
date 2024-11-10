@@ -29,6 +29,7 @@ class TechnicalController extends DefautChangeNotifer {
     loadTechnicalVisits(); // Carrega as visitas quando o controller é criado
   }
 
+
   Future<void> loadTechnicalVisits() async {
     try {
       print('Controller - Iniciando carregamento de visitas técnicas');

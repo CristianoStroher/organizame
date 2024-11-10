@@ -17,7 +17,7 @@ Future<void> main() async {
 
   // Habilita o logging detalhado do Firestore apenas em modo de depuração
   if (kDebugMode) {
-    FirebaseFirestore.setLoggingEnabled(true);
+    FirebaseFirestore.setLoggingEnabled(false);
     // Opcional: Definir configurações de persistência
     FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true,
