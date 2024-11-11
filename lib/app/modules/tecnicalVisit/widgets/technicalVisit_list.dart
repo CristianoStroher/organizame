@@ -67,7 +67,16 @@ class _TechnicalvisitListState extends State<TechnicalvisitList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('AMBIENTES', style: context.titleDefaut),
+              Row(
+                children: [
+                  Text('AMBIENTES', style: context.titleDefaut),
+                  const SizedBox(width: 8),
+                  Text(
+                    '(${environments.length})',
+                    style: context.titleDefaut,
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
               if (environments.isEmpty)
                 Text('Nenhum ambiente cadastrado.',
