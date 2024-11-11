@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 
 class Enviroment extends StatelessWidget {
   final String enviromentName;
   final String enviromentDifficulty;
   final String enviromentDescription;
+  final String environmentId;
+  final TechnicalVisitController controller;
 
   const Enviroment({
     super.key,
     required this.enviromentName,
     required this.enviromentDifficulty,
     required this.enviromentDescription,
+    required this.controller,
+    required this.environmentId,
   });
 
   @override
@@ -44,8 +50,40 @@ class Enviroment extends StatelessWidget {
               ],
             ),
             trailing: IconButton(
-              onPressed: () {
-                // Ação ao deletar o ambiente
+              onPressed: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Remover Ambiente'),
+                    content: const Text(
+                        'Tem certeza que deseja remover este ambiente?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: const Text('Confirmar'),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirm == true) {
+                  try {
+                    await controller.removeEnvironment(environmentId);
+                    if (context.mounted) {
+                      Messages.of(context)
+                          .showInfo('Ambiente removido com sucesso!');
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      Messages.of(context)
+                          .showError('Erro ao remover ambiente');
+                    }
+                  }
+                }
               },
               icon: Icon(Icons.delete, color: context.secondaryColor),
             ),

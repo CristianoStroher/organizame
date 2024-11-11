@@ -118,7 +118,6 @@ class TechnicalVisitController extends DefautChangeNotifer {
         );
 
         setCurrentVisit(updatedVisit);
-        
       }
 
       success();
@@ -145,7 +144,8 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
   Future<void> addEnvironment(EnviromentObject environment) async {
     try {
-      Logger().d('Tentando adicionar ambiente. CurrentVisit: ${currentVisit?.id}');
+      Logger()
+          .d('Tentando adicionar ambiente. CurrentVisit: ${currentVisit?.id}');
       Logger().d('CurrentVisit: ${currentVisit?.id}'); // Novo log
       Logger().d('Ambiente: ${environment.toString()}');
 
@@ -169,39 +169,38 @@ class TechnicalVisitController extends DefautChangeNotifer {
       await refreshVisits(); // Atualiza a lista após adicionar
 
       success();
-      
+
       Logger().i('Ambiente adicionado com sucesso');
-    
     } catch (e) {
       Logger().e('Erro ao adicionar ambiente: $e');
       rethrow;
-      
     }
   }
 
   List<EnviromentObject> get environments => currentEnvironments;
-  
+
   Future<void> navigateToEnvironment(BuildContext context) async {
-  Logger().d('Navegando para ambiente. CurrentVisit: ${currentVisit?.id}');
-  
-  if (currentVisit == null) {
-    Logger().e('Tentando navegar sem visita selecionada');
-    return;
+    Logger().d('Navegando para ambiente. CurrentVisit: ${currentVisit?.id}');
+
+    if (currentVisit == null) {
+      Logger().e('Tentando navegar sem visita selecionada');
+      return;
+    }
+
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EnviromentPage(
+          technicalVisitController: this,
+        ),
+      ),
+    );
+
+    Logger()
+        .d('Retornou da navegação. CurrentVisit ainda é: ${currentVisit?.id}');
   }
 
-  final result = await Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => EnviromentPage(
-        technicalVisitController: this,
-      ),
-    ),
-  );
-
-  Logger().d('Retornou da navegação. CurrentVisit ainda é: ${currentVisit?.id}');
-}
-
- void setCurrentVisit(TechnicalVisitObject visit) {
+  void setCurrentVisit(TechnicalVisitObject visit) {
     currentVisit = visit;
     _currentVisitId = visit.id;
     // Pega os ambientes da visita
@@ -215,7 +214,6 @@ class TechnicalVisitController extends DefautChangeNotifer {
       });
     }
     notifyListeners();
-    
   }
 
   Future<void> ensureCurrentVisit() async {
@@ -226,6 +224,39 @@ class TechnicalVisitController extends DefautChangeNotifer {
     }
   }
 
+  Future<void> removeEnvironment(String environmentId) async {
+    try {
+      if (currentVisit?.id == null) {
+        throw Exception('Nenhuma visita selecionada');
+      }
 
+      Logger().d('Iniciando remoção do ambiente: $environmentId');
+      Logger().d('Da visita: ${currentVisit!.id}');
 
+      // Remove do backend
+      await _service.removeEnvironmentFromVisit(
+          currentVisit!.id!, environmentId);
+
+      // Remove da lista local
+      currentEnvironments.removeWhere((env) => env.id == environmentId);
+
+      // Atualiza a visita atual
+      final updatedVisit = currentVisit!.copyWith(
+        enviroment: List.from(currentEnvironments),
+      );
+
+      // Atualiza no backend
+      await updateVisit(updatedVisit);
+
+      // Recarrega os dados
+      await refreshVisits();
+
+      success();
+      Logger().d('Ambiente removido com sucesso');
+    } catch (e) {
+      Logger().e('Erro ao remover ambiente: $e');
+      setError('Erro ao remover ambiente');
+      rethrow;
+    }
+  }
 }
