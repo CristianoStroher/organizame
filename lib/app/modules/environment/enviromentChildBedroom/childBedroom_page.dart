@@ -42,11 +42,6 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   @override
   void initState() {
     super.initState();
-    Logger().d(
-        'ChildBedroomPage initState - Controller tem visita: ${widget.controller.currentVisit?.id}');
-    Logger().d(
-        'ID da visita no controller recebido: ${widget.controller.currentVisit?.id}');
-
     widget.controller.ensureCurrentVisit();
 
     controller =
@@ -93,28 +88,28 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   }
 
   bool ensureBoolValue(bool? value) {
-  return value ?? false;
-}
+    return value ?? false;
+  }
 
 // Função para converter o mapa de itens para o formato correto
-Map<String, bool> convertSelectedItensToMap() {
-  return {
-    EnviromentItensEnum.roupas.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.roupas]),
-    EnviromentItensEnum.calcados.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.calcados]),
-    EnviromentItensEnum.brinquedos.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.brinquedos]),
-    EnviromentItensEnum.roupasDeCama.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.roupasDeCama]),
-    EnviromentItensEnum.outros.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.outros]),
-  };
-}
+  Map<String, bool> convertSelectedItensToMap() {
+    return {
+      EnviromentItensEnum.roupas.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.roupas]),
+      EnviromentItensEnum.calcados.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.calcados]),
+      EnviromentItensEnum.brinquedos.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.brinquedos]),
+      EnviromentItensEnum.roupasDeCama.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.roupasDeCama]),
+      EnviromentItensEnum.outros.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.outros]),
+    };
+  }
 
 // Função para atualizar os itens selecionados a partir de um mapa
-void updateSelectedItens(Map<String, bool> newValues) {
-  setState(() {
-    for (final item in EnviromentItensEnum.values) {
-      _selectedItens[item] = newValues[item.name] ?? false;
-    }
-  });
-}
+  void updateSelectedItens(Map<String, bool> newValues) {
+    setState(() {
+      for (final item in EnviromentItensEnum.values) {
+        _selectedItens[item] = newValues[item.name] ?? false;
+      }
+    });
+  }
 
   Future<void> _handleSaveOrUpdate() async {
     if (_formkey.currentState!.validate()) {
