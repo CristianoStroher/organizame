@@ -27,7 +27,7 @@ class _EnviromentPageState extends State<EnviromentPage> {
         builder: (context) => ChangeNotifierProvider<TechnicalVisitController>.value(
           value: controller,
           child: ChildBedroomPage(
-            technicalVisitController: controller,
+            controller: controller,
           ),
         ),
       ),

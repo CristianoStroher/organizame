@@ -39,7 +39,7 @@ class TecnicalModule extends OrganizameModule {
           
           routers: {
             '/environment': (context) => EnviromentPage(technicalVisitController: context.read<TechnicalVisitController>(),),
-            '/childBedroom': (context) => ChildBedroomPage(technicalVisitController: context.read<TechnicalVisitController>()),             
+            '/childBedroom': (context) => ChildBedroomPage(controller: context.read<TechnicalVisitController>()),             
 
             
           },

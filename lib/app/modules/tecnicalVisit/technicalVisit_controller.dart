@@ -31,6 +31,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       );
 
       await _service.saveTechnicalVisit(date, time, customer);
+      await refreshVisits();
 
       // Busca todas as visitas para obter a que acabou de ser salva
       final allVisits = await _service.getAllTechnicalVisits();
@@ -46,7 +47,6 @@ class TechnicalVisitController extends DefautChangeNotifer {
           visit.customer.id == customer.id);
 
       Logger().d('Visita salva e definida como atual: ${currentVisit?.id}');
-
       success();
     } catch (e) {
       _logger.i('Erro ao salvar visita técnica: $e');
@@ -196,6 +196,10 @@ class TechnicalVisitController extends DefautChangeNotifer {
       ),
     );
 
+    if (result == true) {
+      await refreshVisits();
+    }
+
     Logger()
         .d('Retornou da navegação. CurrentVisit ainda é: ${currentVisit?.id}');
   }
@@ -259,4 +263,40 @@ class TechnicalVisitController extends DefautChangeNotifer {
       rethrow;
     }
   }
+
+  Future<void> updateEnvironment(EnviromentObject environment) async {
+    try {
+      if (currentVisit?.id == null) {
+        throw Exception('Nenhuma visita selecionada');
+      }
+
+      Logger().d('Tentando atualizar ambiente. CurrentVisit: ${currentVisit?.id}');
+      Logger().d('Ambiente: ${environment.toString()}');
+
+      // Atualiza no backend
+      await _service.updateEnvironmentInVisit(currentVisit!.id!, environment);
+
+      // Atualiza na lista local
+      final index = currentEnvironments.indexWhere((env) => env.id == environment.id);
+      if (index != -1) {
+        currentEnvironments[index] = environment;
+      }
+
+      // Atualiza a visita atual
+      final updatedVisit = currentVisit!.copyWith(
+        enviroment: List.from(currentEnvironments),
+      );
+
+      await updateVisit(updatedVisit);
+      await refreshVisits();
+
+      success();
+      Logger().d('Ambiente atualizado com sucesso');
+    } catch (e) {
+      Logger().e('Erro ao atualizar ambiente: $e');
+      setError('Erro ao atualizar ambiente');
+      rethrow;
+    }
+  }
+  
 }

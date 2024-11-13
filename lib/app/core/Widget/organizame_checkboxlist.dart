@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class OrganizameCheckboxlist extends StatefulWidget {
   final List<String> options; // lista de opções do checkbox
   final Color? color; // Cor do checkbox
+  final Map<String, bool>? initialValues; // Valores iniciais
+  final Function(Map<String, bool>)? onChanged; // Função de callback
 
   const OrganizameCheckboxlist({
     super.key,
     required this.options,
     this.color,
+    this.initialValues,
+    this.onChanged,
   });
 
   @override
@@ -15,13 +19,47 @@ class OrganizameCheckboxlist extends StatefulWidget {
 }
 
 class _OrganizameCheckboxlistState extends State<OrganizameCheckboxlist> {
-  Map<String, bool> _checkedOptions = {}; // Mapa de opções marcadas
+  Map<String, bool> _checkedOptions = {};
 
   @override
   void initState() {
     super.initState();
-    // Inicializa o mapa com as opções como chaves e seus estados como false
-    _checkedOptions = {for (var option in widget.options) option: false};
+    _initializeCheckboxes();
+  }
+
+  void _initializeCheckboxes() {
+    if (widget.initialValues != null) {
+      _checkedOptions = Map<String, bool>.from(widget.initialValues!);
+    } else {
+      // Se não houver valores iniciais, inicializa tudo como false
+      _checkedOptions = {
+        for (var option in widget.options) option: false
+      };
+    }
+  }
+
+  @override
+  void didUpdateWidget(OrganizameCheckboxlist oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Verifica se os valores iniciais mudaram
+    bool valuesChanged = false;
+    if (widget.initialValues != oldWidget.initialValues) {
+      if (widget.initialValues != null && oldWidget.initialValues != null) {
+        // Compara os valores dos mapas
+        widget.initialValues!.forEach((key, value) {
+          if (oldWidget.initialValues![key] != value) {
+            valuesChanged = true;
+          }
+        });
+      } else {
+        valuesChanged = true;
+      }
+    }
+
+    if (valuesChanged) {
+      _initializeCheckboxes();
+    }
   }
 
   @override
@@ -32,37 +70,27 @@ class _OrganizameCheckboxlistState extends State<OrganizameCheckboxlist> {
         return CheckboxListTile(
           side: BorderSide(
               color: Theme.of(context).primaryColor,
-              width: 1), // Borda do checkbox
-          activeColor: Theme.of(context).primaryColor, // Cor ativa do checkbox
-          checkColor: Colors.white, // Cor do check
-          tileColor: widget.color ?? Colors.white, // Cor do fundo do tile
-          contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16.0), // Espaçamento interno horizontal
-          controlAffinity:
-              ListTileControlAffinity.leading, // Checkbox à esquerda
-          visualDensity: VisualDensity.compact, // Densidade visual padrão
-          value: _checkedOptions[option],
+              width: 1),
+          activeColor: Theme.of(context).primaryColor, 
+          checkColor: Colors.white, 
+          tileColor: widget.color ?? Colors.white, 
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0), 
+          controlAffinity: ListTileControlAffinity.leading, 
+          visualDensity: VisualDensity.compact, 
+          value: _checkedOptions[option] ?? false, 
           title: Text(
             option,
             style: TextStyle(
                 fontSize: 16,
-                color: Theme.of(context).primaryColor), // Estilo do texto
-          ),
+                color: Theme.of(context).primaryColor),           ),
           onChanged: (bool? value) {
             setState(() {
               _checkedOptions[option] = value ?? false;
             });
+            widget.onChanged?.call(Map<String, bool>.from(_checkedOptions));
           },
         );
       }).toList(),
     );
-  }
-
-  // Método para obter as opções selecionadas
-  List<String> getSelectedOptions() {
-    return _checkedOptions.entries
-        .where((entry) => entry.value)
-        .map((entry) => entry.key)
-        .toList();
-  }
+  }  
 }

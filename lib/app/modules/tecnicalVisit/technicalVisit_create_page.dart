@@ -145,8 +145,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     final formValid = _globalKey.currentState?.validate() ?? false;
 
     if (!formValid) {
-      Messages.of(context)
-          .showError('Por favor, preencha todos os campos obrigatórios.');
+      Messages.of(context).showError('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
@@ -192,12 +191,13 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
 
       if (widget.technicalVisit != null) {
         // Modo edição
+        final updatedEnvironments = widget.technicalVisit!.enviroment;
         final updatedVisit = TechnicalVisitObject(
           id: widget.technicalVisit!.id,
           date: dateValue,
           time: timeValue,
           customer: selectedClient.value!,
-          enviroment: widget.technicalVisit!.enviroment,
+          enviroment: updatedEnvironments,
         );
 
         await widget._controller.updateVisit(updatedVisit);
@@ -205,8 +205,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
 
         widget._controller.currentVisit = updatedVisit;
 
-        if (mounted) {
-          Messages.of(context)
+        if (mounted) {Messages.of(context)
               .showInfo('Visita técnica atualizada com sucesso!');
           setState(() {}); // Força atualização da UI
         }
@@ -216,13 +215,11 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
           dateValue,
           timeValue,
           selectedClient.value!,
-        );
+        );        
         await widget._controller.refreshVisits();
         Messages.of(context).showInfo('Visita técnica salva com sucesso!');
-      }
-      //   if (context.mounted) {
-      //   Navigator.of(context).pop(true);
-      // }
+      }        
+      
       if (mounted) {
         setState(() {});
       }
@@ -230,6 +227,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
       Logger().e('Erro ao salvar visita técnica: $e');
       Logger().e(s);
       Messages.of(context).showError('Erro ao salvar visita técnica: $e');
+      
     }
   }
 }

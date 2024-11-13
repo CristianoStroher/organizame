@@ -115,15 +115,13 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
 
   Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit) async {
     try {
-      Logger().d(
-          'Repositório - Iniciando atualização da visita: ${technicalVisit.id}');
+      Logger().d('Repositório - Iniciando atualização da visita: ${technicalVisit.id}');
 
       final Map<String, dynamic> updateData = {
         'date': Timestamp.fromDate(technicalVisit.date),
         'time': Timestamp.fromDate(technicalVisit.time),
         'customer': technicalVisit.customer.toMap(),
-        'environments':
-            technicalVisit.enviroment?.map((e) => e.toMap()).toList(),
+        'environments': technicalVisit.enviroment?.map((e) => e.toMap()).toList(),
       };
 
       await _firestore
@@ -131,8 +129,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           .doc(technicalVisit.id)
           .update(updateData);
 
-      Logger().i(
-          'Repositório - Visita técnica atualizada com sucesso id: ${technicalVisit.id}');
+      Logger().i('Repositório - Visita técnica atualizada com sucesso id: ${technicalVisit.id}');
     } catch (e, stackTrace) {
       Logger().e('Repositório - Erro ao atualizar a visita técnica: $e');
       Logger().e('Stack trace: $stackTrace');
@@ -263,4 +260,45 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> updateEnvironmentInVisit(String visitId, EnviromentObject environment) async {
+    try {
+      Logger().d('Iniciando atualização de ambiente na visita $visitId');
+      Logger().d('Ambiente a ser atualizado: ${environment.toMap()}');
+
+      final docRef = _firestore.collection(_collection).doc(visitId);
+      final docSnap = await docRef.get();
+
+      if (!docSnap.exists) {
+        throw Exception('Visita não encontrada');
+      }
+
+      final dados = docSnap.data()!;
+      final List<dynamic> ambientesAtuais = dados['environments'] ?? dados['enviroment'] ?? [];
+      
+      // Encontra o índice do ambiente a ser atualizado
+      final index = ambientesAtuais.indexWhere(
+        (amb) => amb['id'].toString() == environment.id.toString()
+      );
+
+      if (index == -1) {
+        throw Exception('Ambiente não encontrado na visita');
+      }
+
+      // Atualiza o ambiente mantendo a mesma posição na lista
+      final List<Map<String, dynamic>> ambientesAtualizados = List.from(ambientesAtuais);
+      ambientesAtualizados[index] = environment.toMap();
+
+      // Atualiza no Firestore
+      await docRef.update({'environments': ambientesAtualizados});
+
+      Logger().d('Ambiente atualizado com sucesso');
+    } catch (e) {
+      Logger().e('Erro ao atualizar ambiente: $e');
+      rethrow;
+    }
+  }
+
+
 }

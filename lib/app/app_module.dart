@@ -55,7 +55,7 @@ class AppModule extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
         ChangeNotifierProvider(create: (context) => TechnicalController(technicalVisitService: context.read())), //injetando o controller do módulo tecnical
         ChangeNotifierProvider(create: (context) => LivingRoomController()), //injetando o controller do módulo livingRoom
-        ChangeNotifierProvider(create: (context) => ChildBedroomController(technicalVisitController:context.read())), //injetando o controller do módulo childBedroom
+        ChangeNotifierProvider(create: (context) => ChildBedroomController(controller:context.read())), //injetando o controller do módulo childBedroom
         ChangeNotifierProvider(create: (context) => KitchenController()), //injetando o controller do módulo kitchen
         ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read(),)), //injetando o controller do módulo customer
         ChangeNotifierProvider(create: (context) => TechnicalVisitController(service: context.read<TechnicalVisitService>())), //injetando o controller do módulo technicalVisit

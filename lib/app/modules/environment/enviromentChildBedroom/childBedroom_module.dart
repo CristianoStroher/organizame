@@ -34,7 +34,7 @@ class ChildBedroomModule extends OrganizameModule {
           ],
           
           routers: {
-            '/childBedroom': (context) => ChildBedroomPage(technicalVisitController: context.read<TechnicalVisitController>()),
+            '/childBedroom': (context) => ChildBedroomPage(controller: context.read<TechnicalVisitController>()),
                   
                 
           },

@@ -73,6 +73,21 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
       rethrow;
     }
   }
+  
+  @override
+  Future<void> updateEnvironmentInVisit(
+      String visitId, EnviromentObject environment) async {
+    try {
+      Logger().i('Service - Iniciando atualização do ambiente');
+      await _repository.updateEnvironmentInVisit(visitId, environment);
+      Logger().i('Service - Ambiente atualizado com sucesso');
+    } catch (e) {
+      Logger().e('Service - Erro ao atualizar ambiente: $e');
+      rethrow;
+    }
+  }
+
+  
 
 }
 

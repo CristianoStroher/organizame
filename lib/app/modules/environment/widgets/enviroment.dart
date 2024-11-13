@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/models/enviroment_object.dart';
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 
 class Enviroment extends StatelessWidget {
@@ -19,12 +22,51 @@ class Enviroment extends StatelessWidget {
     required this.environmentId,
   });
 
+  void _navigateToSpecificEnvironment(BuildContext context) {
+    Logger().d('Navegando para ambiente ID: $environmentId');
+    
+    // Busca o ambiente específico na lista de ambientes da visita atual
+    final currentEnvironment = controller.currentVisit?.enviroment?.firstWhere(
+      (env) => env.id == environmentId,
+      orElse: () {
+        Logger().e('Ambiente não encontrado: $environmentId');
+        return EnviromentObject(
+          id: environmentId,
+          name: enviromentName,
+          difficulty: enviromentDifficulty,
+          descroiption: enviromentDifficulty,
+        );
+      },
+    );
+
+    Logger().d('Ambiente encontrado: ${currentEnvironment?.toMap()}');
+
+    if (currentEnvironment == null) {
+      Messages.of(context).showError('Ambiente não encontrado na visita atual');
+      return;
+    }
+
+    switch (enviromentName.toUpperCase()) {
+      case 'QUARTO CRIANÇA':
+      case 'QUARTO DE CRIANÇA':
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ChildBedroomPage(
+              controller: controller,
+              environment: currentEnvironment, // Passa o ambiente encontrado
+            ),
+          ),
+        );
+        break;
+      default:
+        Messages.of(context).showInfo('Página não disponível para este ambiente');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        // Ação quando o ambiente é clicado
-      },
+      onTap: () => _navigateToSpecificEnvironment(context),
       child: Column(
         children: [
           Divider(
