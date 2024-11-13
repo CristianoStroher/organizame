@@ -23,6 +23,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       DateTime date, DateTime time, CustomerObject customer) async {
     try {
       showLoadingAndResetState();
+      Logger().d('Iniciando salvamento de visita técnica');
 
       final newTechnicalVisit = TechnicalVisitObject(
         date: date,
@@ -34,18 +35,18 @@ class TechnicalVisitController extends DefautChangeNotifer {
       await refreshVisits();
 
       // Busca todas as visitas para obter a que acabou de ser salva
-      final allVisits = await _service.getAllTechnicalVisits();
-      _technicalVisits = allVisits;
+      _technicalVisits = await _service.getAllTechnicalVisits();
+      
 
       // Encontra a visita recém salva e atualiza currentVisit
-      currentVisit = allVisits.firstWhere((visit) =>
+      currentVisit = _technicalVisits.firstWhere((visit) =>
           visit.date.day == date.day &&
           visit.date.month == date.month &&
           visit.date.year == date.year &&
           visit.time.hour == time.hour &&
           visit.time.minute == time.minute &&
           visit.customer.id == customer.id);
-
+    
       Logger().d('Visita salva e definida como atual: ${currentVisit?.id}');
       success();
     } catch (e) {
@@ -131,6 +132,19 @@ class TechnicalVisitController extends DefautChangeNotifer {
     }
   }
 
+  // Adicione um método para inicialização
+  Future<void> initialize() async {
+    try {
+      showLoadingAndResetState();
+      await refreshVisits();
+    } catch (e) {
+      Logger().e('Erro na inicialização: $e');
+      setError('Erro ao carregar visitas');
+    } finally {
+      hideLoading();
+    }
+  }
+
   // Método para carregar uma visita existente
   void loadExistingVisit(TechnicalVisitObject visit) {
     currentVisit = visit;
@@ -205,6 +219,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }
 
   void setCurrentVisit(TechnicalVisitObject visit) {
+    Logger().d('Definindo visita atual: ${visit.id}');
     currentVisit = visit;
     _currentVisitId = visit.id;
     // Pega os ambientes da visita
@@ -298,5 +313,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       rethrow;
     }
   }
+
+  List<TechnicalVisitObject> get technicalVisits => _technicalVisits;
   
 }

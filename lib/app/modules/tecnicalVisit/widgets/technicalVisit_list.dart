@@ -53,15 +53,12 @@ class _TechnicalvisitListState extends State<TechnicalvisitList> {
   Widget build(BuildContext context) {
     return Consumer<TechnicalVisitController>(
       builder: (context, controller, _) {
+        Logger().d('Construindo TechnicalvisitList');
+        Logger().d('Visita atual: ${controller.currentVisit?.id}');
         final currentVisit = controller.currentVisit;
         final environments = controller.currentEnvironments;
         final bool canAddEnvironment = controller.canAddEnvironments();
-        
-        Logger().d('Construindo TechnicalvisitList');
-        Logger().d('Visita atual: ${currentVisit?.id}');
-        Logger().d('Número de ambientes: ${environments.length}');
-        Logger().d('Ambientes: $environments');
-
+       
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Column(

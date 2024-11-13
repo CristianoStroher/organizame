@@ -8,10 +8,15 @@ import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/widgets/visit.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:provider/provider.dart';
 
 class TecnicalPage extends StatefulWidget {
-  const TecnicalPage({super.key});
+  final TechnicalVisitController controller;
+  const TecnicalPage({
+    super.key,
+    required this.controller,
+    });
 
   @override
   State<TecnicalPage> createState() => _TecnicalPageState();
@@ -22,9 +27,27 @@ class _TecnicalPageState extends State<TecnicalPage> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+       super.initState();
+       widget.controller.initialize();
+    
+    // Adiciona listener para atualizações
+      widget.controller.addListener(_handleControllerUpdate);
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
+    widget.controller.removeListener(_handleControllerUpdate);
     super.dispose();
+  }
+
+  void _handleControllerUpdate() {
+    if (mounted) {
+      setState(() {
+        // Atualiza a UI quando o controller notificar mudanças
+      });
+    }
   }
 
   Future<void> _goToTaskPage(BuildContext context) async {
