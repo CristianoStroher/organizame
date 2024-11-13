@@ -26,7 +26,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       Logger().d('Iniciando salvamento de visita técnica');
 
       await _service.saveTechnicalVisit(date, time, customer);
-      
+
       // Atualiza a lista de visitas
       _technicalVisits = await _service.getAllTechnicalVisits();
 
@@ -41,7 +41,6 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
       // Atualiza os ambientes da visita atual
       currentEnvironments = List.from(currentVisit?.enviroment ?? []);
-      
       _currentVisitId = currentVisit?.id;
 
       Logger().d('Visita salva e definida como atual: ${currentVisit?.id}');
@@ -55,7 +54,6 @@ class TechnicalVisitController extends DefautChangeNotifer {
       hideLoading();
     }
   }
-
 
   Future<void> updateVisit(TechnicalVisitObject visit) async {
     try {
@@ -102,15 +100,16 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }
 
   // Método para recarregar a lista de visitas
-   Future<void> refreshVisits() async {
+  Future<void> refreshVisits() async {
     try {
       showLoadingAndResetState();
       Logger().i('Recarregando lista de visitas');
 
+      // Atualiza lista principal
       _technicalVisits = await _service.getAllTechnicalVisits();
 
+      // Se existe uma visita atual, atualiza ela também
       if (currentVisit != null) {
-        // Atualiza a visita atual com os dados mais recentes
         final updatedVisit = _technicalVisits.firstWhere(
           (visit) => visit.id == currentVisit!.id,
           orElse: () => currentVisit!,
@@ -220,10 +219,10 @@ class TechnicalVisitController extends DefautChangeNotifer {
     currentVisit = visit;
     _currentVisitId = visit.id;
     currentEnvironments = List.from(visit.enviroment ?? []);
-    
+
     Logger().d('CurrentVisit definido com ID: $_currentVisitId');
     Logger().d('Ambientes carregados: ${currentEnvironments.length}');
-    
+
     notifyListeners();
   }
 
@@ -277,14 +276,16 @@ class TechnicalVisitController extends DefautChangeNotifer {
         throw Exception('Nenhuma visita selecionada');
       }
 
-      Logger().d('Tentando atualizar ambiente. CurrentVisit: ${currentVisit?.id}');
+      Logger()
+          .d('Tentando atualizar ambiente. CurrentVisit: ${currentVisit?.id}');
       Logger().d('Ambiente: ${environment.toString()}');
 
       // Atualiza no backend
       await _service.updateEnvironmentInVisit(currentVisit!.id!, environment);
 
       // Atualiza na lista local
-      final index = currentEnvironments.indexWhere((env) => env.id == environment.id);
+      final index =
+          currentEnvironments.indexWhere((env) => env.id == environment.id);
       if (index != -1) {
         currentEnvironments[index] = environment;
       }
@@ -307,5 +308,4 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }
 
   List<TechnicalVisitObject> get technicalVisits => _technicalVisits;
-  
 }
