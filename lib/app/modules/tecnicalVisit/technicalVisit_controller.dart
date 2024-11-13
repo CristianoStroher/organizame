@@ -25,20 +25,12 @@ class TechnicalVisitController extends DefautChangeNotifer {
       showLoadingAndResetState();
       Logger().d('Iniciando salvamento de visita técnica');
 
-      final newTechnicalVisit = TechnicalVisitObject(
-        date: date,
-        time: time,
-        customer: customer,
-      );
-
       await _service.saveTechnicalVisit(date, time, customer);
-      await refreshVisits();
-
-      // Busca todas as visitas para obter a que acabou de ser salva
-      _technicalVisits = await _service.getAllTechnicalVisits();
       
+      // Atualiza a lista de visitas
+      _technicalVisits = await _service.getAllTechnicalVisits();
 
-      // Encontra a visita recém salva e atualiza currentVisit
+      // Encontra a visita recém criada
       currentVisit = _technicalVisits.firstWhere((visit) =>
           visit.date.day == date.day &&
           visit.date.month == date.month &&
@@ -46,18 +38,24 @@ class TechnicalVisitController extends DefautChangeNotifer {
           visit.time.hour == time.hour &&
           visit.time.minute == time.minute &&
           visit.customer.id == customer.id);
-    
+
+      // Atualiza os ambientes da visita atual
+      currentEnvironments = List.from(currentVisit?.enviroment ?? []);
+      
+      _currentVisitId = currentVisit?.id;
+
       Logger().d('Visita salva e definida como atual: ${currentVisit?.id}');
       success();
+      notifyListeners();
     } catch (e) {
-      _logger.i('Erro ao salvar visita técnica: $e');
-      setError('Função save - Erro ao salvar visita técnica: $e');
+      _logger.e('Erro ao salvar visita técnica: $e');
+      setError('Erro ao salvar visita técnica');
       rethrow;
     } finally {
       hideLoading();
-      notifyListeners();
     }
   }
+
 
   Future<void> updateVisit(TechnicalVisitObject visit) async {
     try {
@@ -104,20 +102,19 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }
 
   // Método para recarregar a lista de visitas
-  Future<void> refreshVisits() async {
+   Future<void> refreshVisits() async {
     try {
       showLoadingAndResetState();
       Logger().i('Recarregando lista de visitas');
 
       _technicalVisits = await _service.getAllTechnicalVisits();
 
-      // Se estiver editando uma visita, atualiza a currentVisit
       if (currentVisit != null) {
-        var updatedVisit = _technicalVisits.firstWhere(
+        // Atualiza a visita atual com os dados mais recentes
+        final updatedVisit = _technicalVisits.firstWhere(
           (visit) => visit.id == currentVisit!.id,
           orElse: () => currentVisit!,
         );
-
         setCurrentVisit(updatedVisit);
       }
 
@@ -222,16 +219,11 @@ class TechnicalVisitController extends DefautChangeNotifer {
     Logger().d('Definindo visita atual: ${visit.id}');
     currentVisit = visit;
     _currentVisitId = visit.id;
-    // Pega os ambientes da visita
     currentEnvironments = List.from(visit.enviroment ?? []);
+    
     Logger().d('CurrentVisit definido com ID: $_currentVisitId');
-    Logger().d(
-        'Ambientes carregados na setCurrentVisit: ${currentEnvironments.length}');
-    if (currentEnvironments.isNotEmpty) {
-      currentEnvironments.forEach((env) {
-        Logger().d('Ambiente carregado: ${env.name} - ${env.id}');
-      });
-    }
+    Logger().d('Ambientes carregados: ${currentEnvironments.length}');
+    
     notifyListeners();
   }
 

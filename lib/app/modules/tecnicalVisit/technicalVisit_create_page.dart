@@ -145,7 +145,8 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     final formValid = _globalKey.currentState?.validate() ?? false;
 
     if (!formValid) {
-      Messages.of(context).showError('Por favor, preencha todos os campos obrigatórios.');
+      Messages.of(context)
+          .showError('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
@@ -155,32 +156,9 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     }
 
     try {
-      // Parse da data usando DateTime.parse para a data ISO
       final DateTime dateValue = DateTime.parse(dateEC.text);
+      final TimeOfDay timeOfDay = selectedTime.value ?? TimeOfDay.now();
 
-      // Parse da hora de forma segura
-      TimeOfDay timeOfDay;
-      if (timeEC.text.isEmpty) {
-        timeOfDay = TimeOfDay.now();
-      } else {
-        try {
-          final timeStr = timeEC.text.trim();
-          final timeParts = timeStr.split(':');
-          if (timeParts.length == 2) {
-            timeOfDay = TimeOfDay(
-              hour: int.tryParse(timeParts[0]) ?? 0,
-              minute: int.tryParse(timeParts[1]) ?? 0,
-            );
-          } else {
-            timeOfDay = TimeOfDay.now();
-          }
-        } catch (e) {
-          Logger().e('Erro ao fazer parse da hora: $e');
-          timeOfDay = TimeOfDay.now();
-        }
-      }
-
-      // Combina data e hora
       final DateTime timeValue = DateTime(
         dateValue.year,
         dateValue.month,
@@ -201,13 +179,11 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         );
 
         await widget._controller.updateVisit(updatedVisit);
-        await widget._controller.refreshVisits();
 
-        widget._controller.currentVisit = updatedVisit;
-
-        if (mounted) {Messages.of(context)
+        if (mounted) {
+          Messages.of(context)
               .showInfo('Visita técnica atualizada com sucesso!');
-          setState(() {}); // Força atualização da UI
+          Navigator.of(context).pop(true);
         }
       } else {
         // Modo criação
@@ -215,19 +191,16 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
           dateValue,
           timeValue,
           selectedClient.value!,
-        );        
-        await widget._controller.refreshVisits();
-        Messages.of(context).showInfo('Visita técnica salva com sucesso!');
-      }        
-      
-      if (mounted) {
-        setState(() {});
+        );
+
+        if (mounted) {
+          Messages.of(context).showInfo('Visita técnica salva com sucesso!');
+          Navigator.of(context).pop(true);
+        }
       }
-    } catch (e, s) {
+    } catch (e) {
       Logger().e('Erro ao salvar visita técnica: $e');
-      Logger().e(s);
-      Messages.of(context).showError('Erro ao salvar visita técnica: $e');
-      
+      Messages.of(context).showError('Erro ao salvar visita técnica');
     }
   }
 }
