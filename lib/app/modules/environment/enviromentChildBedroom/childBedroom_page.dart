@@ -174,7 +174,6 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 
   Future<void> _createNewEnvironment() async {
   try {
-    Logger().d('Iniciando criação de novo ambiente');
     
     // Convertendo o Map<EnviromentItensEnum, bool> para Map<String, bool>
     final Map<String, bool> itensMap = {
@@ -185,8 +184,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
     };
 
-    Logger().d('Itens selecionados para o novo ambiente: $itensMap');
-    
+       
     await controller.saveEnvironment(
       description: _descriptionController.text,
       metragem: _metragemController.text,

@@ -14,14 +14,14 @@ import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_con
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 
 class KitchenPage extends StatefulWidget {
-  final EnviromentObject enviroment;
-  final TechnicalVisitController _controller;
+  final TechnicalVisitController controller;
+  final EnviromentObject? environment;
 
   const KitchenPage({
     super.key,
-    required this.enviroment,
-    required controller,
-  }) : _controller = controller;
+    this.environment,
+    required this.controller,
+  });
 
   @override
   State<KitchenPage> createState() => _KitchenPageState();
@@ -29,7 +29,7 @@ class KitchenPage extends StatefulWidget {
 
 class _KitchenPageState extends State<KitchenPage> {
   late final KitchenController controller; // Controller da página
-  String? selectedDifficulty; // Armazena a dificuldade selecionada
+  String? _selectedDifficulty; // Armazena a dificuldade selecionada
 
   final _formkey = GlobalKey<FormState>();
   final _metragemController = TextEditingController();
@@ -43,10 +43,10 @@ class _KitchenPageState extends State<KitchenPage> {
     widget.controller.ensureCurrentVisit();
     controller = KitchenController(controller: widget.controller);
 
-    if (widget.enviroment != null) {
+    if (widget.environment != null) {
       _initializeWithExistingEnvironment();
     } else {
-      _initializeWithNewEnvironment();
+      _initializeNewEnvironment();
     }
   }
 
@@ -271,6 +271,7 @@ class _KitchenPageState extends State<KitchenPage> {
         ],
       ),
       body: Form(
+        key: _formkey,
         child: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -308,7 +309,7 @@ class _KitchenPageState extends State<KitchenPage> {
                     'Moderado',
                     'Crítico',
                   ],
-                  selectedOptions: selectedDifficulty,
+                  selectedOptions: _selectedDifficulty,
                   onChanged: (String? newValue) {
                     setState(() {
                       _selectedDifficulty = newValue;
