@@ -11,6 +11,7 @@ class Visit extends StatelessWidget {
   final dateFormatData = DateFormat('dd/MM/yyyy');
   final dateFormatHora = DateFormat('HH:mm');
   final Function(TechnicalVisitObject) onEdit;
+  
 
   Visit({
     super.key,
@@ -75,6 +76,7 @@ class Visit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final environmentCount = object.enviroment?.length ?? 0;
     return Column(
       children: [
         Divider(
@@ -143,6 +145,21 @@ class Visit extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 4),
+                Row(
+                children: [
+                  Icon(
+                    Icons.home,
+                    size: 16,
+                    color: context.secondaryColor,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Ambientes $environmentCount ',
+                    style: context.titleDefaut,
+                  ),
+                ],
+              ),
               ],
             ],
           ),
