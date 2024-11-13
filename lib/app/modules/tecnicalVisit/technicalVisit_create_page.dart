@@ -8,6 +8,7 @@ import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
+import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/widgets/technicalVisit_header.dart';
@@ -91,7 +92,12 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
               Icons.close,
               color: context.primaryColor,
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () async {
+              await widget._controller.refreshVisits();
+              if (context.mounted) {
+                Navigator.of(context).pop(true);
+              }
+            },
           ),
         ],
       ),
@@ -179,11 +185,9 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         );
 
         await widget._controller.updateVisit(updatedVisit);
-
         if (mounted) {
           Messages.of(context)
               .showInfo('Visita técnica atualizada com sucesso!');
-          Navigator.of(context).pop(true);
         }
       } else {
         // Modo criação
@@ -193,14 +197,22 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
           selectedClient.value!,
         );
 
+        // Notifica a página principal para atualizar a lista
+        if (context.mounted) {
+          context.read<TechnicalController>().refreshVisits();
+        }
+
         if (mounted) {
-          Messages.of(context).showInfo('Visita técnica salva com sucesso!');
-          Navigator.of(context).pop(true);
+          Messages.of(context).showInfo(
+              'Visita técnica salva com sucesso! Agora você pode adicionar ambientes.');
         }
       }
-    } catch (e) {
+    } catch (e, s) {
       Logger().e('Erro ao salvar visita técnica: $e');
-      Messages.of(context).showError('Erro ao salvar visita técnica');
+      Logger().e(s);
+      if (mounted) {
+        Messages.of(context).showError('Erro ao salvar visita técnica');
+      }
     }
   }
 }

@@ -33,13 +33,18 @@ class _TecnicalPageState extends State<TecnicalPage> {
     
     // Adiciona listener para atualizações
       widget.controller.addListener(_handleControllerUpdate);
+
+    _setupPeriodicRefresh();
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    widget.controller.removeListener(_handleControllerUpdate);
-    super.dispose();
+  void _setupPeriodicRefresh() {
+    // Atualiza a lista a cada 5 segundos enquanto a página estiver aberta
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        widget.controller.refreshVisits();
+        _setupPeriodicRefresh();
+      }
+    });
   }
 
   void _handleControllerUpdate() {
@@ -49,6 +54,14 @@ class _TecnicalPageState extends State<TecnicalPage> {
       });
     }
   }
+  
+  @override
+  void dispose() {
+    _searchController.dispose();
+    widget.controller.removeListener(_handleControllerUpdate);
+    super.dispose();
+  }
+
 
   Future<void> _goToTaskPage(BuildContext context) async {
     final controller = context.read<TechnicalController>();

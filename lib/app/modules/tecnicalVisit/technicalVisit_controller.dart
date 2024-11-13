@@ -30,7 +30,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       // Atualiza a lista de visitas
       _technicalVisits = await _service.getAllTechnicalVisits();
 
-      // Encontra a visita recém criada
+      // Encontra a visita recém criada e define como atual
       currentVisit = _technicalVisits.firstWhere((visit) =>
           visit.date.day == date.day &&
           visit.date.month == date.month &&
@@ -39,11 +39,12 @@ class TechnicalVisitController extends DefautChangeNotifer {
           visit.time.minute == time.minute &&
           visit.customer.id == customer.id);
 
-      // Atualiza os ambientes da visita atual
-      currentEnvironments = List.from(currentVisit?.enviroment ?? []);
       _currentVisitId = currentVisit?.id;
+      currentEnvironments = List.from(currentVisit?.enviroment ?? []);
 
       Logger().d('Visita salva e definida como atual: ${currentVisit?.id}');
+      Logger().d('Pronta para receber ambientes');
+
       success();
       notifyListeners();
     } catch (e) {

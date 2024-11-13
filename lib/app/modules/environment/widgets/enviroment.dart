@@ -24,7 +24,7 @@ class Enviroment extends StatelessWidget {
 
   void _navigateToSpecificEnvironment(BuildContext context) {
     Logger().d('Navegando para ambiente ID: $environmentId');
-    
+
     // Busca o ambiente específico na lista de ambientes da visita atual
     final currentEnvironment = controller.currentVisit?.enviroment?.firstWhere(
       (env) => env.id == environmentId,
@@ -59,7 +59,8 @@ class Enviroment extends StatelessWidget {
         );
         break;
       default:
-        Messages.of(context).showInfo('Página não disponível para este ambiente');
+        Messages.of(context)
+            .showInfo('Página não disponível para este ambiente');
     }
   }
 
@@ -96,17 +97,47 @@ class Enviroment extends StatelessWidget {
                 final confirm = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Remover Ambiente'),
-                    content: const Text(
-                        'Tem certeza que deseja remover este ambiente?'),
+                    title: Text('Remover Ambiente', style: context.titleMedium),
+                    content: Text(
+                      'Tem certeza que deseja remover este ambiente?',
+                      style:
+                          TextStyle(color: context.primaryColor, fontSize: 16),
+                    ),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text('Cancelar'),
+                        style: TextButton.styleFrom(
+                          backgroundColor: Color(0xFFFAFFC5),
+                          side:
+                              BorderSide(color: context.primaryColor, width: 1),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        child: Text(
+                          'Cancelar',
+                          style: context.titleDefaut,
+                        ),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(true),
-                        child: const Text('Confirmar'),
+                        style: TextButton.styleFrom(
+                          backgroundColor: context.primaryColor,
+                          side:
+                              BorderSide(color: context.primaryColor, width: 1),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        child: Text(
+                          'Excluir',
+                          style:
+                              TextStyle(color: Color(0xFFFAFFC5), fontSize: 16),
+                        ),
                       ),
                     ],
                   ),

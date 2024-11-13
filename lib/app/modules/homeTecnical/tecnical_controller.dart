@@ -29,7 +29,6 @@ class TechnicalController extends DefautChangeNotifer {
     loadTechnicalVisits(); // Carrega as visitas quando o controller é criado
   }
 
-
   Future<void> loadTechnicalVisits() async {
     try {
       print('Controller - Iniciando carregamento de visitas técnicas');
@@ -187,7 +186,22 @@ class TechnicalController extends DefautChangeNotifer {
 
   // Método para atualizar a lista após criar ou editar uma visita
   Future<void> refreshVisits() async {
-    await loadTechnicalVisits();
+    try {
+      showLoadingAndResetState();
+      Logger().i('Atualizando lista de visitas');
+
+      final newVisits = await _service.getAllTechnicalVisits();
+      _technicalVisits = newVisits;
+
+      Logger().d('Lista atualizada: ${_technicalVisits.length} visitas');
+      success();
+    } catch (e) {
+      Logger().e('Erro ao atualizar visitas: $e');
+      setError('Erro ao atualizar lista');
+    } finally {
+      hideLoading();
+      notifyListeners(); // Garante notificação aos listeners
+    }
   }
 
   void clearFilters() {
