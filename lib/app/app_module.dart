@@ -7,7 +7,7 @@ import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_controller.dart';
 import 'package:organizame/app/modules/homeTasks/home_controller.dart';
 import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_controller.dart';
-import 'package:organizame/app/modules/environment/enviromentLivingRoom/livingRoom_controller.dart';
+import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_room_controller.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
@@ -54,7 +54,7 @@ class AppModule extends StatelessWidget {
         ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
         ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
         ChangeNotifierProvider(create: (context) => TechnicalController(technicalVisitService: context.read())), //injetando o controller do módulo tecnical
-        ChangeNotifierProvider(create: (context) => LivingRoomController()), //injetando o controller do módulo livingRoom
+        ChangeNotifierProvider(create: (context) => LivingRoomController(controller: context.read())), //injetando o controller do módulo livingRoom
         ChangeNotifierProvider(create: (context) => ChildBedroomController(controller:context.read())), //injetando o controller do módulo childBedroom
         ChangeNotifierProvider(create: (context) => KitchenController(controller: context.read())), //injetando o controller do módulo kitchen
         ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read(),)), //injetando o controller do módulo customer

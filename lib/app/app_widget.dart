@@ -9,7 +9,7 @@ import 'package:organizame/app/modules/environment/enviromentChildBedroom/childB
 
 import 'package:organizame/app/modules/homeTasks/home_module.dart';
 import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_module.dart';
-import 'package:organizame/app/modules/environment/enviromentLivingRoom/livingRoom_module.dart';
+import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_room_module.dart';
 import 'package:organizame/app/modules/splash/splash_page.dart';
 import 'package:organizame/app/modules/task/task_module.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_module.dart';

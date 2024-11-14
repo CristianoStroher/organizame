@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -12,17 +11,18 @@ import 'package:organizame/app/core/widget/organizame_textfield.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
-import 'package:organizame/app/modules/environment/enviromentLivingRoom/livingRoom_controller.dart';
+import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_room_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 
 class LivingRoomPage extends StatefulWidget {
-  final TechnicalController controller;
+  final TechnicalVisitController controller;
   final EnviromentObject? enviroment;
 
   const LivingRoomPage({
     super.key,
-    required this.controller,
     this.enviroment,
+    required this.controller,
     });
 
   @override
@@ -31,13 +31,13 @@ class LivingRoomPage extends StatefulWidget {
 
 class _LivingRoomPageState extends State<LivingRoomPage> {
   late final LivingRoomController controller;
-  String? selectedDifficulty;
+  String? _selectedDifficulty;
 
   final _formkey = GlobalKey<FormState>();
   final _metragemController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _observationController = TextEditingController();
-  final Map<EnviromentObject, bool> selectedItens = {};
+  final Map<EnviromentItensEnum, bool> _selectedItens = {};
 
   @override
   void initState() {
@@ -53,12 +53,12 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
   }
 
   void _initializeWithExistingEnvironment() {
-    _metragemController.text = widget.environment!.metragem ?? '';
-    _descriptionController.text = widget.environment!.descroiption ?? '';
-    _observationController.text = widget.environment!.observation ?? '';
-    _selectedDifficulty = widget.environment!.difficulty;
+    _metragemController.text = widget.enviroment!.metragem ?? '';
+    _descriptionController.text = widget.enviroment!.descroiption ?? '';
+    _observationController.text = widget.enviroment!.observation ?? '';
+    _selectedDifficulty = widget.enviroment!.difficulty;
 
-    final itens = widget.environment!.itens;
+    final itens = widget.enviroment!.itens;
     if (itens != null) {
       _selectedItens[EnviromentItensEnum.roupas] = itens[EnviromentItensEnum.roupas.name] ?? false;
       _selectedItens[EnviromentItensEnum.calcados] = itens[EnviromentItensEnum.calcados.name] ?? false;
@@ -112,7 +112,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
   Future<void> _handleSaveOrUpdate() async {
     if (_formkey.currentState!.validate()) {
       try {
-        if (widget.environment != null) {
+        if (widget.enviroment != null) {
           await _updateExistingEnvironment();
         } else {
           await _createNewEnvironment();
@@ -133,7 +133,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
 
   Future<void> _updateExistingEnvironment() async {
     try {
-      Logger().d('Iniciando atualização do ambiente: ${widget.environment!.id}');
+      Logger().d('Iniciando atualização do ambiente: ${widget.enviroment!.id}');
       
        // Criar um mapa intermediário com valores não nulos
     final Map<String, bool> itensMap = {
@@ -146,7 +146,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
     };
 
     final updatedEnvironment = EnviromentObject(
-      id: widget.environment!.id,
+      id: widget.enviroment!.id,
       name: 'QUARTO DE CASAL',
       descroiption: _descriptionController.text,
       metragem: _metragemController.text,
@@ -249,7 +249,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.environment != null
+                  widget.enviroment != null
                     ? 'EDITAR AMBIENTE'
                     : 'NOVO AMBIENTE',
                   style: context.titleDefaut),
@@ -274,10 +274,10 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
                     'Moderado',
                     'Crítico',
                   ],
-                  selectedOptions: selectedDifficulty,
+                  selectedOptions: _selectedDifficulty,
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedDifficulty = newValue;
+                      _selectedDifficulty = newValue;
                     });
                   },
                 ),
@@ -326,7 +326,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
                 const SizedBox(height: 20),
                 OrganizameElevatedButton(
                   onPressed: _handleSaveOrUpdate,
-                  label: widget.environment != null ? 'Atualizar' : 'Adicionar',
+                  label: widget.enviroment != null ? 'Atualizar' : 'Adicionar',
                   textColor: const Color(0xFFFAFFC5),
                 ),
                 const SizedBox(height: 40),
