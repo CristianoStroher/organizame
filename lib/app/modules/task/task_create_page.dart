@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
@@ -18,6 +19,7 @@ import 'package:validatorless/validatorless.dart';
 class TaskCreatePage extends StatefulWidget {
   final TaskController _controller;
   final TaskObject? task;
+  
 
   const TaskCreatePage({
     super.key,
@@ -35,6 +37,57 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
   final dateEC = TextEditingController();
   final timeEC = TextEditingController();
   final observationsEC = TextEditingController();
+
+   Future<void> _handleSave() async {
+    final formValid = _globalKey.currentState?.validate() ?? false;
+
+    if (!formValid) {
+      Messages.of(context).showError('Formulário inválido');
+      return;
+    }
+
+    // Verifica se data e hora foram preenchidas
+    if (dateEC.text.isEmpty || timeEC.text.isEmpty) {
+      Messages.of(context).showError('Data e hora são obrigatórios');
+      return;
+    }
+
+    try {
+      if (widget.task != null) {
+        // Atualiza a tarefa existente
+        await widget._controller.updateTask(
+          TaskObject(
+            id: widget.task!.id,
+            descricao: descriptionEC.text,
+            data: DateFormat('dd/MM/yyyy').parse(dateEC.text),
+            hora: DateFormat('HH:mm').parse(timeEC.text),
+            observacao: observationsEC.text,
+            finalizado: widget.task!.finalizado,
+          ),
+        );
+
+        if (mounted) {
+          Messages.of(context).showInfo('Tarefa atualizada com sucesso!');
+          Navigator.pop(context, true);
+        }
+      } else {
+        // Cria uma nova tarefa
+        await widget._controller.saveTask(
+          descriptionEC.text,
+          dateEC.text,
+          timeEC.text,
+          observationsEC.text,
+        );
+
+        if (mounted) {
+          Messages.of(context).showInfo('Tarefa salva com sucesso!');
+          Navigator.pop(context, true);
+        }
+      }
+    } catch (e) {
+      Messages.of(context).showError('Erro ao salvar tarefa');
+    }
+  }
 
   @override
   void initState() {
@@ -152,38 +205,9 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                     ),
                     const SizedBox(height: 20),
                     OrganizameElevatedButton(
-                      label: 'Salvar',
+                      label: widget.task != null ? 'Atualizar' : 'Salvar',
                       onPressed: () {
-                        final formValid = _globalKey.currentState?.validate() ?? false;
-
-                        if (formValid) {
-                          if (widget.task != null) {
-                            // Atualiza a tarefa existente
-                            context.read<TaskController>().updateTask(
-                                  TaskObject(
-                                    id: widget.task!.id,
-                                    descricao: descriptionEC.text,
-                                    data: DateFormat('dd/MM/yyyy')
-                                        .parse(dateEC.text),
-                                    hora:
-                                        DateFormat('HH:mm').parse(timeEC.text),
-                                    observacao: observationsEC.text,
-                                    finalizado: widget.task!.finalizado,
-                                  ),
-                                );
-                          } else {
-                            // Cria uma nova tarefa
-                            context.read<TaskController>().saveTask(
-                                  descriptionEC.text,
-                                  dateEC.text,
-                                  timeEC.text,
-                                  observationsEC.text,
-                                );
-                          }
-
-                          Navigator.pop(
-                              context); // Fecha a tela após salvar ou atualizar
-                        }
+                        _handleSave();
                       },
                     ),
                   ],

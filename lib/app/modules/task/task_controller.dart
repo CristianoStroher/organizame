@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/homeTasks/home_controller.dart';
@@ -38,31 +40,49 @@ class TaskController extends DefautChangeNotifer {
   // Getter para a hora selecionada
   DateTime? get selectedTime => _selectedTime;
 
-  Future<void> saveTask(String description, String date, String time,
-      String observationsEC) async {
+ Future<void> saveTask(
+    String description, 
+    String date, 
+    String time,
+    String observationsEC
+  ) async {
     try {
       showLoadingAndResetState();
-      notifyListeners();
-      if (_selectedDate != null ||
-          _selectedTime != null ||
-          description.isNotEmpty) {
-        await _tasksService.saveTask(
-          _selectedDate!,
-          _selectedTime!,
-          description,
-          observations: observationsEC,
-        );
-        success();
-        setSelectedDate = null;
-        setSelectedTime = null;
-        
-      } else {
-        setError('Data e hora são obrigatórios');
+      
+      // Parse da data e hora a partir das strings recebidas
+      final DateTime parsedDate = DateFormat('dd/MM/yyyy').parse(date);
+      final DateTime parsedTime = DateFormat('HH:mm').parse(time);
+
+      // Atualiza os valores selecionados
+      _selectedDate = parsedDate;
+      _selectedTime = parsedTime;
+
+      if (description.isEmpty) {
+        setError('Descrição é obrigatória');
+        return;
       }
-    } catch (e, s) {
+
+      if (_selectedDate == null || _selectedTime == null) {
+        setError('Data e hora são obrigatórios');
+        return;
+      }
+
+      await _tasksService.saveTask(
+        _selectedDate!,
+        _selectedTime!,
+        description,
+        observations: observationsEC,
+      );
+
+      success();
+      
+      // Limpa os valores após salvar
+      _selectedDate = null;
+      _selectedTime = null;
+      
+    } catch (e) {
+      Logger().e('Erro ao salvar tarefa: $e');
       setError('Erro ao salvar tarefa');
-      // Logger().e(e);
-      // Logger().e(s);
     } finally {
       hideLoading();
       notifyListeners();
