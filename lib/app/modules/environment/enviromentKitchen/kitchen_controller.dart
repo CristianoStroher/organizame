@@ -23,7 +23,7 @@ class KitchenController extends DefautChangeNotifer {
       Logger().d('ChildBedroomController construído com visita: ${_controller.currentVisit?.id}');
       final environment = EnviromentObject(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: 'Quarto Criança',
+        name: 'Cozinha',
         descroiption: description,
         metragem: metragem,
         difficulty: difficulty,

@@ -1,6 +1,7 @@
 
 import 'package:organizame/app/core/modules/organizame_module.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
+import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_page.dart';
 import 'package:organizame/app/modules/environment/enviroment_page.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_create_page.dart';
@@ -39,7 +40,9 @@ class TecnicalModule extends OrganizameModule {
           
           routers: {
             '/environment': (context) => EnviromentPage(technicalVisitController: context.read<TechnicalVisitController>(),),
-            '/childBedroom': (context) => ChildBedroomPage(controller: context.read<TechnicalVisitController>()),             
+            '/childBedroom': (context) => ChildBedroomPage(controller: context.read<TechnicalVisitController>()),
+            '/kitchen': (context) => KitchenPage(controller: context.read<TechnicalVisitController>()),
+            '/livingRoom': (context) => ChildBedroomPage(controller: context.read<TechnicalVisitController>()),        
 
             
           },

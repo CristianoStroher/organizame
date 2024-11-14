@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
+import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_page.dart';
 import 'package:organizame/app/modules/environment/widgets/enviroment_card.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:provider/provider.dart'; // Certifique-se de importar o EnviromentCard corretamente
@@ -21,17 +23,42 @@ class _EnviromentPageState extends State<EnviromentPage> {
 
   void _navigateToEnvironment(BuildContext context, Map<String, dynamic> environment) {
     final controller = context.read<TechnicalVisitController>();
+    
+    // Define qual página abrir baseado no tipo de ambiente
+    Widget? page;
+    switch (environment['text']) {
+      case 'Quarto criança':
+        page = ChildBedroomPage(
+          controller: controller,
+        );
+        break;
+      case 'Cozinha':
+        page = KitchenPage(
+          controller: controller,
+        );
+        break;
+      case 'Quarto Casal':
+        // Quando implementar a página do quarto de casal
+        // page = CoupleBedroomPage(
+        //   controller: controller,
+        // );
+        Messages.of(context).showInfo('Página do Quarto de Casal em desenvolvimento');
+        return;
+      default:
+        Messages.of(context).showInfo('Ambiente ainda não implementado');
+        return;
+    }
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider<TechnicalVisitController>.value(
-          value: controller,
-          child: ChildBedroomPage(
-            controller: controller,
+    if (page != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider<TechnicalVisitController>.value(
+            value: controller,
+            child: page!,
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override
@@ -60,7 +87,8 @@ class _EnviromentPageState extends State<EnviromentPage> {
               Icons.close,
               color: context.primaryColor,
             ),
-            onPressed: () {
+            onPressed: () async {
+              await widget.technicalVisitController.refreshVisits();
               Navigator.of(context).pop();
             },
           ),

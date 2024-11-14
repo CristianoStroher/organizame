@@ -4,6 +4,7 @@ import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
+import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_page.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 
 class Enviroment extends StatelessWidget {
@@ -58,6 +59,29 @@ class Enviroment extends StatelessWidget {
           ),
         );
         break;
+      
+      case 'COZINHA':
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => KitchenPage(
+              controller: controller,
+              environment: currentEnvironment,
+            ),
+          ),
+        );
+        break;
+
+      /* case 'QUARTO CASAL':
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CoupleBedroomPage(
+              controller: controller,
+              environment: currentEnvironment,
+            ),
+          ),
+        );
+        break; */
+
       default:
         Messages.of(context)
             .showInfo('Página não disponível para este ambiente');
