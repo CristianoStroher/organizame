@@ -121,6 +121,8 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
         if (mounted) {
           Navigator.of(context).pop(true);
           await widget.controller.refreshVisits();
+          Navigator.of(context).pop(true);
+          
         }
       } catch (e) {
         Logger().e('Erro ao salvar/atualizar ambiente: $e');
@@ -129,7 +131,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
         }
       }
     }
-  }
+  } 
 
   Future<void> _updateExistingEnvironment() async {
     try {

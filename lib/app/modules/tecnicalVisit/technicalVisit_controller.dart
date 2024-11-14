@@ -309,4 +309,5 @@ class TechnicalVisitController extends DefautChangeNotifer {
   }
 
   List<TechnicalVisitObject> get technicalVisits => _technicalVisits;
+
 }

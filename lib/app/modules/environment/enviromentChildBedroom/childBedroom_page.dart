@@ -123,6 +123,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         if (mounted) {
           Navigator.of(context).pop(true);
           await widget.controller.refreshVisits();
+          
         }
       } catch (e) {
         Logger().e('Erro ao salvar/atualizar ambiente: $e');
@@ -195,6 +196,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 
     if (mounted) {
       Messages.of(context).showInfo('Ambiente criado com sucesso!');
+      Navigator.of(context).pop(true);
     }
   } catch (e) {
     Logger().e('Erro ao criar novo ambiente: $e');

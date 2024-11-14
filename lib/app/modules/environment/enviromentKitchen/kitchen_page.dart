@@ -222,6 +222,8 @@ class _KitchenPageState extends State<KitchenPage> {
 
     if (mounted) {
       Messages.of(context).showInfo('Ambiente criado com sucesso!');
+      Navigator.of(context).pop(true);
+      
     }
   } catch (e) {
     Logger().e('Erro ao criar novo ambiente: $e');
