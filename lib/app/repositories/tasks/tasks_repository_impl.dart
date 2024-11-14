@@ -118,4 +118,43 @@ class TasksRepositoryImpl extends TasksRepository {
       throw Exception('Erro ao atualizar tarefa: $e');
     }
   }
+
+  @override
+  Future<List<TaskObject>> getOldTasks({DateTime? startDate, DateTime? endDate}) async {
+    try {
+      final conn = await _sqLiteConnectionFactory.openConnection();
+      
+      String query = '''
+        SELECT * FROM compromisso
+        WHERE 1=1
+      ''';
+      
+      List<dynamic> arguments = [];
+
+      if (startDate != null) {
+        query += ' AND date(data) >= date(?)';
+        arguments.add(DateFormat('yyyy-MM-dd').format(startDate));
+      }
+
+      if (endDate != null) {
+        query += ' AND date(data) <= date(?)';
+        arguments.add(DateFormat('yyyy-MM-dd').format(endDate));
+      }
+
+      query += ' ORDER BY data DESC, hora DESC';
+
+      Logger().d('Query: $query');
+      Logger().d('Arguments: $arguments');
+
+      final result = await conn.rawQuery(query, arguments);
+      
+      Logger().d('Resultados encontrados: ${result.length}');
+
+      return result.map((e) => TaskObject.fromMap(e)).toList();
+    } catch (e) {
+      Logger().e('Erro ao buscar tarefas antigas: $e');
+      throw Exception('Erro ao buscar tarefas antigas: $e');
+    }
+  }
+
 }

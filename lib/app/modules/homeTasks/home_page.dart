@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
@@ -25,15 +27,14 @@ class HomePage extends StatefulWidget {
     super.key,
     required HomeController homeController,
     required TaskController taskController,
-  }) : _homeController = homeController,
-       _taskController = taskController;
+  })  : _homeController = homeController,
+        _taskController = taskController;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   void initState() {
     super.initState();
@@ -55,8 +56,141 @@ class _HomePageState extends State<HomePage> {
       await context
           .read<HomeController>()
           .findFilter(filter: TaskFilterEnum.today);
-          
     });
+  }
+
+  void _showOldTasksFilter(BuildContext context) {
+    final controller = context.read<HomeController>();
+    DateTime? startDate;
+    DateTime? endDate;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text('Buscar Tarefas Antigas', style: context.titleMedium),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Data inicial
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  'De',
+                  style: TextStyle(color: context.primaryColor),
+                ),
+                subtitle: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        startDate != null
+                            ? DateFormat('dd/MM/yyyy').format(startDate!)
+                            : 'Selecione a data inicial',
+                        style: TextStyle(color: context.secondaryColor),
+                      ),
+                    ),
+                    if (startDate != null)
+                      IconButton(
+                        icon: Icon(Icons.clear, color: context.secondaryColor),
+                        onPressed: () => setState(() => startDate = null),
+                      ),
+                  ],
+                ),
+                trailing:
+                    Icon(Icons.calendar_today, color: context.secondaryColor),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: startDate ?? DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime.now(),
+                  );
+                  if (picked != null) {
+                    setState(() => startDate = picked);
+                  }
+                },
+              ),
+
+              // Data final
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  'Até',
+                  style: TextStyle(color: context.primaryColor),
+                ),
+                subtitle: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        endDate != null
+                            ? DateFormat('dd/MM/yyyy').format(endDate!)
+                            : 'Selecione a data final',
+                        style: TextStyle(color: context.secondaryColor),
+                      ),
+                    ),
+                    if (endDate != null)
+                      IconButton(
+                        icon: Icon(Icons.clear, color: context.secondaryColor),
+                        onPressed: () => setState(() => endDate = null),
+                      ),
+                  ],
+                ),
+                trailing:
+                    Icon(Icons.calendar_today, color: context.secondaryColor),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: endDate ?? DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime.now(),
+                  );
+                  if (picked != null) {
+                    setState(() => endDate = picked);
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Color(0xFFFAFFC5),
+                side: BorderSide(color: context.primaryColor, width: 1),
+              ),
+              child: Text('Cancelar',
+                  style: TextStyle(color: context.primaryColor)),
+            ),
+            TextButton(
+              onPressed: () {
+                if (startDate == null && endDate == null) {
+                  Messages.of(context)
+                      .showError('Selecione pelo menos uma data');
+                  return;
+                }
+
+                if (startDate != null &&
+                    endDate != null &&
+                    endDate!.isBefore(startDate!)) {
+                  Messages.of(context).showError(
+                      'Data final deve ser posterior à data inicial');
+                  return;
+                }
+
+                controller.findOldTasks(startDate: startDate, endDate: endDate);
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: context.primaryColor,
+              ),
+              child: Text('Buscar', style: TextStyle(color: Color(0xFFFAFFC5))),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -112,8 +246,6 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton(
             icon: Icon(OrganizameIcons.filter,
                 size: 20, color: context.primaryColor),
-            onSelected: (value) =>
-                context.read<HomeController>().showOrHideFinishingTasks(),
             itemBuilder: (context) {
               return [
                 PopupMenuItem<bool>(
@@ -123,13 +255,21 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(color: context.primaryColor),
                   ),
                 ),
-                // PopupMenuItem(
-                //   child: Text(
-                //     'Tarefas antigas',
-                //     style: TextStyle(color: context.primaryColor),
-                //   ),
-                // ),
+                PopupMenuItem<String>(
+                  value: 'old',
+                  child: Text(
+                    'Tarefas antigas',
+                    style: TextStyle(color: context.primaryColor),
+                  ),
+                ),
               ];
+            },
+            onSelected: (value) {
+              if (value == true) {
+                context.read<HomeController>().showOrHideFinishingTasks();
+              } else if (value == 'old') {
+                _showOldTasksFilter(context);
+              }
             },
           ),
         ],
@@ -144,7 +284,7 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: OrganizameNavigatorbar(
         color: context.primaryColorLight,
-        initialIndex: index,        
+        initialIndex: index,
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

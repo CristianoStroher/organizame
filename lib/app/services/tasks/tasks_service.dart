@@ -11,6 +11,8 @@ abstract class TasksService {
     Future<TaskObject?> findTask(TaskObject task);
     Future<void> finishTask(TaskObject task);
     Future<void> updateTask(TaskObject task);
+    Future<List<TaskObject>> getOldTasks({DateTime? startDate, DateTime? endDate});
+
    
 
  

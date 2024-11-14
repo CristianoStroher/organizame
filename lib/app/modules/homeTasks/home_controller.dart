@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/core/ui/messages.dart';
@@ -6,6 +7,7 @@ import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/models/task_total_filter.dart';
 import 'package:organizame/app/models/task_week_object.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
+import 'package:path/path.dart';
 
 class HomeController extends DefautChangeNotifer {
   final TasksService _tasksService;
@@ -81,6 +83,13 @@ class HomeController extends DefautChangeNotifer {
           final weekObjet = await _tasksService.getWeek();
           tasks = weekObjet.tasks;
           initialDateOfWeek = weekObjet.startDate;
+          break;
+        case TaskFilterEnum.old:
+          if (filteredTasks.isNotEmpty && filterSelected == TaskFilterEnum.old) {
+            tasks = filteredTasks;
+          } else {
+            tasks = [];
+          }
           break;
       }
     } on Exception catch (e) {
@@ -181,6 +190,51 @@ class HomeController extends DefautChangeNotifer {
       hideLoading();
       notifyListeners();
       refreshPage(); // Chama notifyListeners apenas uma vez no finally
+    }
+  }
+
+  Future<void> findOldTasks({DateTime? startDate, DateTime? endDate}) async {
+    try {
+      showLoadingAndResetState();
+      filterSelected = TaskFilterEnum.old;
+
+      final tasks = await _tasksService.getOldTasks(
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      // Ordena por data/hora (mais recentes primeiro)
+      tasks.sort((a, b) => _combineDateTime(b).compareTo(_combineDateTime(a)));
+
+      filteredTasks = tasks;
+      alltasks = tasks;
+
+      if (!showFinishingTasks) {
+        filteredTasks = filteredTasks.where((task) => !task.finalizado).toList();
+      }
+
+      String mensagem = 'Mostrando tarefas';
+      if (startDate != null && endDate != null) {
+        mensagem += ' de ${DateFormat('dd/MM/yyyy').format(startDate)} até ${DateFormat('dd/MM/yyyy').format(endDate)}';
+      } else if (startDate != null) {
+        mensagem += ' a partir de ${DateFormat('dd/MM/yyyy').format(startDate)}';
+      } else if (endDate != null) {
+        mensagem += ' até ${DateFormat('dd/MM/yyyy').format(endDate)}';
+      }
+
+      if (tasks.isEmpty) {
+        setError('Nenhuma tarefa encontrada para o período selecionado');
+      } else {
+        Logger().i('$mensagem (${tasks.length} encontradas)');
+      }
+
+      success();
+    } catch (e) {
+      Logger().e('Erro ao buscar tarefas antigas: $e');
+      setError('Erro ao buscar tarefas antigas');
+    } finally {
+      hideLoading();
+      notifyListeners();
     }
   }
   

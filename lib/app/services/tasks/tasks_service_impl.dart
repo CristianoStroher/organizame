@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/models/task_week_object.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
@@ -66,6 +67,19 @@ class TasksServiceImpl extends TasksService {
   @override
   Future<void> updateTask(TaskObject task) {
     return _tasksRepository.updateTask(task);
+  }
+
+  @override
+  Future<List<TaskObject>> getOldTasks({DateTime? startDate, DateTime? endDate}) async {
+    try {
+      return await _tasksRepository.getOldTasks(
+        startDate: startDate,
+        endDate: endDate,
+      );
+    } catch (e) {
+      Logger().e('Erro no service ao buscar tarefas antigas: $e');
+      throw Exception('Erro ao buscar tarefas antigas');
+    }
   }
   
   
