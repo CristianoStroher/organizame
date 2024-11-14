@@ -157,11 +157,15 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(
-                backgroundColor: Color(0xFFFAFFC5),
+                backgroundColor: context.primaryColorLight,
                 side: BorderSide(color: context.primaryColor, width: 1),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
               ),
-              child: Text('Cancelar',
-                  style: TextStyle(color: context.primaryColor)),
+              child: Text('Cancelar', style: context.titleDefaut),
             ),
             TextButton(
               onPressed: () {
@@ -184,8 +188,18 @@ class _HomePageState extends State<HomePage> {
               },
               style: TextButton.styleFrom(
                 backgroundColor: context.primaryColor,
+                side: BorderSide(color: context.primaryColor, width: 1),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
               ),
-              child: Text('Buscar', style: TextStyle(color: Color(0xFFFAFFC5))),
+              child: Text(
+                'Buscar',
+                style:
+                    TextStyle(color: context.primaryColorLight, fontSize: 16),
+              ),
             ),
           ],
         ),
