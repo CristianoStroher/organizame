@@ -4,6 +4,7 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
 import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_page.dart';
+import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_room_page.dart';
 import 'package:organizame/app/modules/environment/widgets/enviroment_card.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:provider/provider.dart'; // Certifique-se de importar o EnviromentCard corretamente
@@ -38,12 +39,10 @@ class _EnviromentPageState extends State<EnviromentPage> {
         );
         break;
       case 'Quarto Casal':
-        // Quando implementar a página do quarto de casal
-        // page = CoupleBedroomPage(
-        //   controller: controller,
-        // );
-        Messages.of(context).showInfo('Página do Quarto de Casal em desenvolvimento');
-        return;
+        page = LivingRoomPage(
+          controller: controller,
+        );
+        break;        
       default:
         Messages.of(context).showInfo('Ambiente ainda não implementado');
         return;

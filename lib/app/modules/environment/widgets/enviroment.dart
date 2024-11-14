@@ -72,6 +72,7 @@ class Enviroment extends StatelessWidget {
         );
         break;
 
+      case 'QUARTO DE CASAL':
       case 'QUARTO CASAL':
         Navigator.of(context).push(
           MaterialPageRoute(
