@@ -282,12 +282,13 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 ),
                 const SizedBox(height: 10),
                 OrganizameCheckboxlist(
+                  capitalizeFirstLetter: true,
                   options: [
-                    EnviromentItensEnum.roupas.name,
-                    EnviromentItensEnum.calcados.name,
-                    EnviromentItensEnum.brinquedos.name,
-                    EnviromentItensEnum.roupasDeCama.name,
-                    EnviromentItensEnum.outros.name,
+                    EnviromentItensEnum.roupas.displayName,
+                    EnviromentItensEnum.calcados.displayName,
+                    EnviromentItensEnum.brinquedos.displayName,
+                    EnviromentItensEnum.roupasDeCama.displayName,
+                    EnviromentItensEnum.outros.displayName,
                   ],
                   color: const Color(0xFFFAFFC5),
                   initialValues: {

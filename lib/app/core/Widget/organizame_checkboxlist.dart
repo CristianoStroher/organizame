@@ -5,6 +5,7 @@ class OrganizameCheckboxlist extends StatefulWidget {
   final Color? color; // Cor do checkbox
   final Map<String, bool>? initialValues; // Valores iniciais
   final Function(Map<String, bool>)? onChanged; // Função de callback
+  final bool capitalizeFirstLetter;
 
   const OrganizameCheckboxlist({
     super.key,
@@ -12,6 +13,7 @@ class OrganizameCheckboxlist extends StatefulWidget {
     this.color,
     this.initialValues,
     this.onChanged,
+    required this.capitalizeFirstLetter,
   });
 
   @override
@@ -20,6 +22,11 @@ class OrganizameCheckboxlist extends StatefulWidget {
 
 class _OrganizameCheckboxlistState extends State<OrganizameCheckboxlist> {
   Map<String, bool> _checkedOptions = {};
+
+  String capitalizeFirstLetter(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+  }
 
   @override
   void initState() {

@@ -283,13 +283,14 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
                 ),
                 const SizedBox(height: 10),
                 OrganizameCheckboxlist(
+                  capitalizeFirstLetter: true,
                   options: [
-                    EnviromentItensEnum.acessorios.name,
-                    EnviromentItensEnum.calcados.name,
-                    EnviromentItensEnum.maquiagem.name,
-                    EnviromentItensEnum.roupas.name,
-                    EnviromentItensEnum.roupasDeCama.name,
-                    EnviromentItensEnum.outros.name,
+                    EnviromentItensEnum.acessorios.displayName,
+                    EnviromentItensEnum.calcados.displayName,
+                    EnviromentItensEnum.maquiagem.displayName,
+                    EnviromentItensEnum.roupas.displayName,
+                    EnviromentItensEnum.roupasDeCama.displayName,
+                    EnviromentItensEnum.outros.displayName,
                   ],
                   color: const Color(0xFFFAFFC5),
                   initialValues: {
