@@ -1,17 +1,22 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/models/enviroment_imagens.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
-import 'package:mockito/annotations.dart';
 
 class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
   final FirebaseFirestore _firestore;
   final String _collection = 'technical_visits';
+  final FirebaseStorage _storage;
 
   TechnicalVisitRepositoryImpl({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+      : _firestore = firestore ?? FirebaseFirestore.instance,
+        _storage = FirebaseStorage.instance;
 
   @override
   Future<void> saveTechnicalVisit(
@@ -299,6 +304,13 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
       rethrow;
     }
   }
+
+
+
+
+  
+
+
 
 
 }

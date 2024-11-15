@@ -1,4 +1,5 @@
 import 'package:logger/logger.dart';
+import 'package:organizame/app/models/enviroment_imagens.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
 
 class EnviromentObject {
@@ -9,6 +10,7 @@ class EnviromentObject {
   final String? difficulty;
   final String? observation;
   final Map<String, bool>? itens;
+  final List<EnviromentImagens>? imagens;
 
   EnviromentObject({
     required this.id,
@@ -18,6 +20,7 @@ class EnviromentObject {
     this.difficulty,
     this.observation,
     this.itens,
+    this.imagens,
   });
 
   factory EnviromentObject.fromMap(Map<String, dynamic> map) {
@@ -33,6 +36,11 @@ class EnviromentObject {
         itens: map['itens'] != null 
             ? Map<String, bool>.from(map['itens'] as Map<dynamic, dynamic>) 
             : null,
+        imagens: map['imagens'] != null
+            ? (map['imagens'] as List<dynamic>).map((imgMap) {
+                return EnviromentImagens.fromJson(imgMap as Map<String, dynamic>);
+              }).toList()
+            : null,        
       );
     } catch (e) {
       Logger().e('Erro ao converter de Map para EnviromentObject: $e');
@@ -53,6 +61,7 @@ class EnviromentObject {
       'difficulty': difficulty,
       'observation': observation,
       'itens': itens,
+      'imagens': imagens?.map((img) => img.toJson()).toList(),
     };
   }
 
@@ -64,6 +73,7 @@ class EnviromentObject {
     String? difficulty,
     String? observation,
     Map<String, bool>? itens,
+    List<EnviromentImagens>? imagens,
   }) {
     return EnviromentObject(
       id: id ?? this.id,
@@ -73,6 +83,7 @@ class EnviromentObject {
       difficulty: difficulty ?? this.difficulty, // Corrigido
       observation: observation ?? this.observation, // Corrigido
       itens: itens ?? (this.itens != null ? Map<String, bool>.from(this.itens!) : null),
+      imagens: imagens ?? this.imagens,
     );
   }
 
@@ -88,6 +99,28 @@ class EnviromentObject {
     final newItens = Map<String, bool>.from(itens ?? {});
     newItens[item.name] = value;  // Corrigido para usar item.name
     return newItens;
+  }
+
+  // Helper methods para imagens
+  List<EnviromentImagens> addImagem(EnviromentImagens novaImagem) {
+    final listaAtual = List<EnviromentImagens>.from(imagens ?? []);
+    listaAtual.add(novaImagem);
+    return listaAtual;
+  }
+
+  List<EnviromentImagens> removeImagem(String imagemId) {
+    final listaAtual = List<EnviromentImagens>.from(imagens ?? []);
+    listaAtual.removeWhere((img) => img.id == imagemId);
+    return listaAtual;
+  }
+
+   List<EnviromentImagens> updateImagem(EnviromentImagens imagemAtualizada) {
+    final listaAtual = List<EnviromentImagens>.from(imagens ?? []);
+    final index = listaAtual.indexWhere((img) => img.id == imagemAtualizada.id);
+    if (index != -1) {
+      listaAtual[index] = imagemAtualizada;
+    }
+    return listaAtual;
   }
 
   // Helper methods para conversão de itens
@@ -113,7 +146,8 @@ class EnviromentObject {
   String toString() {
     return 'EnviromentObject(id: $id, nome: $name, descricao: $descroiption, '
            'metragem: $metragem, dificuldade: $difficulty, '
-           'observacao: $observation, itens: $itens)';
+           'observacao: $observation, itens: $itens,'
+           'imagens: ${imagens?.length ?? 0} imagens)';
   }
   
 }
