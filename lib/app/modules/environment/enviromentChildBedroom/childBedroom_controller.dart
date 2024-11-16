@@ -194,17 +194,17 @@ class ChildBedroomController extends DefautChangeNotifer {
       Logger().d('Imagem enviada com sucesso: ${imagem.id}');
 
       // Update current environment with new image
-      List<EnviromentImagens> currentImages =
-          List<EnviromentImagens>.from(_currentEnvironment?.imagens ?? []);
+      List<EnviromentImagens> currentImages = List<EnviromentImagens>.from(_currentEnvironment?.imagens ?? []);
       currentImages.add(imagem);
 
-      _currentEnvironment =
-          _currentEnvironment!.copyWith(imagens: currentImages);
+      _currentEnvironment = _currentEnvironment!.copyWith(imagens: currentImages);
 
       // Update environment in controller
       await _controller.updateEnvironment(_currentEnvironment!);
+      
 
       success();
+      
       return imagem;
     } catch (e) {
       Logger().e('Erro ao capturar ou enviar imagem: $e');
