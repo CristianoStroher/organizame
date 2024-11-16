@@ -24,20 +24,33 @@ class ChildBedroomController extends DefautChangeNotifer {
     _initializeEnvironment();
   }
 
-  void _initializeEnvironment() {
-    _controller.ensureCurrentVisit(); // Garantir que a visita está definida
-    _currentEnvironment = _controller.currentEnvironment; // Obter ambiente atual
-    if (_currentEnvironment == null) {
-      String newId = DateTime.now().millisecondsSinceEpoch.toString();
-      Logger().d('Criando novo ambiente com ID: $newId');
-      _currentEnvironment = EnviromentObject(
-        id: newId,
-        name: 'QUARTO CRIANÇA',
-        descroiption: '',
-      );
+  Future<void> _initializeEnvironment() async {
+    try {
+      await _controller.ensureCurrentVisit(); // Wait for this
+      _currentEnvironment = _controller.currentEnvironment;
+
+      if (_currentEnvironment == null) {
+        String newId = DateTime.now().millisecondsSinceEpoch.toString();
+        Logger().d('Criando novo ambiente com ID: $newId');
+
+        _currentEnvironment = EnviromentObject(
+          id: newId,
+          name: 'QUARTO CRIANÇA',
+          descroiption: '',
+          imagens: [],
+        );
+
+        // Save the new environment immediately
+        await _controller.addEnvironment(_currentEnvironment!);
+        Logger().d('Novo ambiente salvo com ID: $newId');
+      }
+
+      Logger().d('Ambiente inicializado com ID: ${_currentEnvironment?.id}');
+      notifyListeners();
+    } catch (e) {
+      Logger().e('Erro ao inicializar ambiente: $e');
+      rethrow;
     }
-    Logger().d('Ambiente inicializado com ID: ${_currentEnvironment?.id}');
-    notifyListeners();
   }
 
   String? _getCurrentVisitId() {
@@ -136,60 +149,70 @@ class ChildBedroomController extends DefautChangeNotifer {
     try {
       Logger().d('ChildBedroomController - Capturando imagem');
       showLoadingAndResetState();
-      _validateCurrentState();
 
+      // Ensure visit and environment are initialized
+      await _controller.ensureCurrentVisit();
       if (_currentEnvironment == null) {
-        _initializeEnvironment();
-        if (_currentEnvironment == null) {
-          throw Exception('Não foi possível inicializar o ambiente');
-        }
+        await _initializeEnvironment();
       }
 
-      final visitId =
-          _getCurrentVisitId(); // Já validado em _validateCurrentState
-      final environmentId =
-          _currentEnvironment?.id; // Já validado em _validateCurrentState
+      final visitId = _getCurrentVisitId();
+      final environmentId = _currentEnvironment?.id;
 
       if (visitId == null || environmentId == null) {
         throw Exception('VisitId ou EnvironmentId são inválidos');
       }
 
-      // Capturar imagem
+      // Verify environment exists in the controller
+      final existingEnvironment = _controller.getEnvironment(environmentId);
+      if (existingEnvironment == null) {
+        Logger().d('Ambiente não encontrado, tentando adicionar novamente');
+        await _controller.addEnvironment(_currentEnvironment!);
+      }
+
+      // Capture image
       final ImagePicker picker = ImagePicker();
       final XFile? foto = await picker.pickImage(
         source: ImageSource.camera,
         imageQuality: 85,
       );
 
-      // Verificar se a foto foi capturada
-      if (foto != null) {
-        Logger().d('ChildBedroomController - Imagem capturada: ${foto.path}');
-        final imagem = await _imagenService.uploadImage(
-          visitId,
-          environmentId,
-          File(foto.path),
-          description,
-        );
-
-        Logger().d(
-            'ChildBedroomController - Imagem enviada com sucesso: ${imagem.id}');
-
-        // Criar uma nova lista tipada corretamente
-        List<EnviromentImagens> currentImages =
-            List<EnviromentImagens>.from(_currentEnvironment?.imagens ?? []);
-        currentImages.add(imagem);
-
-        // Atualizar o ambiente com a nova lista tipada
-        _currentEnvironment =
-            _currentEnvironment!.copyWith(imagens: currentImages);
-        return imagem; // Retornar a imagem para uso posterior se necessário
-      } else {
+      if (foto == null) {
         throw Exception('Nenhuma imagem foi capturada');
       }
+
+      Logger().d('Imagem capturada: ${foto.path}');
+
+      // Upload image
+      final imagem = await _imagenService.uploadImage(
+        visitId,
+        environmentId,
+        File(foto.path),
+        description,
+      );
+
+      Logger().d('Imagem enviada com sucesso: ${imagem.id}');
+
+      // Update current environment with new image
+      List<EnviromentImagens> currentImages =
+          List<EnviromentImagens>.from(_currentEnvironment?.imagens ?? []);
+      currentImages.add(imagem);
+
+      _currentEnvironment =
+          _currentEnvironment!.copyWith(imagens: currentImages);
+
+      // Update environment in controller
+      await _controller.updateEnvironment(_currentEnvironment!);
+
+      success();
+      return imagem;
     } catch (e) {
       Logger().e('Erro ao capturar ou enviar imagem: $e');
-      // Pode adicionar uma notificação de erro aqui para o usuário
+      setError('Erro ao capturar ou enviar imagem: $e');
       return null;
+    } finally {
+      hideLoading();
+      notifyListeners();
     }
   }
 
@@ -323,6 +346,16 @@ class ChildBedroomController extends DefautChangeNotifer {
     } on core.FirebaseException catch (e) {
       print('Erro no upload: $e');
       return 'Erro ao fazer upload da imagem';
+    }
+  }
+
+  Future<bool> verifyEnvironmentExists(String environmentId) async {
+    try {
+      final environment = await _controller.getEnvironment(environmentId);
+      return environment != null;
+    } catch (e) {
+      Logger().e('Erro ao verificar existência do ambiente: $e');
+      return false;
     }
   }
 }

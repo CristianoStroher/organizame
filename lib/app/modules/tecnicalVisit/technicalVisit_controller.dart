@@ -312,4 +312,15 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
   List<TechnicalVisitObject> get technicalVisits => _technicalVisits;
 
+  EnviromentObject? getEnvironment(String environmentId) {
+  try {
+    return currentEnvironments.firstWhere(
+      (env) => env.id == environmentId,
+    );
+  } catch (e) {
+    Logger().d('Ambiente não encontrado: $environmentId');
+    return null;
+  }
+}
+
 }
