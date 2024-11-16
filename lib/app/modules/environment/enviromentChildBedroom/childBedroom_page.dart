@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
@@ -8,11 +11,15 @@ import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
+import 'package:organizame/app/models/enviroment_imagens.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
-
+import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository.dart';
+import 'package:organizame/app/services/enviromentImages/enviroment_images_service.dart';
+import 'package:organizame/app/services/enviromentImages/enviroment_images_service_impl.dart';
+import 'package:provider/provider.dart';
 
 class ChildBedroomPage extends StatefulWidget {
   final TechnicalVisitController controller;
@@ -30,22 +37,28 @@ class ChildBedroomPage extends StatefulWidget {
 
 class _ChildBedroomPageState extends State<ChildBedroomPage> {
   late final ChildBedroomController controller;
-  
+  late final EnviromentImagesService _imagesService;
+
   final _formkey = GlobalKey<FormState>();
   final _metragemController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _observationController = TextEditingController();
   final Map<EnviromentItensEnum, bool> _selectedItens = {};
-  
+
   String? _selectedDifficulty; // Armazena a dificuldade selecionada
 
   @override
   void initState() {
     super.initState();
+    _imagesService = EnviromentImagesServiceImpl(
+      repository: context.read<EnviromentImagesRepository>(),
+    );
     widget.controller.ensureCurrentVisit();
 
-    controller =
-        ChildBedroomController(controller: widget.controller);
+    controller = ChildBedroomController(
+      controller: widget.controller,
+      imagenService: _imagesService,
+    );
 
     // Inicializa os campos com os dados existentes
     if (widget.environment != null) {
@@ -56,20 +69,25 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   }
 
   void _initializeWithExistingEnvironment() {
-  _metragemController.text = widget.environment!.metragem ?? '';
-  _descriptionController.text = widget.environment!.descroiption ?? '';
-  _observationController.text = widget.environment!.observation ?? '';
-  _selectedDifficulty = widget.environment!.difficulty;
+    _metragemController.text = widget.environment!.metragem ?? '';
+    _descriptionController.text = widget.environment!.descroiption ?? '';
+    _observationController.text = widget.environment!.observation ?? '';
+    _selectedDifficulty = widget.environment!.difficulty;
 
-  final itens = widget.environment!.itens;
-  if (itens != null) {
-    _selectedItens[EnviromentItensEnum.roupas] = itens[EnviromentItensEnum.roupas.name] ?? false;
-    _selectedItens[EnviromentItensEnum.calcados] = itens[EnviromentItensEnum.calcados.name] ?? false;
-    _selectedItens[EnviromentItensEnum.brinquedos] = itens[EnviromentItensEnum.brinquedos.name] ?? false;
-    _selectedItens[EnviromentItensEnum.roupasDeCama] = itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
-    _selectedItens[EnviromentItensEnum.outros] = itens[EnviromentItensEnum.outros.name] ?? false;
+    final itens = widget.environment!.itens;
+    if (itens != null) {
+      _selectedItens[EnviromentItensEnum.roupas] =
+          itens[EnviromentItensEnum.roupas.name] ?? false;
+      _selectedItens[EnviromentItensEnum.calcados] =
+          itens[EnviromentItensEnum.calcados.name] ?? false;
+      _selectedItens[EnviromentItensEnum.brinquedos] =
+          itens[EnviromentItensEnum.brinquedos.name] ?? false;
+      _selectedItens[EnviromentItensEnum.roupasDeCama] =
+          itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
+      _selectedItens[EnviromentItensEnum.outros] =
+          itens[EnviromentItensEnum.outros.name] ?? false;
+    }
   }
-}
 
   void _initializeNewEnvironment() {
     _selectedItens[EnviromentItensEnum.roupas] = false;
@@ -94,11 +112,16 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 // Função para converter o mapa de itens para o formato correto
   Map<String, bool> convertSelectedItensToMap() {
     return {
-      EnviromentItensEnum.roupas.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.roupas]),
-      EnviromentItensEnum.calcados.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.calcados]),
-      EnviromentItensEnum.brinquedos.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.brinquedos]),
-      EnviromentItensEnum.roupasDeCama.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.roupasDeCama]),
-      EnviromentItensEnum.outros.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.outros]),
+      EnviromentItensEnum.roupas.name:
+          ensureBoolValue(_selectedItens[EnviromentItensEnum.roupas]),
+      EnviromentItensEnum.calcados.name:
+          ensureBoolValue(_selectedItens[EnviromentItensEnum.calcados]),
+      EnviromentItensEnum.brinquedos.name:
+          ensureBoolValue(_selectedItens[EnviromentItensEnum.brinquedos]),
+      EnviromentItensEnum.roupasDeCama.name:
+          ensureBoolValue(_selectedItens[EnviromentItensEnum.roupasDeCama]),
+      EnviromentItensEnum.outros.name:
+          ensureBoolValue(_selectedItens[EnviromentItensEnum.outros]),
     };
   }
 
@@ -123,7 +146,6 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         if (mounted) {
           Navigator.of(context).pop(true);
           await widget.controller.refreshVisits();
-          
         }
       } catch (e) {
         Logger().e('Erro ao salvar/atualizar ambiente: $e');
@@ -136,15 +158,21 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 
   Future<void> _updateExistingEnvironment() async {
     try {
-      Logger().d('Iniciando atualização do ambiente: ${widget.environment!.id}');
-      
-       // Criar um mapa intermediário com valores não nulos
-    final Map<String, bool> itensMap = {
-        EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
-        EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
-        EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-        EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-        EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
+      Logger()
+          .d('Iniciando atualização do ambiente: ${widget.environment!.id}');
+
+      // Criar um mapa intermediário com valores não nulos
+      final Map<String, bool> itensMap = {
+        EnviromentItensEnum.roupas.name:
+            _selectedItens[EnviromentItensEnum.roupas] ?? false,
+        EnviromentItensEnum.calcados.name:
+            _selectedItens[EnviromentItensEnum.calcados] ?? false,
+        EnviromentItensEnum.brinquedos.name:
+            _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+        EnviromentItensEnum.roupasDeCama.name:
+            _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
+        EnviromentItensEnum.outros.name:
+            _selectedItens[EnviromentItensEnum.outros] ?? false,
       };
 
       final updatedEnvironment = EnviromentObject(
@@ -174,39 +202,214 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   }
 
   Future<void> _createNewEnvironment() async {
-  try {
-    
-    // Convertendo o Map<EnviromentItensEnum, bool> para Map<String, bool>
-    final Map<String, bool> itensMap = {
-      EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
-      EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
-      EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-      EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-      EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
-    };
+    try {
+      // Convertendo o Map<EnviromentItensEnum, bool> para Map<String, bool>
+      final Map<String, bool> itensMap = {
+        EnviromentItensEnum.roupas.name:
+            _selectedItens[EnviromentItensEnum.roupas] ?? false,
+        EnviromentItensEnum.calcados.name:
+            _selectedItens[EnviromentItensEnum.calcados] ?? false,
+        EnviromentItensEnum.brinquedos.name:
+            _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+        EnviromentItensEnum.roupasDeCama.name:
+            _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
+        EnviromentItensEnum.outros.name:
+            _selectedItens[EnviromentItensEnum.outros] ?? false,
+      };
 
-       
-    await controller.saveEnvironment(
-      description: _descriptionController.text,
-      metragem: _metragemController.text,
-      difficulty: _selectedDifficulty,
-      observation: _observationController.text,
-      selectedItens: itensMap,  // Passando o mapa convertido
+      await controller.saveEnvironment(
+        description: _descriptionController.text,
+        metragem: _metragemController.text,
+        difficulty: _selectedDifficulty,
+        observation: _observationController.text,
+        selectedItens: itensMap,
+        // Passando o mapa convertido
+      );
+
+      if (mounted) {
+        Messages.of(context).showInfo('Ambiente criado com sucesso!');
+        Navigator.of(context).pop(true);
+      }
+    } catch (e) {
+      Logger().e('Erro ao criar novo ambiente: $e');
+      if (mounted) {
+        Messages.of(context).showError('Erro ao criar ambiente');
+      }
+      rethrow;
+    }
+  }
+
+  Widget _buildImageSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.environment?.imagens?.isNotEmpty ?? false)
+          Container(
+            height: 120,
+            margin: const EdgeInsets.only(bottom: 16),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.environment!.imagens!.length,
+              itemBuilder: (context, index) {
+                final imagem = widget.environment!.imagens![index];
+                return Stack(
+                  children: [
+                    Container(
+                      width: 120,
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          imagem.filePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(Icons.error),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            onPressed: () => _editImageDescription(imagem),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            onPressed: () => _deleteImage(imagem),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        OrganizameElevatedButton(
+          label: 'Adicionar Imagens',
+          onPressed: _captureImage,
+          textColor: const Color(0xFFFAFFC5),
+        ),
+      ],
+    );
+  } 
+
+  Future<void> _captureImage() async {
+    try {
+      final description = await _showDescriptionDialog();
+      if (description != null) {
+        final imagem = await controller.captureAndUploadImage(description);
+        if (imagem != null && mounted) {
+          setState(() {}); // Atualiza a UI
+          Messages.of(context).showInfo('Imagem adicionada com sucesso!');
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        Messages.of(context).showError('Erro ao capturar imagem');
+      }
+    }
+  }
+
+  Future<String?> _showDescriptionDialog() {
+    final descriptionController = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Descrição da Imagem'),
+        content: OrganizameTextformfield(
+          enabled: true,
+          label: 'Descrição',
+          controller: descriptionController,
+          validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (descriptionController.text.isNotEmpty) {
+                Navigator.pop(context, descriptionController.text);
+              }
+            },
+            child: const Text('Confirmar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _editImageDescription(EnviromentImagens imagem) async {
+    final newDescription = await _showDescriptionDialog();
+    if (newDescription != null && mounted) {
+      try {
+        await controller.updateImageDescription(imagem.id, newDescription);
+        setState(() {}); // Atualiza a UI
+        if (mounted) {
+          Messages.of(context).showInfo('Descrição atualizada com sucesso!');
+        }
+      } catch (e) {
+        if (mounted) {
+          Messages.of(context).showError('Erro ao atualizar descrição');
+        }
+      }
+    }
+  }
+
+  Future<void> _deleteImage(EnviromentImagens imagem) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar Exclusão'),
+        content: const Text('Deseja realmente excluir esta imagem?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Excluir'),
+          ),
+        ],
+      ),
     );
 
-    if (mounted) {
-      Messages.of(context).showInfo('Ambiente criado com sucesso!');
-      Navigator.of(context).pop(true);
+    if (confirm == true && mounted) {
+      try {
+        await controller.deleteImage(imagem);
+        setState(() {}); // Atualiza a UI
+        if (mounted) {
+          Messages.of(context).showInfo('Imagem excluída com sucesso!');
+        }
+      } catch (e) {
+        if (mounted) {
+          Messages.of(context).showError('Erro ao excluir imagem');
+        }
+      }
     }
-  } catch (e) {
-    Logger().e('Erro ao criar novo ambiente: $e');
-    if (mounted) {
-      Messages.of(context).showError('Erro ao criar ambiente');
-    }
-    rethrow;
   }
-}
-  
 
   @override
   Widget build(BuildContext context) {
@@ -294,19 +497,32 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                   ],
                   color: const Color(0xFFFAFFC5),
                   initialValues: {
-                    EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
-                    EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
-                    EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-                    EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-                    EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
+                    EnviromentItensEnum.roupas.name:
+                        _selectedItens[EnviromentItensEnum.roupas] ?? false,
+                    EnviromentItensEnum.calcados.name:
+                        _selectedItens[EnviromentItensEnum.calcados] ?? false,
+                    EnviromentItensEnum.brinquedos.name:
+                        _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+                    EnviromentItensEnum.roupasDeCama.name:
+                        _selectedItens[EnviromentItensEnum.roupasDeCama] ??
+                            false,
+                    EnviromentItensEnum.outros.name:
+                        _selectedItens[EnviromentItensEnum.outros] ?? false,
                   },
                   onChanged: (Map<String, bool> newValues) {
                     setState(() {
-                      _selectedItens[EnviromentItensEnum.roupas] = newValues[EnviromentItensEnum.roupas.name] ?? false;
-                      _selectedItens[EnviromentItensEnum.calcados] = newValues[EnviromentItensEnum.calcados.name] ?? false;
-                      _selectedItens[EnviromentItensEnum.brinquedos] = newValues[EnviromentItensEnum.brinquedos.name] ?? false;
-                      _selectedItens[EnviromentItensEnum.roupasDeCama] = newValues[EnviromentItensEnum.roupasDeCama.name] ?? false;
-                      _selectedItens[EnviromentItensEnum.outros] = newValues[EnviromentItensEnum.outros.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.roupas] =
+                          newValues[EnviromentItensEnum.roupas.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.calcados] =
+                          newValues[EnviromentItensEnum.calcados.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.brinquedos] =
+                          newValues[EnviromentItensEnum.brinquedos.name] ??
+                              false;
+                      _selectedItens[EnviromentItensEnum.roupasDeCama] =
+                          newValues[EnviromentItensEnum.roupasDeCama.name] ??
+                              false;
+                      _selectedItens[EnviromentItensEnum.outros] =
+                          newValues[EnviromentItensEnum.outros.name] ?? false;
                     });
                   },
                 ),
@@ -319,11 +535,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 const SizedBox(height: 20),
                 Text('IMAGENS', style: context.titleDefaut),
                 const SizedBox(height: 20),
-                OrganizameElevatedButton(
-                  label: 'Adicionar Imagens',
-                  onPressed: () {},
-                  textColor: const Color(0xFFFAFFC5),
-                ),
+                _buildImageSection(),
                 const SizedBox(height: 20),
                 OrganizameElevatedButton(
                   onPressed: _handleSaveOrUpdate,
@@ -338,5 +550,4 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       ),
     );
   }
-  
 }

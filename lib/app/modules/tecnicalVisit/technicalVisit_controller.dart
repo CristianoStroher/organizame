@@ -8,6 +8,8 @@ import 'package:organizame/app/services/technicalVisit/technical_visit_service.d
 import 'package:organizame/app/models/customer_object.dart';
 
 class TechnicalVisitController extends DefautChangeNotifer {
+  EnviromentObject? get currentEnvironment => _currentEnvironment;
+  EnviromentObject? _currentEnvironment;
   final TechnicalVisitService _service;
   List<TechnicalVisitObject> _technicalVisits = [];
   TechnicalVisitObject? currentVisit;

@@ -40,15 +40,15 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
   @override
   Future<List<TechnicalVisitObject>> getAllTechnicalVisits() async {
     try {
-      Logger().d('Iniciando busca de visitas técnicas');
+      // Logger().d('Iniciando busca de visitas técnicas');
       final querySnapshot = await _firestore.collection(_collection).get();
       final List<TechnicalVisitObject> visitas = [];
 
       for (var doc in querySnapshot.docs) {
         try {
           final dados = doc.data();
-          Logger().d('Dados do documento ${doc.id}:');
-          Logger().d('Dados completos: $dados');
+          // Logger().d('Dados do documento ${doc.id}:');
+          // Logger().d('Dados completos: $dados');
 
           final clienteMap = dados['customer'] as Map<String, dynamic>?;
           final dataTimestamp = dados['date'] as Timestamp?;
@@ -58,19 +58,19 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           final ambientesData =
               dados['environments'] ?? dados['enviroment'] ?? [];
 
-          Logger()
-              .d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
+          // Logger()
+          //     .d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
 
           // Converter ambientes
           List<EnviromentObject> ambientes = [];
           if (ambientesData is List) {
             for (var amb in ambientesData) {
               try {
-                Logger().d('Processando ambiente: $amb');
+                // Logger().d('Processando ambiente: $amb');
                 if (amb is Map<String, dynamic>) {
                   final ambiente = EnviromentObject.fromMap(amb);
                   ambientes.add(ambiente);
-                  Logger().d('Ambiente processado com sucesso: ${ambiente.id}');
+                  // Logger().d('Ambiente processado com sucesso: ${ambiente.id}');
                 }
               } catch (e) {
                 Logger().e('Erro ao converter ambiente: $e', error: e);
@@ -89,8 +89,7 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
               enviroment: ambientes,
             );
 
-            Logger().d(
-                'Visita ${doc.id} carregada com ${ambientes.length} ambientes');
+            // Logger().d('Visita ${doc.id} carregada com ${ambientes.length} ambientes');
             visitas.add(visita);
           }
         } catch (e) {

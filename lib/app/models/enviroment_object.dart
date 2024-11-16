@@ -25,7 +25,7 @@ class EnviromentObject {
 
   factory EnviromentObject.fromMap(Map<String, dynamic> map) {
     try {
-      Logger().d('Convertendo map para EnviromentObject: $map');
+      // Logger().d('Convertendo map para EnviromentObject: $map');
       return EnviromentObject(
         id: map['id'] as String,
         name: (map['name'] as String).toUpperCase(),

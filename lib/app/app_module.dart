@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:organizame/app/app_widget.dart';
 import 'package:organizame/app/core/Validators/login_validators.dart';
@@ -11,6 +12,8 @@ import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_r
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
+import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository.dart';
+import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository_impl.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository_impl.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
@@ -50,12 +53,13 @@ class AppModule extends StatelessWidget {
         Provider<TasksService>(create: (context) =>TasksServiceImpl(tasksRepository: context.read())), //injetando o serviço de tarefas
         Provider<TechnicalVisitRepository>(create: (context) => TechnicalVisitRepositoryImpl(firestore: context.read<FirebaseFirestore>())), //injetando o controller do módulo technicalVisit
         Provider<TechnicalVisitService>(create: (context) => TechnicalVisitServiceImpl(repository: context.read<TechnicalVisitRepository>(),),),
+        Provider<EnviromentImagesRepository>(create: (context) => EnviromentImagesRepositoryImpl()), //injetando o repositório de imagens
         ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,),//injetando o provider de autenticação
         ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
         ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
         ChangeNotifierProvider(create: (context) => TechnicalController(technicalVisitService: context.read())), //injetando o controller do módulo tecnical
         ChangeNotifierProvider(create: (context) => LivingRoomController(controller: context.read())), //injetando o controller do módulo livingRoom
-        ChangeNotifierProvider(create: (context) => ChildBedroomController(controller:context.read())), //injetando o controller do módulo childBedroom
+        ChangeNotifierProvider(create: (context) => ChildBedroomController(controller:context.read(),imagenService: context.read())), //injetando o controller do módulo childBedroom
         ChangeNotifierProvider(create: (context) => KitchenController(controller: context.read())), //injetando o controller do módulo kitchen
         ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read(),)), //injetando o controller do módulo customer
         ChangeNotifierProvider(create: (context) => TechnicalVisitController(service: context.read<TechnicalVisitService>())), //injetando o controller do módulo technicalVisit

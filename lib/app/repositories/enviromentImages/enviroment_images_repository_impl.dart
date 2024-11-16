@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/enviroment_imagens.dart';
 import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository.dart';
-
 
 class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
   final FirebaseFirestore _firestore;
@@ -17,77 +15,136 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
         _storage = FirebaseStorage.instance;
 
   @override
-    Future<EnviromentImagens> uploadImage(String visitId, String environmentId, File imageFile, String description) async {
+  Future<EnviromentImagens> uploadImage(String visitId, String environmentId,
+      File imageFile, String description) async {
     try {
-      Logger().d('Iniciando upload de imagem para ambiente $environmentId');
+      // 1. Nome único para o arquivo
+      final fileName = 'test_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-      // Criar nome único para o arquivo
-      final fileName = 'env_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final path = 'visits/$visitId/environments/$environmentId/$fileName';
-      
-      // Fazer upload para o Storage
-      final storageRef = _storage.ref().child(path);
-      await storageRef.putFile(imageFile);
-      final fileUrl = await storageRef.getDownloadURL();
+      // 2. Referência ao storage com o bucket correto
+      final storage = FirebaseStorage.instanceFor(
+          bucket: 'organizame-6649a.firebasestorage.app');
 
-      // Criar objeto da imagem
+      Logger().d('Usando bucket: ${storage.bucket}');
+
+      // 3. Criar referência para upload
+      final storageRef = storage.ref().child('images/$fileName');
+      Logger().d('Tentando upload para path: ${storageRef.fullPath}');
+
+      // 4. Upload com metadata
+      final metadata =
+          SettableMetadata(contentType: 'image/jpeg', customMetadata: {
+        'uploadedAt': DateTime.now().toIso8601String(),
+        'originalName': imageFile.path.split('/').last,
+      });
+
+      // 5. Fazer upload
+      final uploadTask = await storageRef.putFile(imageFile, metadata);
+      Logger().d('Upload concluído');
+
+      // 6. Obter URL
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+      Logger().d('URL obtida: $downloadUrl');
+
+      // 7. Criar objeto
       final imagem = EnviromentImagens(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        filePath: fileUrl,
+        filePath: downloadUrl,
         creationDate: DateTime.now(),
         dateTime: DateTime.now(),
         description: description,
       );
 
-      // Atualizar documento no Firestore
+      // 8. Salvar no Firestore
       await _addImageToEnvironment(visitId, environmentId, imagem);
-
-      Logger().d('Imagem enviada com sucesso: ${imagem.id}');
       return imagem;
+    } on FirebaseException catch (e) {
+      Logger().e('Firebase error code: ${e.code}');
+      Logger().e('Firebase error message: ${e.message}');
+      Logger().e('Path tentado: ${e.stackTrace}');
+      throw Exception('Erro no upload: ${e.message}');
     } catch (e) {
-      Logger().e('Erro no upload da imagem: $e');
-      rethrow;
+      Logger().e('Erro inesperado: $e');
+      throw Exception('Erro no upload: $e');
     }
   }
 
-  Future<void> _addImageToEnvironment(String visitId, String environmentId, EnviromentImagens imagem) async {
+  Future<void> _addImageToEnvironment(
+      String visitId, String environmentId, EnviromentImagens imagem) async {
     try {
-      final docRef = _firestore.collection(_collection).doc(visitId);
+      Logger().d('Adicionando imagem ao ambiente...');
+      Logger().d('Visit ID: $visitId');
+      Logger().d('Environment ID: $environmentId');
+      Logger().d('Imagem ID: ${imagem.id}');
+
+      final docRef = _firestore.collection('technical_visits').doc(visitId);
       final docSnap = await docRef.get();
 
       if (!docSnap.exists) {
+        Logger().e('Documento não encontrado: $visitId');
         throw Exception('Visita não encontrada');
       }
 
-      final dados = docSnap.data()!;
-      final environments = dados['environments'] as List<dynamic>;
-      
-      final environmentIndex = environments.indexWhere(
-        (env) => env['id'].toString() == environmentId
-      );
+      // Log dos dados atuais
+      final data = docSnap.data()!;
+      Logger().d('Documento atual: ${data.toString()}');
 
-      if (environmentIndex == -1) {
+      // Verificar se existe o array environments
+      if (!data.containsKey('environments')) {
+        Logger().e('Campo environments não encontrado');
+        throw Exception('Estrutura do documento inválida');
+      }
+
+      final environments =
+          List<Map<String, dynamic>>.from(data['environments'] ?? []);
+      Logger().d('Ambientes encontrados: ${environments.length}');
+
+      // Log de todos os IDs de ambiente
+      Logger()
+          .d('IDs dos ambientes: ${environments.map((e) => e['id']).toList()}');
+
+      // Encontrar o ambiente correto
+      final envIndex = environments
+          .indexWhere((env) => env['id'].toString() == environmentId);
+      Logger().d('Índice do ambiente encontrado: $envIndex');
+
+      if (envIndex == -1) {
+        Logger().e('Ambiente $environmentId não encontrado na lista');
         throw Exception('Ambiente não encontrado');
       }
 
-      // Adicionar imagem ao ambiente
-      List<Map<String, dynamic>> imagens = [];
-      if (environments[environmentIndex]['imagens'] != null) {
-        imagens = List<Map<String, dynamic>>.from(environments[environmentIndex]['imagens']);
+      // Converter imagem para Map
+      final imageMap = {
+        'id': imagem.id,
+        'filePath': imagem.filePath,
+        'creationDate': imagem.creationDate.toIso8601String(),
+        'dateTime': imagem.dateTime.toIso8601String(),
+        'description': imagem.description,
+      };
+
+      // Inicializar array de imagens se necessário
+      if (!environments[envIndex].containsKey('images')) {
+        environments[envIndex]['images'] = [];
       }
-      
-      imagens.add(imagem.toJson());
-      environments[environmentIndex]['imagens'] = imagens;
+
+      // Adicionar imagem
+      environments[envIndex]['images'].add(imageMap);
+
+      // Log da atualização
+      Logger().d('Atualizando documento com: ${environments[envIndex]}');
 
       // Atualizar documento
       await docRef.update({'environments': environments});
+
+      Logger().d('Imagem adicionada com sucesso ao ambiente');
     } catch (e) {
       Logger().e('Erro ao adicionar imagem ao ambiente: $e');
       rethrow;
     }
   }
 
-  Future<void> deleteImage(String visitId, String environmentId, EnviromentImagens imagem) async {
+  Future<void> deleteImage(
+      String visitId, String environmentId, EnviromentImagens imagem) async {
     try {
       Logger().d('Iniciando exclusão de imagem ${imagem.id}');
 
@@ -107,7 +164,8 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
     }
   }
 
-  Future<void> _removeImageFromEnvironment(String visitId, String environmentId, String imageId) async {
+  Future<void> _removeImageFromEnvironment(
+      String visitId, String environmentId, String imageId) async {
     try {
       final docRef = _firestore.collection(_collection).doc(visitId);
       final docSnap = await docRef.get();
@@ -118,10 +176,9 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
 
       final dados = docSnap.data()!;
       final environments = dados['environments'] as List<dynamic>;
-      
-      final environmentIndex = environments.indexWhere(
-        (env) => env['id'].toString() == environmentId
-      );
+
+      final environmentIndex = environments
+          .indexWhere((env) => env['id'].toString() == environmentId);
 
       if (environmentIndex == -1) {
         throw Exception('Ambiente não encontrado');
@@ -130,8 +187,7 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
       // Remover imagem do ambiente
       if (environments[environmentIndex]['imagens'] != null) {
         List<Map<String, dynamic>> imagens = List<Map<String, dynamic>>.from(
-          environments[environmentIndex]['imagens']
-        );
+            environments[environmentIndex]['imagens']);
         imagens.removeWhere((img) => img['id'] == imageId);
         environments[environmentIndex]['imagens'] = imagens;
 
@@ -144,12 +200,8 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
     }
   }
 
-  Future<void> updateImageDescription(
-    String visitId,
-    String environmentId,
-    String imageId,
-    String newDescription
-  ) async {
+  Future<void> updateImageDescription(String visitId, String environmentId,
+      String imageId, String newDescription) async {
     try {
       final docRef = _firestore.collection(_collection).doc(visitId);
       final docSnap = await docRef.get();
@@ -160,10 +212,9 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
 
       final dados = docSnap.data()!;
       final environments = dados['environments'] as List<dynamic>;
-      
-      final environmentIndex = environments.indexWhere(
-        (env) => env['id'].toString() == environmentId
-      );
+
+      final environmentIndex = environments
+          .indexWhere((env) => env['id'].toString() == environmentId);
 
       if (environmentIndex == -1) {
         throw Exception('Ambiente não encontrado');
@@ -172,9 +223,8 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
       // Atualizar descrição da imagem
       if (environments[environmentIndex]['imagens'] != null) {
         List<Map<String, dynamic>> imagens = List<Map<String, dynamic>>.from(
-          environments[environmentIndex]['imagens']
-        );
-        
+            environments[environmentIndex]['imagens']);
+
         final imageIndex = imagens.indexWhere((img) => img['id'] == imageId);
         if (imageIndex != -1) {
           imagens[imageIndex]['description'] = newDescription;
@@ -189,7 +239,4 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
       rethrow;
     }
   }
-
-
-
 }
