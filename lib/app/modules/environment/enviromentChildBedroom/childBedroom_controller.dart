@@ -155,6 +155,7 @@ class ChildBedroomController extends DefautChangeNotifer {
       await _controller.ensureCurrentVisit();
       if (_currentEnvironment == null) {
         await _initializeEnvironment();
+        throw Exception('Ambiente não inicializado');
       }
 
       final visitId = _getCurrentVisitId();

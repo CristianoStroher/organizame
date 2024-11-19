@@ -384,6 +384,7 @@ String _formatDate(DateTime? date) {
 
   Future<void> _captureImage() async {
     try {
+      Logger().d('Ambiente atual antes de capturar: ${widget.environment?.id}');
       final description = await _showDescriptionDialog();
       if (description != null) {
         final imagem = await controller.captureAndUploadImage(description);
