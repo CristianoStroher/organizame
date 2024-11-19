@@ -37,6 +37,7 @@ class ChildBedroomController extends DefautChangeNotifer {
           id: newId,
           name: 'QUARTO CRIANÇA',
           descroiption: '',
+          itens: {},
           imagens: [],
         );
 
