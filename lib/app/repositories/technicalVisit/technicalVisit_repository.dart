@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/models/enviroment_imagens.dart';
+import 'package:organizame/app/models/imagens_object.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:organizame/app/models/enviroment_imagens.dart';
+import 'package:organizame/app/models/imagens_object.dart';
 import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository.dart';
 
 import './enviroment_images_service.dart';
@@ -12,7 +12,7 @@ class EnviromentImagesServiceImpl extends EnviromentImagesService {
     required EnviromentImagesRepository repository,
   }) : _repository = repository;
 
-  Future<EnviromentImagens> uploadImage(
+  Future<ImagensObject> uploadImage(
     String visitId,
     String environmentId,
     File imageFile,
@@ -29,7 +29,7 @@ class EnviromentImagesServiceImpl extends EnviromentImagesService {
   Future<void> deleteImage(
     String visitId,
     String environmentId,
-    EnviromentImagens imagem
+    ImagensObject imagem
   ) async {
     await _repository.deleteImage(visitId, environmentId, imagem);
   }

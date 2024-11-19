@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
-import 'package:organizame/app/models/enviroment_imagens.dart';
+import 'package:organizame/app/models/imagens_object.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:organizame/app/services/enviromentImages/enviroment_images_service.dart';
@@ -145,7 +145,7 @@ class ChildBedroomController extends DefautChangeNotifer {
     }
   }
 
-  Future<EnviromentImagens?> captureAndUploadImage(String description) async {
+  Future<ImagensObject?> captureAndUploadImage(String description) async {
     try {
       Logger().d('ChildBedroomController - Capturando imagem');
       showLoadingAndResetState();
@@ -194,7 +194,7 @@ class ChildBedroomController extends DefautChangeNotifer {
       Logger().d('Imagem enviada com sucesso: ${imagem.id}');
 
       // Update current environment with new image
-      List<EnviromentImagens> currentImages = List<EnviromentImagens>.from(_currentEnvironment?.imagens ?? []);
+      List<ImagensObject> currentImages = List<ImagensObject>.from(_currentEnvironment?.imagens ?? []);
       currentImages.add(imagem);
 
       _currentEnvironment = _currentEnvironment!.copyWith(imagens: currentImages);
@@ -216,7 +216,7 @@ class ChildBedroomController extends DefautChangeNotifer {
     }
   }
 
-  Future<void> deleteImage(EnviromentImagens imagem) async {
+  Future<void> deleteImage(ImagensObject imagem) async {
     try {
       showLoadingAndResetState();
       _validateCurrentState();
@@ -231,8 +231,8 @@ class ChildBedroomController extends DefautChangeNotifer {
       );
 
       // Criar uma nova lista tipada corretamente
-      List<EnviromentImagens> currentImages =
-          List<EnviromentImagens>.from(_currentEnvironment?.imagens ?? []);
+      List<ImagensObject> currentImages =
+          List<ImagensObject>.from(_currentEnvironment?.imagens ?? []);
       currentImages.removeWhere((img) => img.id == imagem.id);
 
       // Atualizar o ambiente com a nova lista tipada
@@ -270,13 +270,13 @@ class ChildBedroomController extends DefautChangeNotifer {
       );
 
       // Criar uma nova lista tipada corretamente
-      List<EnviromentImagens> currentImages =
-          List<EnviromentImagens>.from(_currentEnvironment?.imagens ?? []);
+      List<ImagensObject> currentImages =
+          List<ImagensObject>.from(_currentEnvironment?.imagens ?? []);
 
       // Atualizar a descrição da imagem
       final updatedImages = currentImages.map((img) {
         if (img.id == imageId) {
-          return EnviromentImagens(
+          return ImagensObject(
             id: img.id,
             filePath: img.filePath,
             creationDate: img.creationDate,

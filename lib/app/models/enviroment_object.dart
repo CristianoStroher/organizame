@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:organizame/app/models/enviroment_imagens.dart';
+import 'package:organizame/app/models/imagens_object.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
 
 class EnviromentObject {
@@ -10,7 +10,7 @@ class EnviromentObject {
   final String? difficulty;
   final String? observation;
   final Map<String, bool>? itens;
-  final List<EnviromentImagens>? imagens;
+  final List<ImagensObject>? imagens;
 
   EnviromentObject({
     required this.id,
@@ -38,7 +38,7 @@ class EnviromentObject {
             : null,
         imagens: map['imagens'] != null
             ? (map['imagens'] as List<dynamic>).map((imgMap) {
-                return EnviromentImagens.fromJson(imgMap as Map<String, dynamic>);
+                return ImagensObject.fromJson(imgMap as Map<String, dynamic>);
               }).toList()
             : null,        
       );
@@ -73,7 +73,7 @@ class EnviromentObject {
     String? difficulty,
     String? observation,
     Map<String, bool>? itens,
-    List<EnviromentImagens>? imagens,
+    List<ImagensObject>? imagens,
   }) {
     return EnviromentObject(
       id: id ?? this.id,
@@ -102,20 +102,20 @@ class EnviromentObject {
   }
 
   // Helper methods para imagens
-  List<EnviromentImagens> addImagem(EnviromentImagens novaImagem) {
-    final listaAtual = List<EnviromentImagens>.from(imagens ?? []);
+  List<ImagensObject> addImagem(ImagensObject novaImagem) {
+    final listaAtual = List<ImagensObject>.from(imagens ?? []);
     listaAtual.add(novaImagem);
     return listaAtual;
   }
 
-  List<EnviromentImagens> removeImagem(String imagemId) {
-    final listaAtual = List<EnviromentImagens>.from(imagens ?? []);
+  List<ImagensObject> removeImagem(String imagemId) {
+    final listaAtual = List<ImagensObject>.from(imagens ?? []);
     listaAtual.removeWhere((img) => img.id == imagemId);
     return listaAtual;
   }
 
-   List<EnviromentImagens> updateImagem(EnviromentImagens imagemAtualizada) {
-    final listaAtual = List<EnviromentImagens>.from(imagens ?? []);
+   List<ImagensObject> updateImagem(ImagensObject imagemAtualizada) {
+    final listaAtual = List<ImagensObject>.from(imagens ?? []);
     final index = listaAtual.indexWhere((img) => img.id == imagemAtualizada.id);
     if (index != -1) {
       listaAtual[index] = imagemAtualizada;

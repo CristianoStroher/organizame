@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
-import 'package:organizame/app/models/enviroment_imagens.dart';
+import 'package:organizame/app/models/imagens_object.dart';
 import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository.dart';
 
 class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
@@ -15,7 +15,7 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
         _storage = FirebaseStorage.instance;
 
   @override
-  Future<EnviromentImagens> uploadImage(String visitId, String environmentId,
+  Future<ImagensObject> uploadImage(String visitId, String environmentId,
       File imageFile, String description) async {
     try {
       // 1. Nome único para o arquivo
@@ -47,7 +47,7 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
       Logger().d('URL obtida: $downloadUrl');
 
       // 7. Criar objeto
-      final imagem = EnviromentImagens(
+      final imagem = ImagensObject(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         filePath: downloadUrl,
         creationDate: DateTime.now(),
@@ -70,7 +70,7 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
   }
 
   Future<void> _addImageToEnvironment(
-      String visitId, String environmentId, EnviromentImagens imagem) async {
+      String visitId, String environmentId, ImagensObject imagem) async {
     try {
       Logger().d('Adicionando imagem ao ambiente...');
       Logger().d('Visit ID: $visitId');
@@ -144,7 +144,7 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
   }
 
   Future<void> deleteImage(
-      String visitId, String environmentId, EnviromentImagens imagem) async {
+      String visitId, String environmentId, ImagensObject imagem) async {
     try {
       Logger().d('Iniciando exclusão de imagem ${imagem.id}');
 

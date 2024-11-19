@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:organizame/app/models/enviroment_imagens.dart';
+import 'package:organizame/app/models/imagens_object.dart';
 
 abstract class EnviromentImagesService {
 
-  Future<EnviromentImagens> uploadImage(String visitId, String environmentId, File imageFile, String description);
-  Future<void> deleteImage(String visitId, String environmentId, EnviromentImagens imagem);
+  Future<ImagensObject> uploadImage(String visitId, String environmentId, File imageFile, String description);
+  Future<void> deleteImage(String visitId, String environmentId, ImagensObject imagem);
   Future<void> updateImageDescription(String visitId, String environmentId, String imageId, String newDescription);
 
 

@@ -1,13 +1,13 @@
 import 'dart:io';
 
-class EnviromentImagens {
+class ImagensObject {
   final String id;
   final String filePath;
   final DateTime creationDate;
   final DateTime dateTime;
   final String? description;
   
-  EnviromentImagens({
+  ImagensObject({
     required this.id,
     required this.filePath,
     required this.creationDate,
@@ -16,8 +16,8 @@ class EnviromentImagens {
   });
 
   // Construtor para criar a partir de um Map (JSON)
-  factory EnviromentImagens.fromJson(Map<String, dynamic> json) {
-    return EnviromentImagens(
+  factory ImagensObject.fromJson(Map<String, dynamic> json) {
+    return ImagensObject(
       id: json['id'] as String,
       filePath: json['filePath'] as String,
       creationDate: DateTime.parse(json['creationDate'] as String),
@@ -38,14 +38,14 @@ class EnviromentImagens {
   }
 
   // Método para criar uma cópia do objeto com algumas alterações
-  EnviromentImagens copyWith({
+  ImagensObject copyWith({
     String? id,
     String? filePath,
     DateTime? creationDate,
     DateTime? dateTime,
     String? description,
   }) {
-    return EnviromentImagens(
+    return ImagensObject(
       id: id ?? this.id,
       filePath: filePath ?? this.filePath,
       creationDate: creationDate ?? this.creationDate,
@@ -65,7 +65,7 @@ class EnviromentImagens {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is EnviromentImagens &&
+    return other is ImagensObject &&
       other.id == id &&
       other.filePath == filePath &&
       other.creationDate == creationDate &&
@@ -84,12 +84,12 @@ class EnviromentImagens {
   }
 
   // Método para criar uma instância com valores padrão
-  factory EnviromentImagens.create({
+  factory ImagensObject.create({
     required String filePath,
     String? description,
   }) {
     final now = DateTime.now();
-    return EnviromentImagens(
+    return ImagensObject(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       filePath: filePath,
       creationDate: now,

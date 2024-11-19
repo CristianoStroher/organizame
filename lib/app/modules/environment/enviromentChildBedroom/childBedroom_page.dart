@@ -11,7 +11,7 @@ import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
-import 'package:organizame/app/models/enviroment_imagens.dart';
+import 'package:organizame/app/models/imagens_object.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_controller.dart';
@@ -69,25 +69,23 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   }
 
   void _initializeWithExistingEnvironment() {
+  if (widget.environment != null) {
+    Logger().d("Ambiente recebido: ${widget.environment}");
     _metragemController.text = widget.environment!.metragem ?? '';
     _descriptionController.text = widget.environment!.descroiption ?? '';
     _observationController.text = widget.environment!.observation ?? '';
     _selectedDifficulty = widget.environment!.difficulty;
 
-    final itens = widget.environment!.itens;
-    if (itens != null) {
-      _selectedItens[EnviromentItensEnum.roupas] =
-          itens[EnviromentItensEnum.roupas.name] ?? false;
-      _selectedItens[EnviromentItensEnum.calcados] =
-          itens[EnviromentItensEnum.calcados.name] ?? false;
-      _selectedItens[EnviromentItensEnum.brinquedos] =
-          itens[EnviromentItensEnum.brinquedos.name] ?? false;
-      _selectedItens[EnviromentItensEnum.roupasDeCama] =
-          itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
-      _selectedItens[EnviromentItensEnum.outros] =
-          itens[EnviromentItensEnum.outros.name] ?? false;
-    }
+    final itens = widget.environment!.itens ?? {};
+    Logger().d("Itens do ambiente: $itens");
+
+    _selectedItens[EnviromentItensEnum.roupas] = itens[EnviromentItensEnum.roupas.name] ?? false;
+    _selectedItens[EnviromentItensEnum.calcados] = itens[EnviromentItensEnum.calcados.name] ?? false;
+    _selectedItens[EnviromentItensEnum.brinquedos] = itens[EnviromentItensEnum.brinquedos.name] ?? false;
+    _selectedItens[EnviromentItensEnum.roupasDeCama] = itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
+    _selectedItens[EnviromentItensEnum.outros] = itens[EnviromentItensEnum.outros.name] ?? false;
   }
+}
 
   void _initializeNewEnvironment() {
     _selectedItens[EnviromentItensEnum.roupas] = false;
@@ -222,8 +220,8 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         metragem: _metragemController.text,
         difficulty: _selectedDifficulty,
         observation: _observationController.text,
-        selectedItens: itensMap,
-        // Passando o mapa convertido
+        selectedItens: convertSelectedItensToMap(),
+        
       );
 
       if (mounted) {
@@ -359,7 +357,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     );
   }
 
-  Future<void> _editImageDescription(EnviromentImagens imagem) async {
+  Future<void> _editImageDescription(ImagensObject imagem) async {
     final newDescription = await _showDescriptionDialog();
     if (newDescription != null && mounted) {
       try {
@@ -376,7 +374,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
-  Future<void> _deleteImage(EnviromentImagens imagem) async {
+  Future<void> _deleteImage(ImagensObject imagem) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
