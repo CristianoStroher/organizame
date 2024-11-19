@@ -148,7 +148,7 @@ class ChildBedroomController extends DefautChangeNotifer {
 
   Future<ImagensObject?> captureAndUploadImage(String description) async {
     try {
-      Logger().d('ChildBedroomController - Capturando imagem');
+      Logger().d('Debug - Environment antes: ${_currentEnvironment?.id}');
       showLoadingAndResetState();
 
       // Ensure visit and environment are initialized

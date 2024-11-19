@@ -275,6 +275,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
   Future<void> updateEnvironment(EnviromentObject environment) async {
     try {
+      Logger().d('Atualizando ambiente: ${environment.id}');
       showLoadingAndResetState();
       if (currentVisit?.id == null) {
         throw Exception('Nenhuma visita selecionada');
