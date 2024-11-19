@@ -238,77 +238,149 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   }
 
   Widget _buildImageSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (widget.environment?.imagens?.isNotEmpty ?? false)
-          Container(
-            height: 120,
-            margin: const EdgeInsets.only(bottom: 16),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.environment!.imagens!.length,
-              itemBuilder: (context, index) {
-                final imagem = widget.environment!.imagens![index];
-                return Stack(
-                  children: [
-                    Container(
-                      width: 120,
-                      margin: const EdgeInsets.only(right: 8),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (widget.environment?.imagens?.isNotEmpty ?? false)
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.environment!.imagens!.length,
+          itemBuilder: (context, index) {
+            final imagem = widget.environment!.imagens![index];
+            return Card(
+              margin: const EdgeInsets.only(bottom: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      // Imagem
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
                         child: Image.network(
                           imagem.filePath,
+                          height: 200,
+                          width: double.infinity,
                           fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              height: 200,
+                              width: double.infinity,
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: context.primaryColor,
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              ),
+                            );
+                          },
                           errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(Icons.error),
+                            return Container(
+                              height: 200,
+                              width: double.infinity,
+                              color: Colors.grey[200],
+                              child: const Icon(Icons.error, color: Colors.red),
                             );
                           },
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                              size: 20,
+                      // Botões de ação
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                onPressed: () => _editImageDescription(imagem),
+                              ),
                             ),
-                            onPressed: () => _editImageDescription(imagem),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                              size: 20,
+                            const SizedBox(width: 8),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                onPressed: () => _deleteImage(imagem),
+                              ),
                             ),
-                            onPressed: () => _deleteImage(imagem),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                    ],
+                  ),
+                  // Informações da imagem
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (imagem.description?.isNotEmpty == true) ...[
+                          Text(
+                            'Descrição:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: context.primaryColor,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            imagem.description!,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                        Text(
+                          'Data: ${_formatDate(imagem.dateTime)}',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              },
-            ),
-          ),
-        OrganizameElevatedButton(
-          label: 'Adicionar Imagens',
-          onPressed: _captureImage,
-          textColor: const Color(0xFFFAFFC5),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
-      ],
-    );
-  } 
+      const SizedBox(height: 16),
+      OrganizameElevatedButton(
+        label: 'Adicionar Imagens',
+        onPressed: _captureImage,
+        textColor: const Color(0xFFFAFFC5),
+      ),
+    ],
+  );
+}
+
+String _formatDate(DateTime? date) {
+  if (date == null) return 'Data não disponível';
+  return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+}
 
   Future<void> _captureImage() async {
     try {
