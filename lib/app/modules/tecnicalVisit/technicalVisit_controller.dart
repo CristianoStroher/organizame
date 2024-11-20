@@ -138,20 +138,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       notifyListeners();
     }
   }
-
-  // Adicione um método para inicialização
-  Future<void> initialize() async {
-    try {
-      showLoadingAndResetState();
-      await refreshVisits();
-    } catch (e) {
-      Logger().e('Erro na inicialização: $e');
-      setError('Erro ao carregar visitas');
-    } finally {
-      hideLoading();
-    }
-  }
-
+  
   // Método para carregar uma visita existente
   void loadExistingVisit(TechnicalVisitObject visit) {
     currentVisit = visit;

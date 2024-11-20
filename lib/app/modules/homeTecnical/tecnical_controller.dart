@@ -88,6 +88,7 @@ class TechnicalController extends DefautChangeNotifer {
       _technicalVisits.removeWhere((visit) => visit.id == technicalVisit.id);
 
       success();
+      refreshVisits();
     } catch (e) {
       setError('Erro ao deletar visita técnica: $e');
     } finally {
