@@ -189,6 +189,14 @@ class TechnicalController extends DefautChangeNotifer {
       showLoadingAndResetState();
       Logger().i('Atualizando lista de visitas');
       final newVisits = await _service.getAllTechnicalVisits();
+
+      // Ordena a lista por data/hora
+      newVisits.sort((a, b) {
+        final dateTimeA = DateTime(a.date.year, a.date.month, a.date.day, a.time.hour, a.time.minute);
+        final dateTimeB = DateTime(b.date.year, b.date.month, b.date.day, b.time.hour, b.time.minute);
+        return dateTimeB.compareTo(dateTimeA);
+      });
+
       _technicalVisits = newVisits;
       _filteredVisits = List.from(newVisits);
       Logger().d('Lista atualizada: ${_technicalVisits.length} visitas');
