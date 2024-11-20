@@ -4,19 +4,17 @@ import 'package:organizame/app/modules/environment/enviromentChildBedroom/childB
 import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_page.dart';
 import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_room_page.dart';
 import 'package:organizame/app/modules/environment/enviroment_page.dart';
-import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
-import 'package:organizame/app/modules/tecnicalVisit/customer/customer_create_page.dart';
-import 'package:organizame/app/modules/homeTecnical/tecnical_page.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
 import 'package:organizame/app/repositories/technicalVisit/technical_visit_repository_impl.dart';
+import 'package:organizame/app/services/enviroment/enviroment_service.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service_impl.dart';
 import 'package:provider/provider.dart';
 
-class TecnicalModule extends OrganizameModule {
+class EnviromentModule extends OrganizameModule {
 
-  TecnicalModule()
+  EnviromentModule()
       : super(
           bindings: [
             Provider<TechnicalVisitRepository>(
@@ -34,6 +32,7 @@ class TecnicalModule extends OrganizameModule {
             ChangeNotifierProvider<TechnicalVisitController>(
               create: (context) => TechnicalVisitController(
                 service: context.read<TechnicalVisitService>(),
+                enviromentService: context.read<EnviromentService>(),
               ),
             ),
            

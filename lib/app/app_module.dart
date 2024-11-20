@@ -12,6 +12,8 @@ import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_r
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
+import 'package:organizame/app/repositories/enviroment/enviroment_repository.dart';
+import 'package:organizame/app/repositories/enviroment/enviroment_repository_impl.dart';
 import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository.dart';
 import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository_impl.dart';
 import 'package:organizame/app/repositories/tasks/tasks_repository.dart';
@@ -20,6 +22,8 @@ import 'package:organizame/app/repositories/technicalVisit/technicalVisit_reposi
 import 'package:organizame/app/repositories/technicalVisit/technical_visit_repository_impl.dart';
 import 'package:organizame/app/repositories/user/user_repository.dart';
 import 'package:organizame/app/repositories/user/user_repository_impl.dart';
+import 'package:organizame/app/services/enviroment/enviroment_service.dart';
+import 'package:organizame/app/services/enviroment/enviroment_service_impl.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 import 'package:organizame/app/services/tasks/tasks_service_impl.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
@@ -46,6 +50,7 @@ class AppModule extends StatelessWidget {
         Provider<LoginValidators>(create: (_) => LoginValidators.instance), //injetando a instância da classe de validação de login
         Provider(create: (_) =>FirebaseAuth.instance), //injetando a instância do firebase)
         Provider(create: (_) => FirebaseFirestore.instance), //injetando a instância do firestore
+        Provider(create: (_) => FirebaseStorage.instance), //injetando a instância do firestore
         Provider(create: (_) => SqliteConnectionFactory(), lazy: false,), //injetando a instância do sqlite
         Provider<UserRepository>(create: (context) => UserRepositoryImpl(firebaseAuth: context.read(),firestore: context.read())), //injetando o repositório do usuário //adicionado firestore
         Provider<UserService>(create: (context) => UserServiceImpl(userRepository: context.read(),loginValidators: context.read())), //injetando o serviço do usuário
@@ -54,6 +59,8 @@ class AppModule extends StatelessWidget {
         Provider<TechnicalVisitRepository>(create: (context) => TechnicalVisitRepositoryImpl(firestore: context.read<FirebaseFirestore>())), //injetando o controller do módulo technicalVisit
         Provider<TechnicalVisitService>(create: (context) => TechnicalVisitServiceImpl(repository: context.read<TechnicalVisitRepository>(),),),
         Provider<EnviromentImagesRepository>(create: (context) => EnviromentImagesRepositoryImpl()), //injetando o repositório de imagens
+        Provider<EnviromentService>(create: (context) => EnviromentServiceImpl(repository: context.read<EnviromentRepository>()),), //injetando o serviço de ambiente
+        Provider<EnviromentRepository>(create: (context) => EnviromentRepositoryImpl(firestore: context.read()),), //injetando o repositório de ambiente
         ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,),//injetando o provider de autenticação
         ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
         ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
@@ -62,7 +69,7 @@ class AppModule extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ChildBedroomController(controller:context.read(),imagenService: context.read())), //injetando o controller do módulo childBedroom
         ChangeNotifierProvider(create: (context) => KitchenController(controller: context.read())), //injetando o controller do módulo kitchen
         ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read(),)), //injetando o controller do módulo customer
-        ChangeNotifierProvider(create: (context) => TechnicalVisitController(service: context.read<TechnicalVisitService>())), //injetando o controller do módulo technicalVisit
+        ChangeNotifierProvider(create: (context) => TechnicalVisitController(service: context.read<TechnicalVisitService>(), enviromentService: context.read<EnviromentService>(),)), //injetando o controller do módulo technicalVisit
   
       ],      child: const AppWidget(),
     );

@@ -4,6 +4,7 @@ import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_r
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:organizame/app/repositories/technicalVisit/technicalVisit_repository.dart';
 import 'package:organizame/app/repositories/technicalVisit/technical_visit_repository_impl.dart';
+import 'package:organizame/app/services/enviroment/enviroment_service.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service_impl.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class LivingRoomModule extends OrganizameModule {
             ChangeNotifierProvider<TechnicalVisitController>(
               create: (context) => TechnicalVisitController(
                 service: context.read<TechnicalVisitService>(),
+                enviromentService: context.read<EnviromentService>(),
               ),
             ),
            

@@ -4,6 +4,7 @@ import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
 import 'package:organizame/app/modules/environment/enviroment_page.dart';
+import 'package:organizame/app/services/enviroment/enviroment_service.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
 import 'package:organizame/app/models/customer_object.dart';
 
@@ -11,6 +12,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
   EnviromentObject? get currentEnvironment => _currentEnvironment;
   EnviromentObject? _currentEnvironment;
   final TechnicalVisitService _service;
+  final EnviromentService _enviromentService;
   List<TechnicalVisitObject> _technicalVisits = [];
   TechnicalVisitObject? currentVisit;
   List<EnviromentObject> currentEnvironments = [];
@@ -19,7 +21,9 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
   TechnicalVisitController({
     required TechnicalVisitService service,
-  }) : _service = service;
+    required EnviromentService enviromentService,
+  }) : _service = service,
+       _enviromentService = enviromentService;
 
   Future<void> saveTechnicalVisit(DateTime date, DateTime time, CustomerObject customer) async {
     try {
@@ -162,7 +166,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
   Future<void> addEnvironment(EnviromentObject environment) async {
     try {
       Logger().d('Tentando adicionar ambiente. CurrentVisit: ${currentVisit?.id}');
-      Logger().d('CurrentVisit: ${currentVisit?.id}'); // Novo log
+      Logger().d('CurrentVisit: ${currentVisit?.id}');
       Logger().d('Ambiente: ${environment.toString()}');
 
       if (currentVisit?.id == null) {
@@ -171,7 +175,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       }
 
       // Chama o método específico no service
-      await _service.addEnvironmentToVisit(currentVisit!.id!, environment);
+      await _enviromentService.addEnvironmentToVisit(currentVisit!.id!, environment);
       // Adiciona à lista local
       currentEnvironments.add(environment);
 
@@ -187,7 +191,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
       success();
 
-      Logger().i('Ambiente adicionado com sucesso');
+      Logger().i('TecnicalVisit controller - Ambiente adicionado com sucesso');
     } catch (e) {
       Logger().e('Erro ao adicionar ambiente: $e');
       rethrow;
@@ -251,7 +255,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       Logger().d('Da visita: ${currentVisit!.id}');
 
       // Remove do backend
-      await _service.removeEnvironmentFromVisit(
+      await _enviromentService.removeEnvironmentFromVisit(
           currentVisit!.id!, environmentId);
 
       // Remove da lista local
@@ -289,7 +293,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       Logger().d('Ambiente: ${environment.toString()}');
 
       // Atualiza no backend
-      await _service.updateEnvironmentInVisit(currentVisit!.id!, environment);
+      await _enviromentService.updateEnvironmentInVisit(currentVisit!.id!, environment);
 
       // Atualiza na lista local
       final index =

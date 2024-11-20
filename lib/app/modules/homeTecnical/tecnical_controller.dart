@@ -1,3 +1,4 @@
+// import 'package:logger/logger.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
@@ -272,6 +273,19 @@ class TechnicalController extends DefautChangeNotifer {
 
     sortVisits(_technicalVisits);
     sortVisits(_filteredVisits);
+  }
+
+  // Adicione um método para inicialização
+  Future<void> initialize() async {
+    try {
+      showLoadingAndResetState();
+      await refreshVisits();
+    } catch (e) {
+      Logger().e('Erro na inicialização: $e');
+      setError('Erro ao carregar visitas');
+    } finally {
+      hideLoading();
+    }
   }
   
 }

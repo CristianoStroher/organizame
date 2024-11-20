@@ -12,7 +12,7 @@ import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.d
 import 'package:provider/provider.dart';
 
 class TecnicalPage extends StatefulWidget {
-  final TechnicalVisitController controller;
+  final TechnicalController controller;
   const TecnicalPage({
     super.key,
     required this.controller,

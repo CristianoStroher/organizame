@@ -68,6 +68,7 @@ class ChildBedroomController extends DefautChangeNotifer {
     }
   }
 
+  // Salva o ambiente no Firestore usa função addEnvironment do controller
   Future<EnviromentObject> saveEnvironment({
     required String description,
     required String metragem,
@@ -75,7 +76,9 @@ class ChildBedroomController extends DefautChangeNotifer {
     String? observation,
     required Map<String, bool> selectedItens,
   }) async {
+
     try {
+      Logger().d('ChildBedroomController - Iniciando salvando ambiente');
       showLoadingAndResetState();
       final visitId = _getCurrentVisitId();
       if (visitId == null) {
@@ -100,10 +103,9 @@ class ChildBedroomController extends DefautChangeNotifer {
         difficulty: difficulty,
         observation: observation,
         itens: selectedItens,
-        imagens:
-            _currentEnvironment?.imagens ?? [], // Manter imagens existentes
+        imagens: _currentEnvironment?.imagens ?? [], // Manter imagens existentes
       );
-
+      Logger().d('Ambiente criado: $environment');
       Logger().d('Salvando ambiente com ID: ${environment.id}');
       await _controller.addEnvironment(environment);
       _currentEnvironment = environment;

@@ -7,6 +7,7 @@ import 'package:organizame/app/repositories/technicalVisit/technicalVisit_reposi
 import './technical_visit_service.dart';
 
 class TechnicalVisitServiceImpl extends TechnicalVisitService {
+  
   final TechnicalVisitRepository _repository;
 
   TechnicalVisitServiceImpl({
@@ -50,44 +51,6 @@ class TechnicalVisitServiceImpl extends TechnicalVisitService {
       _repository.findTechnicalVisitById(id);
 
 
-  @override
-  Future<void> addEnvironmentToVisit(String visitId, EnviromentObject environment) async {
-    try {
-      Logger().i('Service - Iniciando adição do ambiente');
-      await _repository.addEnvironmentToVisit(visitId, environment);
-      Logger().i('Service - Ambiente adicionado com sucesso');
-    } catch (e) {
-      Logger().e('Service - Erro ao adicionar ambiente: $e');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> removeEnvironmentFromVisit(String visitId, String environmentId) async {
-    try {
-      Logger().i('Service - Iniciando remoção do ambiente');
-      await _repository.removeEnvironmentFromVisit(visitId, environmentId);
-      Logger().i('Service - Ambiente removido com sucesso');
-    } catch (e) {
-      Logger().e('Service - Erro ao remover ambiente: $e');
-      rethrow;
-    }
-  }
-  
-  @override
-  Future<void> updateEnvironmentInVisit(
-      String visitId, EnviromentObject environment) async {
-    try {
-      Logger().i('Service - Iniciando atualização do ambiente');
-      await _repository.updateEnvironmentInVisit(visitId, environment);
-      Logger().i('Service - Ambiente atualizado com sucesso');
-    } catch (e) {
-      Logger().e('Service - Erro ao atualizar ambiente: $e');
-      rethrow;
-    }
-  }
-
-  
 
 }
 

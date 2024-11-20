@@ -12,9 +12,5 @@ abstract class TechnicalVisitRepository {
   Future<bool> deleteTechnicalVisit(TechnicalVisitObject technicalVisit);
   Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit);
   Future<TechnicalVisitObject> findTechnicalVisitById(String id);
-  Future<void> addEnvironmentToVisit(String visitId, EnviromentObject environment);
-  Future<void> removeEnvironmentFromVisit(String visitId, String environmentId);
-  Future<void> updateEnvironmentInVisit(String visitId, EnviromentObject environment);
-
 
 }

@@ -87,21 +87,24 @@ class EnviromentObject {
     );
   }
 
+  // metodo para verificar se o ambiente é valido
   bool isValid() {
     return id.isNotEmpty && name.isNotEmpty && descroiption.isNotEmpty;
   }
 
+  // Helper methods para pegar itens
   bool? getItem(EnviromentItensEnum item) {
     return itens?[item.name];  // Corrigido para usar item.name
   }
 
+  // helper methods para setar itens
   Map<String, bool> setItem(EnviromentItensEnum item, bool value) {
     final newItens = Map<String, bool>.from(itens ?? {});
-    newItens[item.name] = value;  // Corrigido para usar item.name
+    newItens[item.name] = value;
     return newItens;
   }
 
-  // Helper methods para imagens
+  // Helper methods para adicionar, remover e atualizar imagens
   List<ImagensObject> addImagem(ImagensObject novaImagem) {
     final listaAtual = List<ImagensObject>.from(imagens ?? []);
     listaAtual.add(novaImagem);
