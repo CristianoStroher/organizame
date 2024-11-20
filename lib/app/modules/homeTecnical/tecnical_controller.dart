@@ -103,8 +103,6 @@ class TechnicalController extends DefautChangeNotifer {
     DateTime? endDate,
   }) async {
     try {
-      print('Controller - Iniciando filtro combinado');
-      print('Nome: $customerName, Início: $startDate, Fim: $endDate');
       showLoadingAndResetState();
 
       if (customerName == null && startDate == null && endDate == null) {
@@ -169,12 +167,8 @@ class TechnicalController extends DefautChangeNotifer {
 
         return dateTimeB.compareTo(dateTimeA);
       });
-
-      print(
-          'Controller - Encontradas ${_filteredVisits.length} visitas após filtro');
       success();
     } catch (e) {
-      print('Controller - Erro ao filtrar: $e');
       setError('Erro ao filtrar visitas técnicas');
       _filteredVisits = List.from(_technicalVisits);
     } finally {
@@ -187,7 +181,7 @@ class TechnicalController extends DefautChangeNotifer {
   Future<void> refreshVisits() async {
     try {
       showLoadingAndResetState();
-      Logger().i('Atualizando lista de visitas');
+      // Logger().i('Atualizando lista de visitas');
       final newVisits = await _service.getAllTechnicalVisits();
 
       // Ordena a lista por data/hora
@@ -199,10 +193,10 @@ class TechnicalController extends DefautChangeNotifer {
 
       _technicalVisits = newVisits;
       _filteredVisits = List.from(newVisits);
-      Logger().d('Lista atualizada: ${_technicalVisits.length} visitas');
+      // Logger().d('Lista atualizada: ${_technicalVisits.length} visitas');
       success();
     } catch (e) {
-      Logger().e('Erro ao atualizar visitas: $e');
+      // Logger().e('Erro ao atualizar visitas: $e');
       setError('Erro ao atualizar lista');
     } finally {
       hideLoading();
@@ -217,7 +211,7 @@ class TechnicalController extends DefautChangeNotifer {
 
   Future<void> updateTechnicalVisit(TechnicalVisitObject technicalVisit) async {
     try {
-      Logger().i('Controller - Iniciando atualização da visita técnica');
+      // Logger().i('Controller - Iniciando atualização da visita técnica');
       showLoadingAndResetState();
 
       await _service.updateTechnicalVisit(technicalVisit);
@@ -239,11 +233,11 @@ class TechnicalController extends DefautChangeNotifer {
       // Reordena as listas após a atualização
       _reorderLists();
 
-      Logger().i('Controller - Visita técnica atualizada com sucesso');
+      // Logger().i('Controller - Visita técnica atualizada com sucesso');
       success();
     } catch (e, stackTrace) {
-      Logger().e('Controller - Erro ao atualizar visita: $e');
-      Logger().e('Controller - Stack trace: $stackTrace');
+      // Logger().e('Controller - Erro ao atualizar visita: $e');
+      // Logger().e('Controller - Stack trace: $stackTrace');
       setError('Erro ao atualizar visita técnica');
     } finally {
       hideLoading();
