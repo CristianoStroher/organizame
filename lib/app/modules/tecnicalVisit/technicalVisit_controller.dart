@@ -21,16 +21,18 @@ class TechnicalVisitController extends DefautChangeNotifer {
     required TechnicalVisitService service,
   }) : _service = service;
 
-  Future<void> saveTechnicalVisit(
-      DateTime date, DateTime time, CustomerObject customer) async {
+  Future<void> saveTechnicalVisit(DateTime date, DateTime time, CustomerObject customer) async {
     try {
-      showLoadingAndResetState();
       Logger().d('Iniciando salvamento de visita técnica');
+      showLoadingAndResetState();
 
+      // Salva a visita no serviço
       await _service.saveTechnicalVisit(date, time, customer);
+      Logger().d(_technicalVisits.length);
 
       // Atualiza a lista de visitas
       _technicalVisits = await _service.getAllTechnicalVisits();
+      Logger().d('Lista de visitas atualizada');
 
       // Encontra a visita recém criada e define como atual
       currentVisit = _technicalVisits.firstWhere((visit) =>
@@ -49,8 +51,9 @@ class TechnicalVisitController extends DefautChangeNotifer {
       Logger().d('Visita salva e definida como atual: ${currentVisit?.id}');
       Logger().d('Pronta para receber ambientes');
 
-      success();
       notifyListeners();
+      success();      
+      Logger().i('Lista de visitas atualizada');
     } catch (e) {
       _logger.e('Erro ao salvar visita técnica: $e');
       setError('Erro ao salvar visita técnica');

@@ -187,8 +187,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         await widget._controller.updateVisit(updatedVisit);
         if (mounted) {
 
-          Messages.of(context)
-              .showInfo('Visita técnica atualizada com sucesso!');
+          Messages.of(context).showInfo('Visita técnica atualizada com sucesso!');
 
         }
       } else {
@@ -198,18 +197,14 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
           timeValue,
           selectedClient.value!,
         );
+        Logger().i('Visita técnica salva com sucesso!');
 
         
 
         // Notifica a página principal para atualizar a lista
         if (context.mounted) {
-          context.read<TechnicalController>().refreshVisits();
-          setState(() {});
-        }
-
-        if (mounted) {
-          Messages.of(context).showInfo(
-              'Visita técnica salva com sucesso! Agora você pode adicionar ambientes.');
+          await context.read<TechnicalController>().refreshVisits();
+          Messages.of(context).showInfo('Visita técnica salva com sucesso! Agora você pode adicionar ambientes.');
         }
       }
     } catch (e, s) {

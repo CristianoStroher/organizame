@@ -186,9 +186,11 @@ class TechnicalController extends DefautChangeNotifer {
   // Método para atualizar a lista após criar ou editar uma visita
   Future<void> refreshVisits() async {
     try {
+      showLoadingAndResetState();
       Logger().i('Atualizando lista de visitas');
       final newVisits = await _service.getAllTechnicalVisits();
       _technicalVisits = newVisits;
+      _filteredVisits = List.from(newVisits);
       Logger().d('Lista atualizada: ${_technicalVisits.length} visitas');
       success();
     } catch (e) {
