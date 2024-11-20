@@ -42,7 +42,7 @@ class ChildBedroomController extends DefautChangeNotifer {
         );
 
         // Save the new environment immediately
-        await _controller.addEnvironment(_currentEnvironment!);
+        //await _controller.addEnvironment(_currentEnvironment!);
         Logger().d('Novo ambiente salvo com ID: $newId');
       }
 
@@ -148,7 +148,8 @@ class ChildBedroomController extends DefautChangeNotifer {
     }
   }
 
-  Future<ImagensObject?> captureAndUploadImage(String description) async {
+  Future<List<XFile>?> captureAndUploadImage(String description) async {
+    // crio uma variavel para receber a lista imagens que preciso altar para objeto imagem
     try {
       Logger().d('Debug - Environment antes: ${_currentEnvironment?.id}');
       showLoadingAndResetState();
@@ -171,12 +172,13 @@ class ChildBedroomController extends DefautChangeNotifer {
       final existingEnvironment = _controller.getEnvironment(environmentId);
       if (existingEnvironment == null) {
         Logger().d('Ambiente não encontrado, tentando adicionar novamente');
-        await _controller.addEnvironment(_currentEnvironment!);
+        // await _controller.addEnvironment(_currentEnvironment!);
       }
 
       // Capture image
       final ImagePicker picker = ImagePicker();
       final XFile? foto = await picker.pickImage(
+        
         source: ImageSource.camera,
         imageQuality: 85,
       );
@@ -188,28 +190,28 @@ class ChildBedroomController extends DefautChangeNotifer {
       Logger().d('Imagem capturada: ${foto.path}');
 
       // Upload image
-      final imagem = await _imagenService.uploadImage(
-        visitId,
-        environmentId,
-        File(foto.path),
-        description,
-      );
+      // final imagem = await _imagenService.uploadImage(
+      //   visitId,
+      //   environmentId,
+      //   File(foto.path),
+      //   description,
+      // );
 
-      Logger().d('Imagem enviada com sucesso: ${imagem.id}');
+     // Logger().d('Imagem enviada com sucesso: ${imagem.id}');
 
-      // Update current environment with new image
+     // Update current environment with new image
       List<ImagensObject> currentImages = List<ImagensObject>.from(_currentEnvironment?.imagens ?? []);
-      currentImages.add(imagem);
+      currentImages.add(ImagensObject(id: 'ssass', filePath: foto.path, creationDate: DateTime.now(), dateTime: DateTime.now()));
 
       _currentEnvironment = _currentEnvironment!.copyWith(imagens: currentImages);
 
-      // Update environment in controller
-      await _controller.updateEnvironment(_currentEnvironment!);
+      // // Update environment in controller
+     // await _controller.updateEnvironment(_currentEnvironment!);
       
 
       success();
       
-      return imagem;
+      return foto;
     } catch (e) {
       Logger().e('Erro ao capturar ou enviar imagem: $e');
       setError('Erro ao capturar ou enviar imagem: $e');

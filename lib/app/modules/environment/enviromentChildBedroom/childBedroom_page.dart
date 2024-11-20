@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
@@ -42,7 +45,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   final _descriptionController = TextEditingController();
   final _observationController = TextEditingController();
   final Map<EnviromentItensEnum, bool> _selectedItens = {};
-  
+  List<XFile>? imagem;
 
   String? _selectedDifficulty; // Armazena a dificuldade selecionada
 
@@ -78,11 +81,16 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       final itens = widget.environment!.itens ?? {};
       Logger().d("Itens do ambiente: $itens");
 
-      _selectedItens[EnviromentItensEnum.roupas] = itens[EnviromentItensEnum.roupas.name] ?? false;
-      _selectedItens[EnviromentItensEnum.calcados] = itens[EnviromentItensEnum.calcados.name] ?? false;
-      _selectedItens[EnviromentItensEnum.brinquedos] = itens[EnviromentItensEnum.brinquedos.name] ?? false;
-      _selectedItens[EnviromentItensEnum.roupasDeCama] = itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
-      _selectedItens[EnviromentItensEnum.outros] = itens[EnviromentItensEnum.outros.name] ?? false;
+      _selectedItens[EnviromentItensEnum.roupas] =
+          itens[EnviromentItensEnum.roupas.name] ?? false;
+      _selectedItens[EnviromentItensEnum.calcados] =
+          itens[EnviromentItensEnum.calcados.name] ?? false;
+      _selectedItens[EnviromentItensEnum.brinquedos] =
+          itens[EnviromentItensEnum.brinquedos.name] ?? false;
+      _selectedItens[EnviromentItensEnum.roupasDeCama] =
+          itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
+      _selectedItens[EnviromentItensEnum.outros] =
+          itens[EnviromentItensEnum.outros.name] ?? false;
     }
   }
 
@@ -214,13 +222,13 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         EnviromentItensEnum.outros.name:
             _selectedItens[EnviromentItensEnum.outros] ?? false,
       };
-
+      print("itens map => $itensMap");
       await controller.saveEnvironment(
         description: _descriptionController.text,
         metragem: _metragemController.text,
         difficulty: _selectedDifficulty,
         observation: _observationController.text,
-        selectedItens: convertSelectedItensToMap(),
+        selectedItens: itensMap,
       );
 
       if (mounted) {
@@ -240,7 +248,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.environment?.imagens?.isNotEmpty ?? false)
+        if (imagem.lenght ?? false)
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -391,7 +399,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       Logger().d('Ambiente atual antes de capturar: ${widget.environment?.id}');
       final description = await _showDescriptionDialog();
       if (description != null) {
-        final imagem = await controller.captureAndUploadImage(description);
+        imagem = await controller.captureAndUploadImage(description);
         if (imagem != null && mounted) {
           await widget.controller.refreshVisits();
           setState(() {}); // Atualiza a UI
@@ -565,11 +573,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 OrganizameCheckboxlist(
                   capitalizeFirstLetter: true,
                   options: [
-                    EnviromentItensEnum.roupas.displayName,
-                    EnviromentItensEnum.calcados.displayName,
-                    EnviromentItensEnum.brinquedos.displayName,
-                    EnviromentItensEnum.roupasDeCama.displayName,
-                    EnviromentItensEnum.outros.displayName,
+                    EnviromentItensEnum.roupas.name,
+                    EnviromentItensEnum.calcados.name,
+                    EnviromentItensEnum.brinquedos.name,
+                    EnviromentItensEnum.roupasDeCama.name,
+                    EnviromentItensEnum.outros.name,
                   ],
                   color: const Color(0xFFFAFFC5),
                   initialValues: {
@@ -586,9 +594,8 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                         _selectedItens[EnviromentItensEnum.outros] ?? false,
                   },
                   onChanged: (Map<String, bool> newValues) {
+                    print("new values => $newValues ");
                     setState(() {
-                      _selectedItens[EnviromentItensEnum.roupas] =
-                          newValues[EnviromentItensEnum.roupas.name] ?? false;
                       _selectedItens[EnviromentItensEnum.calcados] =
                           newValues[EnviromentItensEnum.calcados.name] ?? false;
                       _selectedItens[EnviromentItensEnum.brinquedos] =
@@ -600,6 +607,8 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                       _selectedItens[EnviromentItensEnum.outros] =
                           newValues[EnviromentItensEnum.outros.name] ?? false;
                     });
+                    print(
+                        " _selectedItens[EnviromentItensEnum.roupasDeCama] => ${_selectedItens[EnviromentItensEnum.roupasDeCama]}");
                   },
                 ),
                 const SizedBox(height: 10),

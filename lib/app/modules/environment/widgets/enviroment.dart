@@ -60,7 +60,7 @@ class Enviroment extends StatelessWidget {
           ),
         );
         break;
-      
+
       case 'COZINHA':
         Navigator.of(context).push(
           MaterialPageRoute(
