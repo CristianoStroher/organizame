@@ -41,7 +41,9 @@ class TechnicalVisitController extends DefautChangeNotifer {
           visit.time.minute == time.minute &&
           visit.customer.id == customer.id);
 
+      // Define como atual
       _currentVisitId = currentVisit?.id;
+      // Carrega os ambientes
       currentEnvironments = List.from(currentVisit?.enviroment ?? []);
 
       Logger().d('Visita salva e definida como atual: ${currentVisit?.id}');
@@ -105,7 +107,6 @@ class TechnicalVisitController extends DefautChangeNotifer {
   // Método para recarregar a lista de visitas
   Future<void> refreshVisits() async {
     try {
-      showLoadingAndResetState();
       Logger().i('Recarregando lista de visitas');
 
       // Atualiza lista principal
@@ -172,6 +173,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       // Adiciona à lista local
       currentEnvironments.add(environment);
 
+      // Atualiza a visita atual  com o novo ambiente
       final updatedVisit = currentVisit!.copyWith(
         enviroment: List.from(currentEnvironments),
       );

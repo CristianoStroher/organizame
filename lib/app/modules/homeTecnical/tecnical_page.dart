@@ -34,24 +34,23 @@ class _TecnicalPageState extends State<TecnicalPage> {
     // Adiciona listener para atualizações
       widget.controller.addListener(_handleControllerUpdate);
 
-    _setupPeriodicRefresh();
+    // _setupPeriodicRefresh();
   }
 
-  void _setupPeriodicRefresh() {
-    // Atualiza a lista a cada 5 segundos enquanto a página estiver aberta
-    Future.delayed(const Duration(seconds: 5), () {
-      if (mounted) {
-        widget.controller.refreshVisits();
-        _setupPeriodicRefresh();
-      }
-    });
-  }
+  // void _setupPeriodicRefresh() {
+  //   // Atualiza a lista a cada 5 segundos enquanto a página estiver aberta
+  //   Future.delayed(const Duration(seconds: 5), () {
+  //     if (mounted) {
+  //       widget.controller.refreshVisits();
+  //       _setupPeriodicRefresh();
+  //     }
+  //   });
+  // }
 
+  // Atualiza a UI quando o controller notificar mudanças
   void _handleControllerUpdate() {
     if (mounted) {
-      setState(() {
-        // Atualiza a UI quando o controller notificar mudanças
-      });
+      setState(() {});
     }
   }
   
@@ -306,7 +305,8 @@ class _TecnicalPageState extends State<TecnicalPage> {
               child: CircularProgressIndicator(),
             );
           }
-
+          
+          // variavel para
           final visits = controller.filteredTechnicalVisits;
 
           if (visits.isEmpty) {
@@ -372,8 +372,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
                         onEdit: (visitToEdit) async {
                           final result = await Navigator.of(context)
                               .pushNamed('/visit/create', arguments: {
-                            'visit':
-                                visitToEdit // Passa o objeto dentro de um Map
+                            'visit': visitToEdit // Passa o objeto dentro de um Map
                           });
                           
                             await controller.refreshVisits();

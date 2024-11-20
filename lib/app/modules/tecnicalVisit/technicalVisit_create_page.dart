@@ -37,11 +37,12 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
   final TextEditingController timeEC = TextEditingController();
   bool _initialized = false;
   final dateFormat = DateFormat('dd/MM/yyyy');
-  final selectedTime = ValueNotifier<TimeOfDay?>(null); // Novo
+  final selectedTime = ValueNotifier<TimeOfDay?>(null);
 
   @override
   void initState() {
     super.initState();
+    // se a visita nao for nula define ela como atual.
     if (widget.technicalVisit != null) {
       widget._controller.currentVisit = widget.technicalVisit;
     }
@@ -60,8 +61,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     selectedClient.value = widget.technicalVisit!.customer;
     // Formatando apenas a data, sem a hora
     dateEC.text = DateFormat('dd/MM/yyyy').format(widget.technicalVisit!.date);
-    timeEC.text =
-        TimeOfDay.fromDateTime(widget.technicalVisit!.time).format(context);
+    timeEC.text = TimeOfDay.fromDateTime(widget.technicalVisit!.time).format(context);
   }
 
   @override
@@ -70,7 +70,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     dateEC.dispose();
     timeEC.dispose();
     selectedClient.dispose();
-    selectedTime.dispose(); // Novo
+    selectedTime.dispose(); 
   }
 
   @override
@@ -93,10 +93,11 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
               color: context.primaryColor,
             ),
             onPressed: () async {
-              await widget._controller.refreshVisits();
+
               if (context.mounted) {
                 Navigator.of(context).pop(true);
-              }
+
+              }              
             },
           ),
         ],
@@ -133,8 +134,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
                     onPressed: () => _saveVisitTechnical(context),
-                    label:
-                        widget.technicalVisit != null ? 'Atualizar' : 'Salvar',
+                    label: widget.technicalVisit != null ? 'Atualizar' : 'Salvar',
                     textColor: const Color(0xFFFAFFC5),
                   ),
                   const SizedBox(height: 40),
@@ -173,8 +173,8 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         timeOfDay.minute,
       );
 
-      if (widget.technicalVisit != null) {
         // Modo edição
+      if (widget.technicalVisit != null) {
         final updatedEnvironments = widget.technicalVisit!.enviroment;
         final updatedVisit = TechnicalVisitObject(
           id: widget.technicalVisit!.id,
@@ -186,8 +186,10 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
 
         await widget._controller.updateVisit(updatedVisit);
         if (mounted) {
+
           Messages.of(context)
               .showInfo('Visita técnica atualizada com sucesso!');
+
         }
       } else {
         // Modo criação
@@ -197,9 +199,12 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
           selectedClient.value!,
         );
 
+        
+
         // Notifica a página principal para atualizar a lista
         if (context.mounted) {
           context.read<TechnicalController>().refreshVisits();
+          setState(() {});
         }
 
         if (mounted) {

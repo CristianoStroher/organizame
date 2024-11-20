@@ -55,11 +55,9 @@ class TechnicalVisitRepositoryImpl extends TechnicalVisitRepository {
           final horaTimestamp = dados['time'] as Timestamp?;
 
           // Tenta carregar ambientes de qualquer um dos campos
-          final ambientesData =
-              dados['environments'] ?? dados['enviroment'] ?? [];
+          final ambientesData = dados['environments'] ?? dados['enviroment'] ?? [];
 
-          // Logger()
-          //     .d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
+          // Logger().d('Ambientes encontrados para visita ${doc.id}: $ambientesData');
 
           // Converter ambientes
           List<EnviromentObject> ambientes = [];

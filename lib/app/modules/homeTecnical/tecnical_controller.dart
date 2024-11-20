@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
@@ -187,12 +186,9 @@ class TechnicalController extends DefautChangeNotifer {
   // Método para atualizar a lista após criar ou editar uma visita
   Future<void> refreshVisits() async {
     try {
-      showLoadingAndResetState();
       Logger().i('Atualizando lista de visitas');
-
       final newVisits = await _service.getAllTechnicalVisits();
       _technicalVisits = newVisits;
-
       Logger().d('Lista atualizada: ${_technicalVisits.length} visitas');
       success();
     } catch (e) {
@@ -273,4 +269,5 @@ class TechnicalController extends DefautChangeNotifer {
     sortVisits(_technicalVisits);
     sortVisits(_filteredVisits);
   }
+  
 }
