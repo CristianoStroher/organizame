@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
@@ -44,6 +42,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   final _descriptionController = TextEditingController();
   final _observationController = TextEditingController();
   final Map<EnviromentItensEnum, bool> _selectedItens = {};
+  
 
   String? _selectedDifficulty; // Armazena a dificuldade selecionada
 
@@ -79,16 +78,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       final itens = widget.environment!.itens ?? {};
       Logger().d("Itens do ambiente: $itens");
 
-      _selectedItens[EnviromentItensEnum.roupas] =
-          itens[EnviromentItensEnum.roupas.name] ?? false;
-      _selectedItens[EnviromentItensEnum.calcados] =
-          itens[EnviromentItensEnum.calcados.name] ?? false;
-      _selectedItens[EnviromentItensEnum.brinquedos] =
-          itens[EnviromentItensEnum.brinquedos.name] ?? false;
-      _selectedItens[EnviromentItensEnum.roupasDeCama] =
-          itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
-      _selectedItens[EnviromentItensEnum.outros] =
-          itens[EnviromentItensEnum.outros.name] ?? false;
+      _selectedItens[EnviromentItensEnum.roupas] = itens[EnviromentItensEnum.roupas.name] ?? false;
+      _selectedItens[EnviromentItensEnum.calcados] = itens[EnviromentItensEnum.calcados.name] ?? false;
+      _selectedItens[EnviromentItensEnum.brinquedos] = itens[EnviromentItensEnum.brinquedos.name] ?? false;
+      _selectedItens[EnviromentItensEnum.roupasDeCama] = itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
+      _selectedItens[EnviromentItensEnum.outros] = itens[EnviromentItensEnum.outros.name] ?? false;
     }
   }
 

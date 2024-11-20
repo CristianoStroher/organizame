@@ -8,21 +8,19 @@ import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.d
 import 'package:provider/provider.dart';
 
 class TechnicalvisitList extends StatefulWidget {
+
   const TechnicalvisitList({Key? key}) : super(key: key);
 
   @override
   State<TechnicalvisitList> createState() => _TechnicalvisitListState();
 }
 
-Future<void> _navigateToEnvironmentPage(
-    BuildContext context, TechnicalVisitController controller) async {
+Future<void> _navigateToEnvironmentPage(BuildContext context, TechnicalVisitController controller) async {
   if (controller.canAddEnvironments()) {
     final currentVisit = controller.currentVisit;
     if (currentVisit != null) {
-      Logger()
-          .d('Navegando para EnviromentPage com visita: ${currentVisit.id}');
-      Logger().d(
-          'Ambientes antes da navegação: ${currentVisit.enviroment?.length ?? 0}');
+      // Logger().d('Navegando para EnviromentPage com visita: ${currentVisit.id}');
+      // Logger().d('Ambientes antes da navegação: ${currentVisit.enviroment?.length ?? 0}');
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>
@@ -40,6 +38,7 @@ Future<void> _navigateToEnvironmentPage(
 }
 
 class _TechnicalvisitListState extends State<TechnicalvisitList> {
+
   @override
   void initState() {
     super.initState();
@@ -53,8 +52,8 @@ class _TechnicalvisitListState extends State<TechnicalvisitList> {
   Widget build(BuildContext context) {
     return Consumer<TechnicalVisitController>(
       builder: (context, controller, _) {
-        Logger().d('Construindo TechnicalvisitList');
-        Logger().d('Visita atual: ${controller.currentVisit?.id}');
+        // Logger().d('Construindo TechnicalvisitList');
+        // Logger().d('Visita atual: ${controller.currentVisit?.id}');
         final currentVisit = controller.currentVisit;
         final environments = controller.currentEnvironments;
         final bool canAddEnvironment = controller.canAddEnvironments();
@@ -68,10 +67,7 @@ class _TechnicalvisitListState extends State<TechnicalvisitList> {
                 children: [
                   Text('AMBIENTES', style: context.titleDefaut),
                   const SizedBox(width: 8),
-                  Text(
-                    '(${environments.length})',
-                    style: context.titleDefaut,
-                  ),
+                  Text('(${environments.length})',style: context.titleDefaut),
                 ],
               ),
               const SizedBox(height: 10),

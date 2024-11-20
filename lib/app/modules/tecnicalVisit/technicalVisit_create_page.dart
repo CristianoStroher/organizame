@@ -151,8 +151,7 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
     final formValid = _globalKey.currentState?.validate() ?? false;
 
     if (!formValid) {
-      Messages.of(context)
-          .showError('Por favor, preencha todos os campos obrigatórios.');
+      Messages.of(context).showError('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 

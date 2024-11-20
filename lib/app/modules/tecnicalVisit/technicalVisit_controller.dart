@@ -161,14 +161,13 @@ class TechnicalVisitController extends DefautChangeNotifer {
 
   Future<void> addEnvironment(EnviromentObject environment) async {
     try {
-      Logger()
-          .d('Tentando adicionar ambiente. CurrentVisit: ${currentVisit?.id}');
+      Logger().d('Tentando adicionar ambiente. CurrentVisit: ${currentVisit?.id}');
       Logger().d('CurrentVisit: ${currentVisit?.id}'); // Novo log
       Logger().d('Ambiente: ${environment.toString()}');
 
       if (currentVisit?.id == null) {
         throw Exception('Nenhuma visita selecionada');
-        Logger().e('CurrentVisit é null ao tentar adicionar ambiente');
+        // Logger().e('CurrentVisit é null ao tentar adicionar ambiente');
       }
 
       // Chama o método específico no service
