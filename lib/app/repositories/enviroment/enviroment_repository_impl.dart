@@ -1,64 +1,169 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
-
-import './enviroment_repository.dart';
+import 'package:organizame/app/models/imagens_object.dart';
+import 'package:organizame/app/repositories/enviroment/enviroment_repository.dart';
 
 class EnviromentRepositoryImpl extends EnviromentRepository {
   final FirebaseFirestore _firestore;
-  final String _collection = 'technical_visits';
   final FirebaseStorage _storage;
+  final String _collection = 'technical_visits';
+  final String _bucket = 'organizame-6649a.firebasestorage.app';
 
   EnviromentRepositoryImpl({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance,
-        _storage = FirebaseStorage.instance;
+        _storage = FirebaseStorage.instanceFor(
+          bucket: 'organizame-6649a.firebasestorage.app'
+        );
 
-  //? Adiciona um ambiente à visita
-  @override
-  Future<void> addEnvironmentToVisit(
-      String visitId, EnviromentObject environment) async {
+  Future<String?> _uploadImageToStorage({
+    required String visitId,
+    required String environmentId,
+    required File imageFile,
+    required String description,
+  }) async {
     try {
-      Logger().d('Iniciando adição de ambiente à visita $visitId');
-      Logger().d('Ambiente a ser adicionado: ${environment.toMap()}');
+      Logger().d('Iniciando upload para o Storage');
+      Logger().d('Usando bucket: $_bucket');
 
-      final docRef = _firestore.collection(_collection).doc(visitId);
-      final docSnap = await docRef.get();
-      
+      // Nome único para o arquivo
+      final fileName = 'img_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-      if (!docSnap.exists) {
-        throw Exception('Visita não encontrada');
+      // Criar referência para upload usando o bucket correto
+      final storageRef = _storage
+          .ref()
+          .child('visitas')
+          .child(visitId)
+          .child('ambientes')
+          .child(environmentId)
+          .child('imagens')
+          .child(fileName);
+
+      Logger().d('Tentando upload para path: ${storageRef.fullPath}');
+
+      // Upload com metadata
+      final metadata = SettableMetadata(
+        contentType: 'image/jpeg',
+        customMetadata: {
+          'uploadedAt': DateTime.now().toIso8601String(),
+          'description': description,
+          'originalName': imageFile.path.split('/').last,
+          'environmentId': environmentId,
+          'visitId': visitId,
+        }
+      );
+
+      // Fazer upload
+      final uploadTask = await storageRef.putFile(imageFile, metadata);
+      Logger().d('Status do upload: ${uploadTask.state}');
+
+      if (uploadTask.state == TaskState.success) {
+        final downloadUrl = await uploadTask.ref.getDownloadURL();
+        Logger().d('Upload concluído. URL: $downloadUrl');
+        return downloadUrl;
+      } else {
+        Logger().e('Upload falhou: ${uploadTask.state}');
+        return null;
       }
 
-      final dados = docSnap.data()!;
-      Logger().d('Dados atuais da visita: $dados');
+    } catch (e) {
+      Logger().e('Erro no upload: $e');
+      if (e is FirebaseException) {
+        Logger().e('Firebase error code: ${e.code}');
+        Logger().e('Firebase error message: ${e.message}');
+      }
+      return null;
+    }
+  }
 
-      // Tenta carregar ambientes de qualquer um dos campos
-      final List<dynamic> ambientesAtuais =
-          dados['environments'] ?? dados['enviroment'] ?? [];
+  Future<void> addEnvironmentToVisit(String visitId, EnviromentObject environment) async {
+    try {
+      Logger().d('Iniciando adição de ambiente à visita $visitId');
+      Logger().d('Número de imagens para processar: ${environment.imagens?.length ?? 0}');
+      
+      List<ImagensObject> imagensProcessadas = [];
+      
+      // Processar imagens
+      if (environment.imagens != null && environment.imagens!.isNotEmpty) {
+        for (var imagem in environment.imagens!) {
+          try {
+            Logger().d('Processando imagem: ${imagem.id}');
+            
+            final downloadUrl = await _uploadImageToStorage(
+              visitId: visitId,
+              environmentId: environment.id,
+              imageFile: File(imagem.filePath),
+              description: imagem.description ?? '',
+            );
 
-      Logger().d('Ambientes atuais: $ambientesAtuais');
+            if (downloadUrl != null) {
+              final imagemProcessada = ImagensObject(
+                id: imagem.id,
+                filePath: downloadUrl,
+                description: imagem.description,
+                creationDate: imagem.creationDate,
+                dateTime: imagem.dateTime,
+              );
+              
+              imagensProcessadas.add(imagemProcessada);
+              Logger().d('Imagem processada com sucesso: ${imagemProcessada.id}');
+            }
+          } catch (e) {
+            Logger().e('Erro ao processar imagem: $e');
+          }
+        }
+      }
 
-      // Adiciona o novo ambiente
-      final List<Map<String, dynamic>> ambientesAtualizados = [
-        ...ambientesAtuais.map((e) => e as Map<String, dynamic>),
-        environment.toMap()
-      ];
+      // Atualizar ambiente com as URLs das imagens
+      final environmentAtualizado = environment.copyWith(
+        imagens: imagensProcessadas.isNotEmpty ? imagensProcessadas : null,
+      );
 
-      // Atualiza usando o novo nome do campo
-      await docRef.update({'environments': ambientesAtualizados});
+      // Salvar no Firestore
+      await _saveEnvironmentToFirestore(visitId, environmentAtualizado);
 
-      Logger().d('Ambiente adicionado com sucesso');
+      Logger().d('Ambiente salvo com ${imagensProcessadas.length} imagens');
     } catch (e) {
       Logger().e('Erro ao adicionar ambiente: $e');
       rethrow;
     }
   }
 
-  @override
-  Future<void> removeEnvironmentFromVisit(String visitId, String environmentId) async {
+  Future<void> _saveEnvironmentToFirestore(String visitId, EnviromentObject environment) async {
     try {
-      Logger().d('Repository - Iniciando remoção do ambiente $environmentId da visita $visitId');
+      final docRef = _firestore.collection(_collection).doc(visitId);
+      final docSnap = await docRef.get();
+
+      if (!docSnap.exists) {
+        throw Exception('Visita não encontrada');
+      }
+
+      final dados = docSnap.data()!;
+      final List<dynamic> ambientesAtuais =
+          dados['environments'] ?? dados['enviroment'] ?? [];
+
+      final List<Map<String, dynamic>> ambientesAtualizados = [
+        ...ambientesAtuais.map((e) => e as Map<String, dynamic>),
+        environment.toMap()
+      ];
+
+      await docRef.update({'environments': ambientesAtualizados});
+      Logger().d('Ambiente salvo no Firestore');
+    } catch (e) {
+      Logger().e('Erro ao salvar no Firestore: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> removeEnvironmentFromVisit(
+      String visitId, String environmentId) async {
+    try {
+      Logger().d(
+          'Repository - Iniciando remoção do ambiente $environmentId da visita $visitId');
 
       final docRef = _firestore.collection(_collection).doc(visitId);
       final docSnap = await docRef.get();
@@ -95,7 +200,8 @@ class EnviromentRepositoryImpl extends EnviromentRepository {
   }
 
   @override
-  Future<void> updateEnvironmentInVisit(String visitId, EnviromentObject environment) async {
+  Future<void> updateEnvironmentInVisit(
+      String visitId, EnviromentObject environment) async {
     try {
       Logger().d('Iniciando atualização de ambiente na visita $visitId');
       Logger().d('Ambiente a ser atualizado: ${environment.toMap()}');
@@ -108,19 +214,20 @@ class EnviromentRepositoryImpl extends EnviromentRepository {
       }
 
       final dados = docSnap.data()!;
-      final List<dynamic> ambientesAtuais = dados['environments'] ?? dados['enviroment'] ?? [];
-      
+      final List<dynamic> ambientesAtuais =
+          dados['environments'] ?? dados['enviroment'] ?? [];
+
       // Encontra o índice do ambiente a ser atualizado
       final index = ambientesAtuais.indexWhere(
-        (amb) => amb['id'].toString() == environment.id.toString()
-      );
+          (amb) => amb['id'].toString() == environment.id.toString());
 
       if (index == -1) {
         throw Exception('Ambiente não encontrado na visita');
       }
 
       // Atualiza o ambiente mantendo a mesma posição na lista
-      final List<Map<String, dynamic>> ambientesAtualizados = List.from(ambientesAtuais);
+      final List<Map<String, dynamic>> ambientesAtualizados =
+          List.from(ambientesAtuais);
       ambientesAtualizados[index] = environment.toMap();
 
       // Atualiza no Firestore
@@ -132,5 +239,4 @@ class EnviromentRepositoryImpl extends EnviromentRepository {
       rethrow;
     }
   }
-
 }

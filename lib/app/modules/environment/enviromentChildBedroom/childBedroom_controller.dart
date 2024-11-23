@@ -15,11 +15,11 @@ class ChildBedroomController extends DefautChangeNotifer {
   EnviromentObject? _currentEnvironment;
 
   //? Lista de imagens capturadas
-  final List<ImagensObject> _listaImagens = []; 
+  final List<ImagensObject> _listaImagens = [];
 
   //? Getter que permite acesso somente-leitura à lista de imagens
   //? List.unmodifiable garante que a lista não pode ser modificada externamente
-  List<ImagensObject> get listaImagens => List.unmodifiable(_listaImagens); 
+  List<ImagensObject> get listaImagens => List.unmodifiable(_listaImagens);
 
   EnviromentObject? get currentEnvironment => _currentEnvironment;
 
@@ -78,14 +78,14 @@ class ChildBedroomController extends DefautChangeNotifer {
 
   //? Salva o ambiente no Firestore usa função addEnvironment do controller
   Future<EnviromentObject> saveEnvironment({
+    //quando o ambiente é salvo, ele é salvo com esses dados
     required String description,
     required String metragem,
     String? difficulty,
     String? observation,
     required Map<String, bool> selectedItens,
-    List<ImagensObject> imagens = const [],
+    List<ImagensObject> listaImagens = const [],
   }) async {
-
     try {
       Logger().d('ChildBedroomController - Iniciando salvando ambiente');
       showLoadingAndResetState();
@@ -98,7 +98,6 @@ class ChildBedroomController extends DefautChangeNotifer {
       Logger().d('Visit ID: $visitId');
       Logger().d('Current Environment ID: ${_currentEnvironment?.id}');
 
-      
       // Usar o ID existente ou criar um novo
       final environmentId = _currentEnvironment?.id ??
           DateTime.now().millisecondsSinceEpoch.toString();
@@ -113,7 +112,7 @@ class ChildBedroomController extends DefautChangeNotifer {
         difficulty: difficulty,
         observation: observation,
         itens: selectedItens,
-        imagens: _currentEnvironment?.imagens ?? [], // Manter imagens existentes
+        imagens: listaImagens ?? [], // Manter imagens existentes
       );
       Logger().d('Ambiente criado: $environment');
       Logger().d('Salvando ambiente com ID: ${environment.id}');
@@ -160,7 +159,7 @@ class ChildBedroomController extends DefautChangeNotifer {
   }
 
   // Future<List<XFile>?> captureImage(List<XFile> imageList) async {
-    
+
   //   // crio uma variavel para receber a lista imagens que preciso altar para objeto imagem
   //   try {
   //     Logger().d('Debug - Environment antes: ${_currentEnvironment?.id}');
@@ -219,10 +218,9 @@ class ChildBedroomController extends DefautChangeNotifer {
 
   //     // // Update environment in controller
   //    // await _controller.updateEnvironment(_currentEnvironment!);
-      
 
   //     success();
-      
+
   //     return imageList;
 
   //   } catch (e) {
@@ -235,30 +233,22 @@ class ChildBedroomController extends DefautChangeNotifer {
   //   }
   // }
 
-
   //? Método para capturar uma imagem da câmera e adicionar à lista de imagens
   Future<void> captureImage({required String description}) async {
-
     try {
+      Logger().d('Iniciando captura com descrição: $description');
 
-      //? cria uma instância do ImagePicker	para usar a camera
       final ImagePicker picker = ImagePicker();
-
-      //? Abre a câmera e aguarda o usuário tirar a foto
-      //? imageQuality: 85 reduz um pouco o tamanho do arquivo mantendo boa qualidade
       final XFile? foto = await picker.pickImage(
-
         source: ImageSource.camera,
         imageQuality: 85,
-
       );
 
-      //? Se o usuário cancelar a captura, a variável foto será nula
       if (foto == null) {
         throw Exception('Nenhuma imagem foi capturada');
       }
 
-      //? Cria um novo objeto ImagensObject com os dados da imagem capturada
+      // Cria o objeto de imagem
       final novaImagem = ImagensObject(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         filePath: foto.path,
@@ -267,16 +257,15 @@ class ChildBedroomController extends DefautChangeNotifer {
         dateTime: DateTime.now(),
       );
 
-      //? Adiciona a nova imagem à lista de imagens
+      // Adiciona à lista local
       _listaImagens.add(novaImagem);
+      notifyListeners(); // Importante para atualizar a UI
 
-      Logger().d('Imagem capturada e adicionada à lista: ${foto.path}');
-      
-      Logger().d('listaImagens: $listaImagens');
-
+      Logger().d('Imagem capturada: ${foto.path}');
+      Logger().d('Total de imagens na lista: ${_listaImagens.length}');
     } catch (e) {
       Logger().e('Erro ao capturar imagem: $e');
-      // Exiba uma mensagem de erro para o usuário, se necessário.
+      rethrow;
     }
   }
 
@@ -322,7 +311,7 @@ class ChildBedroomController extends DefautChangeNotifer {
     }
   }
 
- //! Função para atualizar a descrição de uma imagem - não verificada
+  //! Função para atualizar a descrição de uma imagem - não verificada
   Future<void> updateImageDescription(
       String imageId, String newDescription) async {
     try {

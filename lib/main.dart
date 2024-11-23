@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:organizame/app/app_module.dart';
@@ -21,7 +22,7 @@ Future<void> main() async {
   //   appleProvider: AppleProvider.deviceCheck,
   // );
   
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  await FirebaseStorage.instance;
 
   // Habilita o logging detalhado do Firestore apenas em modo de depuração
   // if (kDebugMode) {

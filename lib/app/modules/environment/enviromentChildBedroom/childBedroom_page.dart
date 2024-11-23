@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -74,10 +73,19 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   void _initializeWithExistingEnvironment() {
     if (widget.environment != null) {
       Logger().d("Ambiente recebido: ${widget.environment}");
+      Logger().d("Imagens do ambiente: ${widget.environment?.imagens?.length ?? 0}");
+      
       _metragemController.text = widget.environment!.metragem ?? '';
       _descriptionController.text = widget.environment!.descroiption ?? '';
       _observationController.text = widget.environment!.observation ?? '';
       _selectedDifficulty = widget.environment!.difficulty;
+
+      // Atualizar controller com as imagens existentes
+    if (widget.environment!.imagens != null) {
+      widget.environment!.imagens!.forEach((imagem) {
+        Logger().d('Imagem carregada: ${imagem.filePath}');
+      });
+    }
 
       final itens = widget.environment!.itens ?? {};
       Logger().d("Itens do ambiente: $itens");
@@ -149,7 +157,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         } else {
           await _createNewEnvironment();
         }
-    
+
         if (mounted) {
           Navigator.of(context).pop(true);
           await widget.controller.refreshVisits();
@@ -171,11 +179,16 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 
       // Criar um mapa intermediário com valores não nulos
       final Map<String, bool> itensMap = {
-        EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
-        EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
-        EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-        EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-        EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
+        EnviromentItensEnum.roupas.name:
+            _selectedItens[EnviromentItensEnum.roupas] ?? false,
+        EnviromentItensEnum.calcados.name:
+            _selectedItens[EnviromentItensEnum.calcados] ?? false,
+        EnviromentItensEnum.brinquedos.name:
+            _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+        EnviromentItensEnum.roupasDeCama.name:
+            _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
+        EnviromentItensEnum.outros.name:
+            _selectedItens[EnviromentItensEnum.outros] ?? false,
       };
 
       final updatedEnvironment = EnviromentObject(
@@ -205,15 +218,21 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
+  //? Função para criar um novo ambiente
   Future<void> _createNewEnvironment() async {
     try {
       // Convertendo o Map<EnviromentItensEnum, bool> para Map<String, bool>
       final Map<String, bool> itensMap = {
-        EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
-        EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
-        EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-        EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-        EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
+        EnviromentItensEnum.roupas.name:
+            _selectedItens[EnviromentItensEnum.roupas] ?? false,
+        EnviromentItensEnum.calcados.name:
+            _selectedItens[EnviromentItensEnum.calcados] ?? false,
+        EnviromentItensEnum.brinquedos.name:
+            _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+        EnviromentItensEnum.roupasDeCama.name:
+            _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
+        EnviromentItensEnum.outros.name:
+            _selectedItens[EnviromentItensEnum.outros] ?? false,
       };
       print("itens map => $itensMap");
       await controller.saveEnvironment(
@@ -222,7 +241,8 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         difficulty: _selectedDifficulty,
         observation: _observationController.text,
         selectedItens: itensMap,
-        imagens: controller.listaImagens, //? adicionado a lista de imagens
+        listaImagens: controller.listaImagens,
+        //? adicionado a lista de imagens
       );
 
       Logger().d('Ambiente criado com sucesso!');
@@ -244,13 +264,14 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (controller.listaImagens.isNotEmpty)
+        if (widget.environment?.imagens?.isNotEmpty == true)
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: controller.listaImagens.length,
+            itemCount: widget.environment!.imagens!.length,
             itemBuilder: (context, index) {
-              final imagem = controller.listaImagens[index];
+              final imagem = widget.environment!.imagens![index];
+              Logger().d('Construindo imagem: ${imagem.filePath}');
               return Card(
                 margin: const EdgeInsets.only(bottom: 16),
                 child: Column(
@@ -258,25 +279,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                   children: [
                     Stack(
                       children: [
-                        // Imagem
+                        // Imagem com tratamento para URL/Local
                         ClipRRect(
                           borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(8)),
-                          child: Image.file(
-                            File(imagem.filePath),
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,                            
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                height: 200,
-                                width: double.infinity,
-                                color: Colors.grey[200],
-                                child:
-                                    const Icon(Icons.error, color: Colors.red),
-                              );
-                            },
-                          ),
+                          child: _buildImageWidget(imagem),
                         ),
                         // Botões de ação
                         Positioned(
@@ -325,7 +332,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (imagem.description != null) ...[
+                          if (imagem.description?.isNotEmpty == true) ...[
                             Text(
                               'Descrição:',
                               style: TextStyle(
@@ -363,6 +370,56 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
           textColor: const Color(0xFFFAFFC5),
         ),
       ],
+    );
+  }
+
+// Método auxiliar para construir a imagem
+  Widget _buildImageWidget(ImagensObject imagem) {
+    final bool isStorageUrl = imagem.filePath.startsWith('http');
+    Logger().d('Tipo de imagem: ${isStorageUrl ? "Storage URL" : "Local"}');
+  
+
+    return SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: isStorageUrl
+          ? Image.network(
+              imagem.filePath,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  color: Colors.grey[200],
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: context.primaryColor,
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stack) {
+                Logger().e('Erro ao carregar imagem: $error');
+                return Container(
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.error, color: Colors.red),
+                );
+              },
+            )
+          : Image.file(
+              File(imagem.filePath),
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                Logger().e('Erro ao carregar imagem local: $error');
+                return Container(
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.error, color: Colors.red),
+                );
+              },
+            ),
     );
   }
 
@@ -429,21 +486,21 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     );
   }
 
-
   //? Função para juntar a captura da imagem com a descrição
   Future<void> _handleImageCapture() async {
-
     try {
       //? Primeiro obtém a descrição
       final description = await _showDescriptionDialog();
-      
+
       //? Se não tiver descrição, cancela o processo
       if (description == null || description.isEmpty) {
         return;
       }
 
       //? Chama o controller para capturar a imagem
-      await context.read<ChildBedroomController>().captureImage(description: description);      
+      await context
+          .read<ChildBedroomController>()
+          .captureImage(description: description);
 
       //? Atualiza a UI com a imagem capturada
       setState(() {});
@@ -463,7 +520,6 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       }
     }
   }
-
 
   //? Função para editar a descrição da imagem - NÃO UTILIZADA
   Future<void> _editImageDescription(ImagensObject imagem) async {
@@ -518,7 +574,6 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       }
     }
   }
-  
 
   //? contrução da tela
   @override
@@ -622,10 +677,16 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                   onChanged: (Map<String, bool> newValues) {
                     print("new values => $newValues ");
                     setState(() {
-                      _selectedItens[EnviromentItensEnum.calcados] = newValues[EnviromentItensEnum.calcados.name] ?? false;
-                      _selectedItens[EnviromentItensEnum.brinquedos] = newValues[EnviromentItensEnum.brinquedos.name] ?? false;
-                      _selectedItens[EnviromentItensEnum.roupasDeCama] = newValues[EnviromentItensEnum.roupasDeCama.name] ?? false;
-                      _selectedItens[EnviromentItensEnum.outros] = newValues[EnviromentItensEnum.outros.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.calcados] =
+                          newValues[EnviromentItensEnum.calcados.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.brinquedos] =
+                          newValues[EnviromentItensEnum.brinquedos.name] ??
+                              false;
+                      _selectedItens[EnviromentItensEnum.roupasDeCama] =
+                          newValues[EnviromentItensEnum.roupasDeCama.name] ??
+                              false;
+                      _selectedItens[EnviromentItensEnum.outros] =
+                          newValues[EnviromentItensEnum.outros.name] ?? false;
                     });
                     print(
                         " _selectedItens[EnviromentItensEnum.roupasDeCama] => ${_selectedItens[EnviromentItensEnum.roupasDeCama]}");
@@ -656,5 +717,3 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     );
   }
 }
-  
-

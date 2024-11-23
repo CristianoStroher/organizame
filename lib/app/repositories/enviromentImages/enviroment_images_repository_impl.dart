@@ -9,10 +9,13 @@ class EnviromentImagesRepositoryImpl extends EnviromentImagesRepository {
   final FirebaseFirestore _firestore;
   final String _collection = 'technical_visits';
   final FirebaseStorage _storage;
+  final String _bucket = 'organizame-6649a.firebasestorage.app';
 
   EnviromentImagesRepositoryImpl({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance,
-        _storage = FirebaseStorage.instance;
+        _storage = FirebaseStorage.instanceFor(
+          bucket: 'organizame-6649a.firebasestorage.app'
+        );
 
   @override
   Future<ImagensObject> uploadImage(String visitId, String environmentId,

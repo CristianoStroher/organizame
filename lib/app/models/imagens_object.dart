@@ -1,12 +1,14 @@
 import 'dart:io';
 
+import 'package:logger/logger.dart';
+
 class ImagensObject {
   final String id;
   final String filePath;
   final DateTime creationDate;
   final DateTime dateTime;
   final String? description;
-  
+
   ImagensObject({
     required this.id,
     required this.filePath,
@@ -15,27 +17,29 @@ class ImagensObject {
     this.description,
   });
 
-  // Construtor para criar a partir de um Map (JSON)
   factory ImagensObject.fromJson(Map<String, dynamic> json) {
+    Logger().d('Convertendo JSON para ImagensObject: $json');
     return ImagensObject(
       id: json['id'] as String,
       filePath: json['filePath'] as String,
-      creationDate: DateTime.parse(json['creationDate'] as String),
-      dateTime: DateTime.parse(json['dateTime'] as String),
       description: json['description'] as String?,
+      creationDate: json['creationDate'] != null
+          ? DateTime.parse(json['creationDate'])
+          : DateTime.now(),
+      dateTime: json['dateTime'] != null
+          ? DateTime.parse(json['dateTime'])
+          : DateTime.now(),
     );
   }
 
-  // Método para converter para Map (JSON)
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'filePath': filePath,
-      'creationDate': creationDate.toIso8601String(),
-      'dateTime': dateTime.toIso8601String(),
-      'description': description,
-    };
-  }
+  //? Método para converter o objeto em um mapa
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'filePath': filePath,
+        'description': description,
+        'creationDate': creationDate.toIso8601String(),
+        'dateTime': dateTime.toIso8601String(),
+      };
 
   // Método para criar uma cópia do objeto com algumas alterações
   ImagensObject copyWith({
@@ -64,23 +68,23 @@ class ImagensObject {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is ImagensObject &&
-      other.id == id &&
-      other.filePath == filePath &&
-      other.creationDate == creationDate &&
-      other.dateTime == dateTime &&
-      other.description == description;
+        other.id == id &&
+        other.filePath == filePath &&
+        other.creationDate == creationDate &&
+        other.dateTime == dateTime &&
+        other.description == description;
   }
 
   // Sobrescrita do hashCode para uso em coleções
   @override
   int get hashCode {
     return id.hashCode ^
-      filePath.hashCode ^
-      creationDate.hashCode ^
-      dateTime.hashCode ^
-      description.hashCode;
+        filePath.hashCode ^
+        creationDate.hashCode ^
+        dateTime.hashCode ^
+        description.hashCode;
   }
 
   // Método para criar uma instância com valores padrão

@@ -38,6 +38,7 @@ class EnviromentObject {
             : null,
         imagens: map['imagens'] != null
             ? (map['imagens'] as List<dynamic>).map((imgMap) {
+              Logger().d('Convertendo imagem: $imgMap');
                 return ImagensObject.fromJson(imgMap as Map<String, dynamic>);
               }).toList()
             : null,        
