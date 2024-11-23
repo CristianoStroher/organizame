@@ -14,6 +14,7 @@ class EnviromentRepositoryImpl extends EnviromentRepository {
       : _firestore = firestore ?? FirebaseFirestore.instance,
         _storage = FirebaseStorage.instance;
 
+  //? Adiciona um ambiente à visita
   @override
   Future<void> addEnvironmentToVisit(
       String visitId, EnviromentObject environment) async {
@@ -23,6 +24,7 @@ class EnviromentRepositoryImpl extends EnviromentRepository {
 
       final docRef = _firestore.collection(_collection).doc(visitId);
       final docSnap = await docRef.get();
+      
 
       if (!docSnap.exists) {
         throw Exception('Visita não encontrada');

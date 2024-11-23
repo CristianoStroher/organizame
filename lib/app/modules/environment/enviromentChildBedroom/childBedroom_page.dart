@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -139,6 +140,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     });
   }
 
+  //? Função para salvar ou atualizar o ambiente
   Future<void> _handleSaveOrUpdate() async {
     if (_formkey.currentState!.validate()) {
       try {
@@ -147,7 +149,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         } else {
           await _createNewEnvironment();
         }
-
+    
         if (mounted) {
           Navigator.of(context).pop(true);
           await widget.controller.refreshVisits();
@@ -161,6 +163,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
+  //? Função para atualizar um ambiente existente
   Future<void> _updateExistingEnvironment() async {
     try {
       Logger()
@@ -168,16 +171,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 
       // Criar um mapa intermediário com valores não nulos
       final Map<String, bool> itensMap = {
-        EnviromentItensEnum.roupas.name:
-            _selectedItens[EnviromentItensEnum.roupas] ?? false,
-        EnviromentItensEnum.calcados.name:
-            _selectedItens[EnviromentItensEnum.calcados] ?? false,
-        EnviromentItensEnum.brinquedos.name:
-            _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-        EnviromentItensEnum.roupasDeCama.name:
-            _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-        EnviromentItensEnum.outros.name:
-            _selectedItens[EnviromentItensEnum.outros] ?? false,
+        EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
+        EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
+        EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+        EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
+        EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
       };
 
       final updatedEnvironment = EnviromentObject(
@@ -211,16 +209,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     try {
       // Convertendo o Map<EnviromentItensEnum, bool> para Map<String, bool>
       final Map<String, bool> itensMap = {
-        EnviromentItensEnum.roupas.name:
-            _selectedItens[EnviromentItensEnum.roupas] ?? false,
-        EnviromentItensEnum.calcados.name:
-            _selectedItens[EnviromentItensEnum.calcados] ?? false,
-        EnviromentItensEnum.brinquedos.name:
-            _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-        EnviromentItensEnum.roupasDeCama.name:
-            _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-        EnviromentItensEnum.outros.name:
-            _selectedItens[EnviromentItensEnum.outros] ?? false,
+        EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
+        EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
+        EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+        EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
+        EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
       };
       print("itens map => $itensMap");
       await controller.saveEnvironment(
@@ -229,7 +222,10 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         difficulty: _selectedDifficulty,
         observation: _observationController.text,
         selectedItens: itensMap,
+        imagens: controller.listaImagens, //? adicionado a lista de imagens
       );
+
+      Logger().d('Ambiente criado com sucesso!');
 
       if (mounted) {
         Messages.of(context).showInfo('Ambiente criado com sucesso!');
@@ -248,13 +244,13 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (imagem.lenght ?? false)
+        if (controller.listaImagens.isNotEmpty)
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.environment!.imagens!.length,
+            itemCount: controller.listaImagens.length,
             itemBuilder: (context, index) {
-              final imagem = widget.environment!.imagens![index];
+              final imagem = controller.listaImagens[index];
               return Card(
                 margin: const EdgeInsets.only(bottom: 16),
                 child: Column(
@@ -266,30 +262,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                         ClipRRect(
                           borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(8)),
-                          child: Image.network(
-                            imagem.filePath,
+                          child: Image.file(
+                            File(imagem.filePath),
                             height: 200,
                             width: double.infinity,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                height: 200,
-                                width: double.infinity,
-                                color: Colors.grey[200],
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: context.primaryColor,
-                                    value: loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            loadingProgress.expectedTotalBytes!
-                                        : null,
-                                  ),
-                                ),
-                              );
-                            },
+                            fit: BoxFit.cover,                            
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
                                 height: 200,
@@ -348,7 +325,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (imagem.description?.isNotEmpty == true) ...[
+                          if (imagem.description != null) ...[
                             Text(
                               'Descrição:',
                               style: TextStyle(
@@ -394,14 +371,22 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
 
+  //? Função para capturar a imagem
   Future<void> _captureImage() async {
     try {
       Logger().d('Ambiente atual antes de capturar: ${widget.environment?.id}');
+
+      //? Primeiro obtém a descrição
       final description = await _showDescriptionDialog();
+
+      //? verifica se a descrição foi preenchida
       if (description != null) {
-        imagem = await controller.captureAndUploadImage(description);
+        //? Chama o controller para capturar a imagem
+        await controller.captureImage(description: description);
+        //? Atualiza a UI com a imagem capturada
         if (imagem != null && mounted) {
           await widget.controller.refreshVisits();
+          //? Atualiza a UI com a imagem capturada
           setState(() {}); // Atualiza a UI
           Messages.of(context).showInfo('Imagem adicionada com sucesso!');
         }
@@ -413,6 +398,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
+  //? Função para mostrar o dialogo de descrição
   Future<String?> _showDescriptionDialog() {
     final descriptionController = TextEditingController();
     return showDialog<String>(
@@ -443,6 +429,43 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     );
   }
 
+
+  //? Função para juntar a captura da imagem com a descrição
+  Future<void> _handleImageCapture() async {
+
+    try {
+      //? Primeiro obtém a descrição
+      final description = await _showDescriptionDialog();
+      
+      //? Se não tiver descrição, cancela o processo
+      if (description == null || description.isEmpty) {
+        return;
+      }
+
+      //? Chama o controller para capturar a imagem
+      await context.read<ChildBedroomController>().captureImage(description: description);      
+
+      //? Atualiza a UI com a imagem capturada
+      setState(() {});
+
+      //? Feedback de sucesso
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Imagem capturada com sucesso!')),
+        );
+      }
+    } catch (e) {
+      // Tratamento de erro na view
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao capturar imagem: $e')),
+        );
+      }
+    }
+  }
+
+
+  //? Função para editar a descrição da imagem - NÃO UTILIZADA
   Future<void> _editImageDescription(ImagensObject imagem) async {
     final newDescription = await _showDescriptionDialog();
     if (newDescription != null && mounted) {
@@ -460,6 +483,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
+  //? Função para excluir a imagem - NÃO VERIFICADA
   Future<void> _deleteImage(ImagensObject imagem) async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -494,7 +518,9 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       }
     }
   }
+  
 
+  //? contrução da tela
   @override
   Widget build(BuildContext context) {
     final List<String> options = [
@@ -596,16 +622,10 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                   onChanged: (Map<String, bool> newValues) {
                     print("new values => $newValues ");
                     setState(() {
-                      _selectedItens[EnviromentItensEnum.calcados] =
-                          newValues[EnviromentItensEnum.calcados.name] ?? false;
-                      _selectedItens[EnviromentItensEnum.brinquedos] =
-                          newValues[EnviromentItensEnum.brinquedos.name] ??
-                              false;
-                      _selectedItens[EnviromentItensEnum.roupasDeCama] =
-                          newValues[EnviromentItensEnum.roupasDeCama.name] ??
-                              false;
-                      _selectedItens[EnviromentItensEnum.outros] =
-                          newValues[EnviromentItensEnum.outros.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.calcados] = newValues[EnviromentItensEnum.calcados.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.brinquedos] = newValues[EnviromentItensEnum.brinquedos.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.roupasDeCama] = newValues[EnviromentItensEnum.roupasDeCama.name] ?? false;
+                      _selectedItens[EnviromentItensEnum.outros] = newValues[EnviromentItensEnum.outros.name] ?? false;
                     });
                     print(
                         " _selectedItens[EnviromentItensEnum.roupasDeCama] => ${_selectedItens[EnviromentItensEnum.roupasDeCama]}");
@@ -624,7 +644,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 const SizedBox(height: 20),
                 OrganizameElevatedButton(
                   onPressed: _handleSaveOrUpdate,
-                  label: widget.environment != null ? 'Atualizar' : 'Adicionar',
+                  label: widget.environment != null ? 'Atualizar' : 'Salvar',
                   textColor: const Color(0xFFFAFFC5),
                 ),
                 const SizedBox(height: 40),
@@ -636,3 +656,5 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     );
   }
 }
+  
+

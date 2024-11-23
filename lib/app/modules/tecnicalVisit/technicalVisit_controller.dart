@@ -150,6 +150,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
     return currentVisit?.id != null;
   }
 
+  //? Método para adicionar um ambiente à visita
   Future<void> addEnvironment(EnviromentObject environment) async {
     try {
       Logger().d('Tentando adicionar ambiente. CurrentVisit: ${currentVisit?.id}');
