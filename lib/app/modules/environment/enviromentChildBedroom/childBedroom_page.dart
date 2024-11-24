@@ -45,7 +45,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   final _descriptionController = TextEditingController();
   final _observationController = TextEditingController();
   final Map<EnviromentItensEnum, bool> _selectedItens = {};
-  List<XFile>? imagem;
+  List<XFile>? imagem; // Armazena a imagem capturada
 
   String? _selectedDifficulty; // Armazena a dificuldade selecionada
 
@@ -74,11 +74,10 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   void _initializeWithExistingEnvironment() {
     if (widget.environment != null) {
       Logger().d("Ambiente recebido: ${widget.environment}");
-      Logger().d(
-          "Imagens do ambiente: ${widget.environment?.imagens?.length ?? 0}");
+      Logger().d("Imagens do ambiente: ${widget.environment?.imagens?.length ?? 0}");
 
       _metragemController.text = widget.environment!.metragem ?? '';
-      _descriptionController.text = widget.environment!.descroiption ?? '';
+      _descriptionController.text = widget.environment!.descroiption;
       _observationController.text = widget.environment!.observation ?? '';
       _selectedDifficulty = widget.environment!.difficulty;
 
