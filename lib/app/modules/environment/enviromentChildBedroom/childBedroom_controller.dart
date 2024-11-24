@@ -237,8 +237,7 @@ class ChildBedroomController extends DefautChangeNotifer {
   }
 
   //! Função para atualizar a descrição de uma imagem - não verificada
-  Future<void> updateImageDescription(
-      String imageId, String newDescription) async {
+  Future<void> updateImageDescription(String imageId, String newDescription) async {
     try {
       showLoadingAndResetState();
       _validateCurrentState();

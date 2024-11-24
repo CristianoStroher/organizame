@@ -73,19 +73,20 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   void _initializeWithExistingEnvironment() {
     if (widget.environment != null) {
       Logger().d("Ambiente recebido: ${widget.environment}");
-      Logger().d("Imagens do ambiente: ${widget.environment?.imagens?.length ?? 0}");
-      
+      Logger().d(
+          "Imagens do ambiente: ${widget.environment?.imagens?.length ?? 0}");
+
       _metragemController.text = widget.environment!.metragem ?? '';
       _descriptionController.text = widget.environment!.descroiption ?? '';
       _observationController.text = widget.environment!.observation ?? '';
       _selectedDifficulty = widget.environment!.difficulty;
 
       // Atualizar controller com as imagens existentes
-    if (widget.environment!.imagens != null) {
-      widget.environment!.imagens!.forEach((imagem) {
-        Logger().d('Imagem carregada: ${imagem.filePath}');
-      });
-    }
+      if (widget.environment!.imagens != null) {
+        widget.environment!.imagens!.forEach((imagem) {
+          Logger().d('Imagem carregada: ${imagem.filePath}');
+        });
+      }
 
       final itens = widget.environment!.itens ?? {};
       Logger().d("Itens do ambiente: $itens");
@@ -377,7 +378,6 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   Widget _buildImageWidget(ImagensObject imagem) {
     final bool isStorageUrl = imagem.filePath.startsWith('http');
     Logger().d('Tipo de imagem: ${isStorageUrl ? "Storage URL" : "Local"}');
-  
 
     return SizedBox(
       height: 200,
@@ -544,17 +544,35 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirmar Exclusão'),
-        content: const Text('Deseja realmente excluir esta imagem?'),
+        title: Text('Confirmar Exclusão', style: context.titleMedium),
+        content: Text('Deseja realmente excluir esta imagem?',
+            style: TextStyle(fontSize: 16, color: context.primaryColor)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+            style: TextButton.styleFrom(
+              backgroundColor: Color(0xFFFAFFC5),
+              side: BorderSide(color: context.primaryColor, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            child: Text('Cancelar',
+                style: TextStyle(color: context.secondaryColor)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Excluir'),
+            style: TextButton.styleFrom(
+              backgroundColor: context.primaryColor,
+              side: BorderSide(color: context.primaryColor, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            child: const Text('Excluir',
+              style: TextStyle(color: Color(0xFFFAFFC5))),
           ),
         ],
       ),
