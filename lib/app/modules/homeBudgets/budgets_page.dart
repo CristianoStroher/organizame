@@ -24,13 +24,13 @@ class BudgetsPage extends StatefulWidget {
 }
 
 class _BudgetsPageState extends State<BudgetsPage> {
-  int index = 1;
+  int index = 2;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
        super.initState();
-       widget.controller.initialize();       
+       /* widget.controller.initialize();    */    
     
     // Adiciona listener para atualizações
       widget.controller.addListener(_handleControllerUpdate);
@@ -55,7 +55,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
   Future<void> _goToTaskPage(BuildContext context) async {
     final controller = context.read<TechnicalController>();
     controller.currentVisit = null;
-    final result = await Navigator.of(context).pushNamed('/visit/create');
+    final result = await Navigator.of(context).pushNamed('/budgets/create');
     if (result == true && mounted) {
         await controller.refreshVisits();
         setState(() {});

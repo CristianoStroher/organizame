@@ -52,15 +52,18 @@ class AppModule extends StatelessWidget {
         Provider(create: (_) => FirebaseFirestore.instance), //injetando a instância do firestore
         Provider(create: (_) => FirebaseStorage.instance), //injetando a instância do firestore
         Provider(create: (_) => SqliteConnectionFactory(), lazy: false,), //injetando a instância do sqlite
+    
         Provider<UserRepository>(create: (context) => UserRepositoryImpl(firebaseAuth: context.read(),firestore: context.read())), //injetando o repositório do usuário //adicionado firestore
-        Provider<UserService>(create: (context) => UserServiceImpl(userRepository: context.read(),loginValidators: context.read())), //injetando o serviço do usuário
-        Provider<TasksRepository>(create: (context) => TasksRepositoryImpl(sqLiteConnectionFactory: context.read())), //injetando o repositório de tarefas
-        Provider<TasksService>(create: (context) =>TasksServiceImpl(tasksRepository: context.read())), //injetando o serviço de tarefas
         Provider<TechnicalVisitRepository>(create: (context) => TechnicalVisitRepositoryImpl(firestore: context.read<FirebaseFirestore>())), //injetando o controller do módulo technicalVisit
-        Provider<TechnicalVisitService>(create: (context) => TechnicalVisitServiceImpl(repository: context.read<TechnicalVisitRepository>(),),),
         Provider<EnviromentImagesRepository>(create: (context) => EnviromentImagesRepositoryImpl()), //injetando o repositório de imagens
-        Provider<EnviromentService>(create: (context) => EnviromentServiceImpl(repository: context.read<EnviromentRepository>()),), //injetando o serviço de ambiente
+        Provider<TasksRepository>(create: (context) => TasksRepositoryImpl(sqLiteConnectionFactory: context.read())), //injetando o repositório de tarefas
         Provider<EnviromentRepository>(create: (context) => EnviromentRepositoryImpl(firestore: context.read()),), //injetando o repositório de ambiente
+        
+        Provider<UserService>(create: (context) => UserServiceImpl(userRepository: context.read(),loginValidators: context.read())), //injetando o serviço do usuário
+        Provider<TasksService>(create: (context) =>TasksServiceImpl(tasksRepository: context.read())), //injetando o serviço de tarefas
+        Provider<TechnicalVisitService>(create: (context) => TechnicalVisitServiceImpl(repository: context.read<TechnicalVisitRepository>(),),),
+        Provider<EnviromentService>(create: (context) => EnviromentServiceImpl(repository: context.read<EnviromentRepository>()),), //injetando o serviço de ambiente
+    
         ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,),//injetando o provider de autenticação
         ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
         ChangeNotifierProvider(create: (context) => HomeController(tasksService: context.read())), //injetando o controller do módulo home
@@ -70,7 +73,8 @@ class AppModule extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => KitchenController(controller: context.read())), //injetando o controller do módulo kitchen
         ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read(),)), //injetando o controller do módulo customer
         ChangeNotifierProvider(create: (context) => TechnicalVisitController(service: context.read<TechnicalVisitService>(), enviromentService: context.read<EnviromentService>(),)), //injetando o controller do módulo technicalVisit
-  
+
+
       ],      child: const AppWidget(),
     );
   }

@@ -1,7 +1,10 @@
 
 import 'package:organizame/app/core/modules/organizame_module.dart';
+import 'package:organizame/app/modules/homeBudgets/budgets_page.dart';
+import 'package:provider/provider.dart';
 
 class BudgetsModule extends OrganizameModule {
+  
   BudgetsModule()
       : super(
           bindings: [
@@ -9,7 +12,7 @@ class BudgetsModule extends OrganizameModule {
           ],
           routers: {
             '/budgets': (context) =>
-               B(homeController: context.read(), taskController: context.read()),
+               BudgetsPage(controller: context.read()),
           },
         );
 
