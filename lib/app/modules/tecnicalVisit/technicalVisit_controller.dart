@@ -269,6 +269,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
     }
   }
 
+//? método para atualizar um ambiente
   Future<void> updateEnvironment(EnviromentObject environment) async {
     try {
       Logger().d('Atualizando ambiente: ${environment.id}');
@@ -284,8 +285,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
       await _enviromentService.updateEnvironmentInVisit(currentVisit!.id!, environment);
 
       // Atualiza na lista local
-      final index =
-          currentEnvironments.indexWhere((env) => env.id == environment.id);
+      final index = currentEnvironments.indexWhere((env) => env.id == environment.id);
       if (index != -1) {
         currentEnvironments[index] = environment;
       }

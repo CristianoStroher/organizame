@@ -70,6 +70,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
+  //? Função para inicializar o ambiente com os dados existentes
   void _initializeWithExistingEnvironment() {
     if (widget.environment != null) {
       Logger().d("Ambiente recebido: ${widget.environment}");
@@ -81,10 +82,17 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       _observationController.text = widget.environment!.observation ?? '';
       _selectedDifficulty = widget.environment!.difficulty;
 
-      // Atualizar controller com as imagens existentes
+      // Atualiza o ambiente no controller (incluindo imagens)
+      controller.setCurrentEnvironment(widget.environment!);
+
+      // Se existirem imagens, adiciona à lista de imagens do controller
       if (widget.environment!.imagens != null) {
         widget.environment!.imagens!.forEach((imagem) {
           Logger().d('Imagem carregada: ${imagem.filePath}');
+          // Adiciona à lista de imagens do controller se ainda não existir
+          if (!controller.listaImagens.any((img) => img.id == imagem.id)) {
+            controller.addImageToList(imagem);
+          }
         });
       }
 
@@ -104,6 +112,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
+ //? Função para inicializar um novo ambiente
   void _initializeNewEnvironment() {
     _selectedItens[EnviromentItensEnum.roupas] = false;
     _selectedItens[EnviromentItensEnum.calcados] = false;
@@ -180,16 +189,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 
       // Criar um mapa intermediário com valores não nulos
       final Map<String, bool> itensMap = {
-        EnviromentItensEnum.roupas.name:
-            _selectedItens[EnviromentItensEnum.roupas] ?? false,
-        EnviromentItensEnum.calcados.name:
-            _selectedItens[EnviromentItensEnum.calcados] ?? false,
-        EnviromentItensEnum.brinquedos.name:
-            _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-        EnviromentItensEnum.roupasDeCama.name:
-            _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-        EnviromentItensEnum.outros.name:
-            _selectedItens[EnviromentItensEnum.outros] ?? false,
+        EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
+        EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
+        EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+        EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
+        EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
       };
 
       final updatedEnvironment = EnviromentObject(
@@ -203,7 +207,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         imagens: widget.environment!.imagens,
       );
 
-      // Use o controller local para atualizar
+      // metodo para atualizar o ambiente
       Logger().d('Itens a serem atualizados: $itensMap');
       await controller.updateEnvironment(updatedEnvironment);
 
@@ -224,16 +228,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     try {
       // Convertendo o Map<EnviromentItensEnum, bool> para Map<String, bool>
       final Map<String, bool> itensMap = {
-        EnviromentItensEnum.roupas.name:
-            _selectedItens[EnviromentItensEnum.roupas] ?? false,
-        EnviromentItensEnum.calcados.name:
-            _selectedItens[EnviromentItensEnum.calcados] ?? false,
-        EnviromentItensEnum.brinquedos.name:
-            _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
-        EnviromentItensEnum.roupasDeCama.name:
-            _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
-        EnviromentItensEnum.outros.name:
-            _selectedItens[EnviromentItensEnum.outros] ?? false,
+        EnviromentItensEnum.roupas.name: _selectedItens[EnviromentItensEnum.roupas] ?? false,
+        EnviromentItensEnum.calcados.name: _selectedItens[EnviromentItensEnum.calcados] ?? false,
+        EnviromentItensEnum.brinquedos.name: _selectedItens[EnviromentItensEnum.brinquedos] ?? false,
+        EnviromentItensEnum.roupasDeCama.name: _selectedItens[EnviromentItensEnum.roupasDeCama] ?? false,
+        EnviromentItensEnum.outros.name: _selectedItens[EnviromentItensEnum.outros] ?? false,
       };
       print("itens map => $itensMap");
       await controller.saveEnvironment(
@@ -243,7 +242,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         observation: _observationController.text,
         selectedItens: itensMap,
         listaImagens: controller.listaImagens,
-        //? adicionado a lista de imagens
+        
       );
 
       Logger().d('Ambiente criado com sucesso!');
@@ -261,6 +260,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
+  //? Função para capturar a imagem
   Widget _buildImageSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,11 +374,10 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     );
   }
 
-// Método auxiliar para construir a imagem
+  //? Método auxiliar para construir a imagem
   Widget _buildImageWidget(ImagensObject imagem) {
     final bool isStorageUrl = imagem.filePath.startsWith('http');
     Logger().d('Tipo de imagem: ${isStorageUrl ? "Storage URL" : "Local"}');
-
     return SizedBox(
       height: 200,
       width: double.infinity,
@@ -516,12 +515,12 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       }
 
       //? Chama o controller para capturar a imagem
-      await context
-          .read<ChildBedroomController>()
-          .captureImage(description: description);
-
+      await context.read<ChildBedroomController>().captureImage(description: description);
+      Logger().d('Imagem capturada com sucesso!');
       //? Atualiza a UI com a imagem capturada
-      setState(() {});
+      setState(() {
+        Logger().d('Atualizando UI com imagem capturada');
+      });
 
       //? Feedback de sucesso
       if (mounted) {
@@ -539,7 +538,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     }
   }
 
-  //? Função para editar a descrição da imagem - NÃO UTILIZADA
+  //? Função para editar a descrição da imagem - NÃO FUNCIONAL
   Future<void> _editImageDescription(ImagensObject imagem) async {
     final newDescription = await _showDescriptionDialog();
     if (newDescription != null && mounted) {
@@ -614,6 +613,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
   //? contrução da tela
   @override
   Widget build(BuildContext context) {
+    final lista = controller.listaImagens;
     final List<String> options = [
       'Roupas',
       'Calçados',
@@ -735,7 +735,8 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                   controller: _observationController,
                 ),
                 const SizedBox(height: 20),
-                Text('IMAGENS', style: context.titleDefaut),
+                Text('IMAGENS (${lista.length})', style: context.titleDefaut,
+                ),
                 const SizedBox(height: 20),
                 _buildImageSection(),
                 const SizedBox(height: 20),

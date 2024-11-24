@@ -199,20 +199,23 @@ class EnviromentRepositoryImpl extends EnviromentRepository {
     }
   }
 
+  //?atualização de ambiente
   @override
-  Future<void> updateEnvironmentInVisit(
-      String visitId, EnviromentObject environment) async {
+  Future<void> updateEnvironmentInVisit(String visitId, EnviromentObject environment) async {
     try {
       Logger().d('Iniciando atualização de ambiente na visita $visitId');
       Logger().d('Ambiente a ser atualizado: ${environment.toMap()}');
 
+      // Busca a visita no Firestore
       final docRef = _firestore.collection(_collection).doc(visitId);
+      // Armazena os dados da visita
       final docSnap = await docRef.get();
 
       if (!docSnap.exists) {
         throw Exception('Visita não encontrada');
       }
 
+      // Busca a lista de ambientes da visita
       final dados = docSnap.data()!;
       final List<dynamic> ambientesAtuais =
           dados['environments'] ?? dados['enviroment'] ?? [];

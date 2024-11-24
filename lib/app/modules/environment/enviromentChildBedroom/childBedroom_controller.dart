@@ -157,7 +157,7 @@ class ChildBedroomController extends DefautChangeNotifer {
       notifyListeners();
     }
   }
- 
+
   //? Método para capturar uma imagem da câmera e adicionar à lista de imagens
   Future<void> captureImage({required String description}) async {
     try {
@@ -200,44 +200,78 @@ class ChildBedroomController extends DefautChangeNotifer {
   }
 
   Future<void> deleteImage(ImagensObject imagem) async {
-    try {
-      showLoadingAndResetState();
-      _validateCurrentState();
+  try {
+    Logger().d('Iniciando exclusão da imagem: ${imagem.id}');
+    showLoadingAndResetState();
 
-      final visitId = _getCurrentVisitId()!;
-      final environmentId = _currentEnvironment!.id;
-
-      await _imagenService.deleteImage(
-        visitId,
-        environmentId,
-        imagem,
-      );
-
-      // Criar uma nova lista tipada corretamente
-      List<ImagensObject> currentImages =
-          List<ImagensObject>.from(_currentEnvironment?.imagens ?? []);
-      currentImages.removeWhere((img) => img.id == imagem.id);
-
-      // Atualizar o ambiente com a nova lista tipada
-      _currentEnvironment = _currentEnvironment!.copyWith(
-        imagens: currentImages,
-      );
-
-      await updateEnvironment(_currentEnvironment!);
-
-      success();
-    } catch (e) {
-      setError('Erro ao deletar imagem: $e');
-      Logger().e('Erro ao deletar imagem: $e');
-      rethrow;
-    } finally {
-      hideLoading();
+    // Se a imagem está na lista local
+    if (_listaImagens.any((img) => img.id == imagem.id)) {
+      _listaImagens.removeWhere((img) => img.id == imagem.id);
+      
+      // Se for arquivo local, tenta deletar
+      try {
+        final file = File(imagem.filePath);
+        if (await file.exists()) {
+          await file.delete();
+          Logger().d('Arquivo local deletado: ${imagem.filePath}');
+        }
+      } catch (e) {
+        Logger().e('Erro ao deletar arquivo local: $e');
+      }
+      
       notifyListeners();
+      success();
+      return;
     }
+
+    // Se a imagem está no ambiente atual (já salva)
+    if (_currentEnvironment?.imagens?.any((img) => img.id == imagem.id) ?? false) {
+      final visitId = _getCurrentVisitId();
+      if (visitId == null) {
+        throw Exception('Visita não selecionada');
+      }
+
+      // Remove do Storage se for uma URL
+      if (imagem.filePath.startsWith('http')) {
+        await _imagenService.deleteImage(
+          visitId,
+          _currentEnvironment!.id,
+          imagem,
+        );
+      }
+
+      // Remove da lista de imagens do ambiente
+      final updatedImages = _currentEnvironment!.imagens!
+          .where((img) => img.id != imagem.id)
+          .toList();
+
+      // Atualiza o ambiente
+      _currentEnvironment = _currentEnvironment!.copyWith(
+        imagens: updatedImages,
+      );
+
+      // Salva as alterações
+      await _controller.updateEnvironment(_currentEnvironment!);
+      
+      success();
+      notifyListeners();
+      return;
+    }
+
+    throw Exception('Imagem não encontrada');
+
+  } catch (e) {
+    Logger().e('Erro ao deletar imagem: $e');
+    setError('Erro ao deletar imagem: $e');
+    rethrow;
+  } finally {
+    hideLoading();
   }
+}
 
   //! Função para atualizar a descrição de uma imagem - não verificada
-  Future<void> updateImageDescription(String imageId, String newDescription) async {
+  Future<void> updateImageDescription(
+      String imageId, String newDescription) async {
     try {
       showLoadingAndResetState();
       _validateCurrentState();
@@ -290,6 +324,16 @@ class ChildBedroomController extends DefautChangeNotifer {
 
   void setCurrentEnvironment(EnviromentObject environment) {
     _currentEnvironment = environment;
+
+    if (environment.imagens != null) {
+      for (var imagem in environment.imagens!) {
+        if (!_listaImagens.any((img) => img.id == imagem.id)) {
+          _listaImagens.add(imagem);
+        }
+      }
+      
+    }
+
     notifyListeners();
   }
 
@@ -341,4 +385,12 @@ class ChildBedroomController extends DefautChangeNotifer {
       return false;
     }
   }
+
+  void addImageToList(ImagensObject imagem) {
+    if (!_listaImagens.any((img) => img.id == imagem.id)) {
+      _listaImagens.add(imagem);
+      notifyListeners();
+    }
+  }
+
 }
