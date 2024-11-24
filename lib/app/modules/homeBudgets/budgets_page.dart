@@ -173,7 +173,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                 Messages.of(context).showInfo('Filtros removidos');
               },
               style: TextButton.styleFrom(
-                backgroundColor: Color(0xFFFAFFC5),
+                backgroundColor: Color(0xFFDDFFCC),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -247,7 +247,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                 ),
               ),
               child:
-                  Text('Filtrar', style: TextStyle(color: Color(0xFFFAFFC5))),
+                  Text('Filtrar', style: TextStyle(color: Color(0xFFDDFFCC))),
             ),
           ],
         ),
@@ -259,11 +259,11 @@ class _BudgetsPageState extends State<BudgetsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: HomeDrawer(
-        colorDrawer: const Color(0xFFFAFFC5),
-        backgroundButton: const Color(0xFFFAFFC5),
+        colorDrawer: const Color(0xFFDDFFCC),
+        backgroundButton: const Color(0xFFDDFFCC),
       ),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFAFFC5),
+        backgroundColor: const Color(0xFFDDFFCC),
         title: OrganizameLogoMovie(
           text: 'OrganizaMe',
           part1Color: context.primaryColor,
@@ -281,11 +281,11 @@ class _BudgetsPageState extends State<BudgetsPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _goToTaskPage(context),
         backgroundColor: context.primaryColor,
-        tooltip: 'Adicionar visita técnica',
-        child: const Icon(Icons.add, color: Color(0xFFFAFFC5)),
+        tooltip: 'Adicionar orçamento',
+        child: const Icon(Icons.add, color: Color(0xFFDDFFCC)),
       ),
       bottomNavigationBar: OrganizameNavigatorbar(
-        color: const Color(0xFFFAFFC5),
+        color: const Color(0xFFDDFFCC),
         initialIndex: index,
       ),
       body: Consumer<TechnicalController>(
@@ -346,7 +346,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    'VISITAS TÉCNICAS (${visits.length})',
+                    'ORÇAMENTOS (${visits.length})',
                     style: context.titleDefaut,
                   ),
                 ),

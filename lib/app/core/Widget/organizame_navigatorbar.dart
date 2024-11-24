@@ -34,7 +34,7 @@ class _OrganizameNavigatorbarState extends State<OrganizameNavigatorbar> {
     } else if (index == 1) {
       Navigator.of(context).pushNamed('/tecnical');
     } else if (index == 2) {
-      Navigator.of(context).pushNamed('/budget');
+      Navigator.of(context).pushNamed('/budgets');
     }
   }
 
