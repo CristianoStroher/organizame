@@ -461,7 +461,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Descrição da Imagem'),
+        title: Text('Descrição da Imagem', style: context.titleMedium),
         content: OrganizameTextformfield(
           enabled: true,
           label: 'Descrição',
@@ -471,7 +471,16 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
+            style: TextButton.styleFrom(
+              backgroundColor: Color(0xFFFAFFC5),
+              side: BorderSide(color: context.primaryColor, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            child: Text('Cancelar',
+                style: TextStyle(color: context.secondaryColor)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -479,7 +488,16 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
                 Navigator.pop(context, descriptionController.text);
               }
             },
-            child: const Text('Confirmar'),
+            style: TextButton.styleFrom(
+              backgroundColor: context.primaryColor,
+              side: BorderSide(color: context.primaryColor, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            child: Text('Confirmar',
+                style: TextStyle(color: Color(0xFFFAFFC5))),
           ),
         ],
       ),
@@ -572,7 +590,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
               ),
             ),
             child: const Text('Excluir',
-              style: TextStyle(color: Color(0xFFFAFFC5))),
+                style: TextStyle(color: Color(0xFFFAFFC5))),
           ),
         ],
       ),
