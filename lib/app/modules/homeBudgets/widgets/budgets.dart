@@ -4,24 +4,23 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
-import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 import 'package:organizame/app/modules/homeTasks/home_controller.dart';
-import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/modules/task/task_create_page.dart';
 import 'package:provider/provider.dart';
 
 class Budgets extends StatelessWidget {
-  // final BudgetsController controller;
-  // final BudgetsObject object;
+  final BudgetsController controller;
+  final BudgetsObject object;
   final dateFormatData = DateFormat('dd/MM/yyyy');
   final dateFormatHora = DateFormat('HH:mm');
 
   Budgets({
     super.key,
-    // required this.object,
-    // required this.controller,
+    required this.object,
+    required this.controller,
   });
 
   @override
