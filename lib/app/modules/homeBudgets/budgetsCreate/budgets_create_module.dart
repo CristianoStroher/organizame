@@ -1,6 +1,7 @@
 
 import 'package:organizame/app/core/modules/organizame_module.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_page.dart';
+import 'package:provider/provider.dart';
 
 class BudgetsCreateModule extends OrganizameModule {
   BudgetsCreateModule()
@@ -11,7 +12,7 @@ class BudgetsCreateModule extends OrganizameModule {
           //   // ),
           // ],
           routers: {
-            '/budgets/create': (context) => BudgetsCreatePage(),
+            '/budgets/create': (context) => BudgetsCreatePage(controller: context.read(),),
           },
         );
   
