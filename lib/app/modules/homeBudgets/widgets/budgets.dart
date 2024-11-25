@@ -6,9 +6,9 @@ import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
+import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_page.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 import 'package:organizame/app/modules/homeTasks/home_controller.dart';
-import 'package:organizame/app/modules/task/task_create_page.dart';
 import 'package:provider/provider.dart';
 
 class Budgets extends StatelessWidget {
@@ -30,9 +30,9 @@ class Budgets extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TaskCreatePage(
+            builder: (context) => BudgetsCreatePage(
               controller: controller,
-              task: object,
+              object: object,
             ),
           ),
         ).then((value) async {
@@ -57,21 +57,11 @@ class Budgets extends StatelessWidget {
                 activeColor: context.primaryColorLight,
                 fillColor: WidgetStateProperty.all(context.primaryColorLight),
                 side: BorderSide(color: context.primaryColor, width: 1),
-                value: object.finalizado,
+                value: object.status,
                 onChanged: (value) async {
                   await context.read<HomeController>().finishTask(object);
-                  Logger().i('Tarefa finalizada: ${object.descricao}');
+                  Logger().i('Tarefa finalizada: ${object.customer}');
                 },
-              ),
-              title: Text(
-                object.descricao.toUpperCase(),
-                style: TextStyle(
-                  decoration:
-                      object.finalizado ? TextDecoration.lineThrough : null,
-                  fontFamily: context.titleDefaut.fontFamily,
-                  fontWeight: FontWeight.bold,
-                  color: context.primaryColor,
-                ),
               ),
               subtitle: Row(
                 children: [
@@ -83,7 +73,7 @@ class Budgets extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    dateFormatData.format(object.data),
+                    dateFormatData.format(object.date),
                     style: TextStyle(
                       fontFamily: context.titleDefaut.fontFamily,
                       color: context.secondaryColor,
@@ -99,7 +89,7 @@ class Budgets extends StatelessWidget {
                     builder: (context) => AlertDialog(
                       title: Text('Excluir tarefa', style: context.titleMedium),
                       content: Text(
-                        'Deseja excluir a tarefa ${object.descricao}?',
+                        'Deseja excluir a tarefa ${object.customer}?',
                         style: TextStyle(color: context.primaryColor),
                       ),
                       actions: [

@@ -3,13 +3,13 @@
 import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
 
 class BudgetsObject {
-    
+
   final String id;
   final Customer customer;
-  final String date;
+  final DateTime date;
   final String? observation;
   final int value;
-  final String status;
+  final bool status;
 
   BudgetsObject({
     required this.id,    

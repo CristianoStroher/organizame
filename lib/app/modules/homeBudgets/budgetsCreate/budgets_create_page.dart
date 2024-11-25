@@ -1,9 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
-import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 
@@ -23,6 +23,9 @@ class BudgetsCreatePage extends StatefulWidget {
 }
 
 class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
+  final _globalKey = GlobalKey<FormState>();
+  final observationsEC = TextEditingController();
+  final valueEC = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -66,21 +69,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                   children: [
                     Text(widget.object == null ? 'NOVA ORÇAMENTO' : 'EDITAR ORÇAMENTO',
                         style: context.titleDefaut),
-                    const SizedBox(height: 20),
-                    OrganizameTextformfield(
-                      enabled: true,
-                      validator: Validatorless.multiple([
-                        Validatorless.required('Campo obrigatório'),
-                        Validatorless.max(50, 'Nome muito longo'),
-                      ]),
-                      label: 'Descrição',
-                      controller: descriptionEC,
-                    ),
                     const SizedBox(height: 10),
-                    // Colocando Data e Hora numa única linha
-                    
-                    const SizedBox(height: 10),
-                    // Caixa de texto de Observações com altura de 3 linhas
                     SizedBox(
                       height: 120, // Ajusta a altura total
                       child: OrganizameTextField(
@@ -91,7 +80,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                     ),
                     const SizedBox(height: 20),
                     OrganizameElevatedButton(
-                      label: widget.task != null ? 'Atualizar' : 'Salvar',
+                      label: widget.object != null ? 'Atualizar' : 'Salvar',
                       onPressed: () {
                         _handleSave();
                       },
