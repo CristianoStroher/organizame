@@ -7,6 +7,7 @@ import 'package:organizame/app/core/ui/desing_ui.dart';
 import 'package:organizame/app/modules/auth/auth_module.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_module.dart';
 import 'package:organizame/app/modules/environment/enviroment_module.dart';
+import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_module.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_module.dart';
 
 
@@ -71,6 +72,7 @@ class _AppWidgetState extends State<AppWidget> {
         ...LivingRoomModule().routers,
         ...ChildBedroomModule().routers,
         ...BudgetsModule().routers,
+        ...BudgetsCreateModule().routers,
       },
       home: const SplashPage(),
     );
