@@ -1,5 +1,5 @@
 
-import 'package:organizame/app/core/Validators/login_validators.dart';
+import 'package:organizame/app/core/validators/login_validators.dart';
 import 'package:organizame/app/core/modules/organizame_module.dart';
 import 'package:organizame/app/modules/auth/login/login_controller.dart';
 import 'package:organizame/app/modules/auth/login/login_page.dart';

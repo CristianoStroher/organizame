@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
-import 'package:organizame/app/core/Validators/login_validators.dart';
+import 'package:organizame/app/core/validators/login_validators.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';

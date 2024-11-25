@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:organizame/app/core/Widget/organizame_logo_movie.dart';
+import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';

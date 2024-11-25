@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:organizame/app/app_widget.dart';
-import 'package:organizame/app/core/Validators/login_validators.dart';
+import 'package:organizame/app/core/validators/login_validators.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
