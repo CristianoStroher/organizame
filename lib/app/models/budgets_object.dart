@@ -20,7 +20,7 @@ class BudgetsObject {
     required this.status,
   });
 
-  factory BudgetsObject.fromJson(Map<String, dynamic> json) {
+  factory BudgetsObject.fromMap(Map<String, dynamic> json) {
     return BudgetsObject(
       id: json['id'] as String,
       customer: json['customer'] as Customer,
@@ -33,7 +33,7 @@ class BudgetsObject {
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         'id': id,
         'customer': customer,
         'date': date.toIso8601String(),
