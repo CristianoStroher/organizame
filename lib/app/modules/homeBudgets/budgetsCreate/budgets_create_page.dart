@@ -12,8 +12,9 @@ import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.da
 class BudgetsCreatePage extends StatefulWidget {
   final BudgetsController _controller;
   final BudgetsObject? object;
-  final CustomerObject? initialClient;
-  final Function(CustomerObject?)? onClientSelected;
+  final CustomerObject? initialClient; // Cliente inicial
+  final Function(CustomerObject?)? onClientSelected; // Função para atualizar o cliente selecionado
+ 
 
   const BudgetsCreatePage({
       super.key,
@@ -31,6 +32,9 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
   final _globalKey = GlobalKey<FormState>();
   final observationsEC = TextEditingController();
   final valueEC = TextEditingController();
+  String? selectedClient;
+
+
 
 
   
@@ -81,18 +85,18 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                             : 'EDITAR ORÇAMENTO',
                         style: context.titleDefaut),
                     const SizedBox(height: 10),
-                    OrganizameDropdownfield(
-                      label: 'Cliente',
-                      options: customers.map((customer) => customer.name).toList(),
-                      selectedOptions: selectedClient,
-                      onChanged: (newValue) => _updateClientData(newValue, customers),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor, selecione um cliente';
-                        }
-                        return null;
-                      },
-                    ),
+                    // OrganizameDropdownfield(
+                    //   label: 'Cliente',
+                    //   options: customers.map((customer) => customer.name).toList(),
+                    //   selectedOptions: selectedClient,
+                    //   onChanged: (newValue) => _updateClientData(newValue, customers),
+                    //   validator: (value) {
+                    //     if (value == null || value.isEmpty) {
+                    //       return 'Por favor, selecione um cliente';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
                     SizedBox(
                       height: 120, // Ajusta a altura total
                       child: OrganizameTextField(
@@ -117,4 +121,20 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
       ),
     );
   }
+
+  void _updateClientData(String? newValue, List<CustomerObject> clients) {
+    setState(() {
+      selectedClient = newValue;
+
+      final selectedCustomer = clients.firstWhere(
+        (customer) => customer.name == newValue,
+        orElse: () => CustomerObject(name: ''),
+      );
+
+      if (widget.onClientSelected != null) {
+        widget.onClientSelected!(selectedCustomer);
+      }
+    });
+  }
+
 }

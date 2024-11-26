@@ -10,6 +10,8 @@ class BudgetsModule extends OrganizameModule {
       : super(
           bindings: [
 
+            
+
              ChangeNotifierProvider<BudgetsController>(
               create: (context) => BudgetsController(),
             ),
@@ -17,6 +19,7 @@ class BudgetsModule extends OrganizameModule {
           ],
           routers: {
             '/budgets': (context) => BudgetsPage(controller: context.read()),
+            '/budgets/create': (context) => BudgetsPage(controller: context.read()),
           },
         );
 

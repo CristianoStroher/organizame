@@ -138,13 +138,13 @@ class Budgets extends StatelessWidget {
                           //     .deleteTask(object);
 
                       Loader.hide();
-                      if (result) {
-                        Messages.of(context)
-                            .showInfo('Tarefa excluída com sucesso');
-                      } else {
-                        Messages.of(context)
-                            .showError('Erro ao excluir tarefa');
-                      }
+                      // if (result) {
+                      //   Messages.of(context)
+                      //       .showInfo('Tarefa excluída com sucesso');
+                      // } else {
+                      //   Messages.of(context)
+                      //       .showError('Erro ao excluir tarefa');
+                      // }
                     } catch (e) {
                       Loader.hide();
                       Messages.of(context).showError('Erro ao excluir tarefa');
