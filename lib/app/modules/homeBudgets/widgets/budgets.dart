@@ -59,7 +59,7 @@ class Budgets extends StatelessWidget {
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.status,
                 onChanged: (value) async {
-                  await context.read<HomeController>().finishTask(object);
+                  // await context.read<HomeController>().finishTask(object);
                   Logger().i('Tarefa finalizada: ${object.customer}');
                 },
               ),
@@ -132,10 +132,10 @@ class Budgets extends StatelessWidget {
                   if (confirmDelete == true) {
                     Loader.show(context);
                     try {
-                      final result = //await controller.deleteTask(object);
-                          await context
-                              .read<HomeController>()
-                              .deleteTask(object);
+                      // final result = //await controller.deleteTask(object);
+                          // await context
+                          //     .read<HomeController>()
+                          //     .deleteTask(object);
 
                       Loader.hide();
                       if (result) {

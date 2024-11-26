@@ -1,22 +1,27 @@
-
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
+import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
 import 'package:organizame/app/models/budgets_object.dart';
+import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
 
 class BudgetsCreatePage extends StatefulWidget {
   final BudgetsController _controller;
   final BudgetsObject? object;
-
+  final CustomerObject? initialClient;
+  final Function(CustomerObject?)? onClientSelected;
 
   const BudgetsCreatePage({
-    super.key,
-    required BudgetsController controller,
-    this.object
-    }) : _controller = controller;
+      super.key,
+      required BudgetsController controller,
+      this.object,
+      this.initialClient,
+      this.onClientSelected})
+      : _controller = controller;
 
   @override
   State<BudgetsCreatePage> createState() => _BudgetsCreatePageState();
@@ -26,6 +31,9 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
   final _globalKey = GlobalKey<FormState>();
   final observationsEC = TextEditingController();
   final valueEC = TextEditingController();
+
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +75,24 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(widget.object == null ? 'NOVA ORÇAMENTO' : 'EDITAR ORÇAMENTO',
+                    Text(
+                        widget.object == null
+                            ? 'NOVA ORÇAMENTO'
+                            : 'EDITAR ORÇAMENTO',
                         style: context.titleDefaut),
                     const SizedBox(height: 10),
+                    OrganizameDropdownfield(
+                      label: 'Cliente',
+                      options: customers.map((customer) => customer.name).toList(),
+                      selectedOptions: selectedClient,
+                      onChanged: (newValue) => _updateClientData(newValue, customers),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, selecione um cliente';
+                        }
+                        return null;
+                      },
+                    ),
                     SizedBox(
                       height: 120, // Ajusta a altura total
                       child: OrganizameTextField(
@@ -82,7 +105,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                     OrganizameElevatedButton(
                       label: widget.object != null ? 'Atualizar' : 'Salvar',
                       onPressed: () {
-                        _handleSave();
+                        // _handleSave();
                       },
                     ),
                   ],
