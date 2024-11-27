@@ -34,7 +34,7 @@ class BudgetsModule extends OrganizameModule {
             Provider<CustomerService>(create: (context) => CustomerServiceImpl(customerRepository: context.read()),),
             
             ChangeNotifierProvider<BudgetsController>(
-              create: (context) => BudgetsController(service: context.read<BudgetsServiceImpl>()), ),
+              create: (context) => BudgetsController(service: context.read<BudgetsService>()), ),
             
           ],
           routers: {
