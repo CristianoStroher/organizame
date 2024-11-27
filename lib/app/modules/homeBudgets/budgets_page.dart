@@ -6,19 +6,18 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
-import 'package:organizame/app/modules/homeBudgets/widgets/budgets.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
-import 'package:organizame/app/modules/homeTecnical/widgets/visit.dart';
 import 'package:provider/provider.dart';
 
 class BudgetsPage extends StatefulWidget {
-  final BudgetsController controller;
+  final BudgetsController _controller;
+  
 
   const BudgetsPage({
     super.key,
-    required this.controller,
-    });
+    required  BudgetsController controller,
+    }) : _controller = controller;
 
   @override
   State<BudgetsPage> createState() => _BudgetsPageState();
@@ -34,7 +33,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
        /* widget.controller.initialize();    */    
     
     // Adiciona listener para atualizações
-      widget.controller.addListener(_handleControllerUpdate);
+      widget._controller.addListener(_handleControllerUpdate);
     }
   
   // Atualiza a UI quando o controller notificar mudanças
@@ -47,7 +46,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
   @override
   void dispose() {
     _searchController.dispose();
-    widget.controller.removeListener(_handleControllerUpdate);
+    widget._controller.removeListener(_handleControllerUpdate);
     super.dispose();
     
   }
@@ -289,7 +288,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
         color: const Color(0xFFDDFFCC),
         initialIndex: index,
       ),
-      body: Consumer<TechnicalController>(
+      body: Consumer<BudgetsController>(
         builder: (context, controller, _) {
           if (controller.isLoading) {
             return const Center(
@@ -298,9 +297,9 @@ class _BudgetsPageState extends State<BudgetsPage> {
           }
           
           // variavel para
-          final visits = controller.filteredTechnicalVisits;
+          final budgets =  controller.getAllBudgets();// busca função buscar da controller
 
-          if (visits.isEmpty) {
+          if (budgets.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -347,7 +346,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    'ORÇAMENTOS (${visits.length})',
+                    'ORÇAMENTOS (${budgets.length})',
                     style: context.titleDefaut,
                   ),
                 ),

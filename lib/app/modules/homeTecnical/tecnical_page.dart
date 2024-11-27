@@ -53,7 +53,7 @@ class _TecnicalPageState extends State<TecnicalPage> {
 
   Future<void> _goToTaskPage(BuildContext context) async {
     final controller = context.read<TechnicalController>();
-    controller.currentVisit = null;
+    controller.currentVisit = null; //
     final result = await Navigator.of(context).pushNamed('/visit/create');
     if (result == true && mounted) {
         await controller.refreshVisits();
