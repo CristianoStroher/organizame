@@ -6,6 +6,7 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
+import 'package:organizame/app/modules/homeBudgets/widgets/budgets.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
 import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/homeTecnical/widgets/visit.dart';
@@ -53,11 +54,11 @@ class _BudgetsPageState extends State<BudgetsPage> {
 
 
   Future<void> _goToTaskPage(BuildContext context) async {
-    final controller = context.read<TechnicalController>();
-    controller.currentVisit = null;
+    final controller = context.read<BudgetsController>();
+    // controller.currentVisit = null;
     final result = await Navigator.of(context).pushNamed('/budgets/create');
     if (result == true && mounted) {
-        await controller.refreshVisits();
+        // await controller.refreshVisits();
         setState(() {});
       
     }
@@ -312,8 +313,8 @@ class _BudgetsPageState extends State<BudgetsPage> {
                   const SizedBox(height: 16),
                   Text(
                     controller.allTechnicalVisits.isEmpty
-                        ? 'Nenhuma visita técnica cadastrada'
-                        : 'Nenhuma visita encontrada com este filtro',
+                        ? 'Nenhum orçamento cadastrado'
+                        : 'Nenhum orçamento encontrado com este filtro',
                     style: TextStyle(
                       color: context.primaryColor,
                       fontSize: 16,
@@ -350,28 +351,17 @@ class _BudgetsPageState extends State<BudgetsPage> {
                     style: context.titleDefaut,
                   ),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: visits.length,
-                    itemBuilder: (context, index) {
-                      final visit = visits[index];
-                      return Visit(
-                        controller: controller,
-                        object: visit,
-                        onEdit: (visitToEdit) async {
-                          final result = await Navigator.of(context)
-                              .pushNamed('/visit/create', arguments: {
-                            'visit': visitToEdit // Passa o objeto dentro de um Map
-                          });
-                          
-                            await controller.refreshVisits();
-                          
-                        },
-                      );
-                    },
-                  ),
-                ),
+                // Expanded(
+                //   child: ListView.builder(
+                //     padding: const EdgeInsets.symmetric(horizontal: 20),
+                //     itemCount: budgets.length,
+                //     itemBuilder: (context, index) {
+                //       final visit = visits[index];
+                //       return Container(
+                //         child: Text('budgets'));                   
+                //     },
+                //   ),
+                // ),
               ],
             ),
           );

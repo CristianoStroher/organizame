@@ -13,7 +13,6 @@ import 'package:organizame/app/models/task_object.dart';
 import 'package:organizame/app/modules/task/task_controller.dart';
 import 'package:organizame/app/core/widget/organizame_calendar_button.dart';
 import 'package:organizame/app/core/widget/organizame_time.dart';
-import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class TaskCreatePage extends StatefulWidget {
