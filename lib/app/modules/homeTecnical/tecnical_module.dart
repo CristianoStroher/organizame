@@ -55,7 +55,8 @@ class TecnicalModule extends OrganizameModule {
           ],
           routers: {
             '/tecnical': (context) => TecnicalPage(controller: context.read(),),
-            '/tecnical/customer/create': (context) => const CustomerCreatePage(),             
+            '/tecnical/customer/create': (context) => const CustomerCreatePage(),
+                         
 
             
           },

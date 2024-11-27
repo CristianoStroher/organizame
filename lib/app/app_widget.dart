@@ -72,7 +72,6 @@ class _AppWidgetState extends State<AppWidget> {
         ...LivingRoomModule().routers,
         ...ChildBedroomModule().routers,
         ...BudgetsModule().routers,
-        ...BudgetsCreateModule().routers,
       },
       home: const SplashPage(),
     );

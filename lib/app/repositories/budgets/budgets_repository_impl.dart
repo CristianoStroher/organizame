@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/budgets_object.dart';
+import 'package:organizame/app/models/customer_object.dart';
 
 import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
 
@@ -17,7 +17,7 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
   }) : _firestore = firestore;
 
   @override
-  Future<void> saveBudget(String id, Customer customer, DateTime date,
+  Future<void> saveBudget(String id, CustomerObject customer, DateTime date,
       String? observation, double value, bool status) async {
     try {
       await _firestore.collection(_budgets).add({
@@ -45,7 +45,7 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
 
         return BudgetsObject(
           id: doc.id,
-          customer: data['customer'] as Customer,
+          customer: data['customer'] as CustomerObject,
           date: (data['date'] as Timestamp)
               .toDate(), // convertendo o timestamp para DateTime
           observation: data['observation'] as String?,

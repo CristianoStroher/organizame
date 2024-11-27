@@ -24,20 +24,17 @@ class BudgetsModule extends OrganizameModule {
 
             Provider<BudgetsRepository>(
               create: (context) => BudgetsRepositoryImpl(firestore: context.read()),),  
-            
-            Provider<BudgetsService>(
-              create: (context) => BudgetsServiceImpl(budgetsRepository: context.read()),),
               
             Provider<CustomerRepository>(
               create: (context) => CustomerRepositoryImpl(firestore: context.read()),),
+            
+            Provider<BudgetsService>(
+              create: (context) => BudgetsServiceImpl(budgetsRepository: context.read()),),
 
             Provider<CustomerService>(create: (context) => CustomerServiceImpl(customerRepository: context.read()),),
             
             ChangeNotifierProvider<BudgetsController>(
               create: (context) => BudgetsController(service: context.read<BudgetsServiceImpl>()), ),
-            
-            ChangeNotifierProvider<BudgetsCreateController>(
-              create: (context) => BudgetsCreateController(service: context.read<BudgetsServiceImpl>()),),
             
           ],
           routers: {

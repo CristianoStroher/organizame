@@ -7,7 +7,6 @@ import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
-import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:provider/provider.dart';
 
 class BudgetsPage extends StatefulWidget {
@@ -57,14 +56,14 @@ class _BudgetsPageState extends State<BudgetsPage> {
     // controller.currentVisit = null;
     final result = await Navigator.of(context).pushNamed('/budgets/create');
     if (result == true && mounted) {
-        // await controller.refreshVisits();
+        await controller.refreshVisits();
         setState(() {});
       
     }
   }
 
   void _showFilterDialog(BuildContext context) {
-    final controller = context.read<TechnicalController>();
+    final controller = context.read<BudgetsController>();
     DateTime? startDate;
     DateTime? endDate;
 
@@ -290,14 +289,14 @@ class _BudgetsPageState extends State<BudgetsPage> {
       ),
       body: Consumer<BudgetsController>(
         builder: (context, controller, _) {
-          if (controller.isLoading) {
+          if (controller.isStauts) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
           
-          // variavel para
-          final budgets =  controller.getAllBudgets();// busca função buscar da controller
+          
+          final budgets =  controller.filteredBugets;// busca função buscar da controller
 
           if (budgets.isEmpty) {
             return Center(
@@ -311,7 +310,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    controller.allTechnicalVisits.isEmpty
+                    controller.bugets.isEmpty
                         ? 'Nenhum orçamento cadastrado'
                         : 'Nenhum orçamento encontrado com este filtro',
                     style: TextStyle(
@@ -319,12 +318,12 @@ class _BudgetsPageState extends State<BudgetsPage> {
                       fontSize: 16,
                     ),
                   ),
-                  if (!controller.allTechnicalVisits.isEmpty)
+                  if (!controller.bugets.isEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: TextButton(
                         onPressed: () {
-                          context.read<TechnicalController>().clearFilters();
+                          context.read<BudgetsController>().clearFilters();
                           Messages.of(context).showInfo('Filtro removido');
                         },
                         child: Text(

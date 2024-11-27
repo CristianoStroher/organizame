@@ -1,11 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
 
 class BudgetsObject {
 
   final String id;
-  final Customer customer;
+  final CustomerObject customer;
   final DateTime date;
   final String? observation;
   final double value;
@@ -23,7 +24,7 @@ class BudgetsObject {
   factory BudgetsObject.fromMap(Map<String, dynamic> json) {
     return BudgetsObject(
       id: json['id'] as String,
-      customer: json['customer'] as Customer,
+      customer: json['customer'] as CustomerObject,
       date: json['date'] != null
           ? DateTime.parse(json['date'])
           : DateTime.now(),
@@ -44,7 +45,7 @@ class BudgetsObject {
 
   BudgetsObject copyWith({
     String? id,
-    Customer? customer,
+    CustomerObject? customer,
     DateTime? date,
     String? observation,
     double? value,
