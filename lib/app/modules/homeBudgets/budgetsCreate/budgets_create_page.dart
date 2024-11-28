@@ -44,7 +44,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: context.primaryColorLight,
+        backgroundColor: Color(0xFFDDFFCC),
         automaticallyImplyLeading: false,
         title: OrganizameLogoMovie(
           text: 'Orçamento',
@@ -111,6 +111,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                       onPressed: () {
                         // _handleSave();
                       },
+                      textColor: Color(0xFFDDFFCC),
                     ),
                   ],
                 ),
