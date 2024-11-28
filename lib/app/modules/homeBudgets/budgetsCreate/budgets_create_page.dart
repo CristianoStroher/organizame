@@ -4,6 +4,7 @@ import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_textfield.dart';
+import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
@@ -97,6 +98,12 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                     //     return null;
                     //   },
                     // ),
+                    const SizedBox(height: 20),
+                    OrganizameTextformfield(
+                      label: 'Valor',
+                      enabled: true),
+                    
+                    const SizedBox(height: 10),
                     SizedBox(
                       height: 120, // Ajusta a altura total
                       child: OrganizameTextField(

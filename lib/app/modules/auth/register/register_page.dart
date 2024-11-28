@@ -1,7 +1,6 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
