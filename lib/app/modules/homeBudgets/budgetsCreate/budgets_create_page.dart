@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
@@ -9,16 +10,21 @@ import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
+import 'package:validatorless/validatorless.dart';
 
 class BudgetsCreatePage extends StatefulWidget {
   final BudgetsController _controller;
   final BudgetsObject? object;
   final CustomerObject? initialClient; // Cliente inicial
   final Function(CustomerObject?)? onClientSelected; // Função para atualizar o cliente selecionado
- 
+  final phoneMaskFormatter = MaskTextInputFormatter(
+    mask: '#.###,##',
+    filter: {'#': RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
 
-  const BudgetsCreatePage({
-      super.key,
+  BudgetsCreatePage(
+      {super.key,
       required BudgetsController controller,
       this.object,
       this.initialClient,
@@ -34,11 +40,6 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
   final observationsEC = TextEditingController();
   final valueEC = TextEditingController();
   String? selectedClient;
-
-
-
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +102,14 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                     const SizedBox(height: 20),
                     OrganizameTextformfield(
                       label: 'Valor',
-                      enabled: true),
-                    
+                      enabled: true,
+                      hintText: '0,00',
+                      maskFormatter: widget.phoneMaskFormatter,
+                      controller: valueEC,
+                      validator: (value) =>
+                          Validatorless.required('Valor é obrigatório')(value),
+                    ),
+
                     const SizedBox(height: 10),
                     SizedBox(
                       height: 120, // Ajusta a altura total
@@ -144,5 +151,4 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
       }
     });
   }
-
 }
