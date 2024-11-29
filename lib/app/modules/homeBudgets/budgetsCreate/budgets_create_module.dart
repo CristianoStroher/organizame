@@ -23,7 +23,7 @@ class BudgetsCreateModule extends OrganizameModule {
             ),
           ],
           routers: {
-            '/budgets/create': (context) => BudgetsCreatePage(controller: context.read(),),
+            '/budgets/create': (context) => BudgetsCreatePage(controller: context.read(), createController: context.read()),
           },
         );
 }

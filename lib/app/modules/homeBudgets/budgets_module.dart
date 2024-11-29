@@ -43,10 +43,13 @@ class BudgetsModule extends OrganizameModule {
             ChangeNotifierProvider<BudgetsController>(
               create: (context) => BudgetsController(service: context.read<BudgetsService>(), customerController: context.read<CustomerController>(),), ),
             
+            ChangeNotifierProvider<BudgetsCreateController>(
+              create: (context) => BudgetsCreateController(service: context.read<BudgetsService>(),),)
+            
           ],
           routers: {
             '/budgets': (context) => BudgetsPage(controller: context.read(),),
-            '/budgets/create': (context) => BudgetsCreatePage(controller: context.read()),
+            '/budgets/create': (context) => BudgetsCreatePage(controller: context.read(), createController: context.read(),),
           },
         );
 

@@ -9,11 +9,12 @@ import 'package:organizame/app/core/widget/organizame_textfield.dart';
 import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/models/customer_object.dart';
+import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
-import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
 import 'package:validatorless/validatorless.dart';
 
 class BudgetsCreatePage extends StatefulWidget {
+  final BudgetsCreateController _createController;
   final BudgetsController _controller;
   final BudgetsObject? object;
   final CustomerObject? initialClient; // Cliente inicial
@@ -28,11 +29,14 @@ class BudgetsCreatePage extends StatefulWidget {
   BudgetsCreatePage(
       {super.key,
       required BudgetsController controller,
+      required BudgetsCreateController createController,
       this.object,
       this.initialClient,
       this.onClientSelected,
-      this.customer})
-      : _controller = controller;
+      this.customer,
+      })
+      : _controller = controller,
+        _createController = createController;
 
   @override
   State<BudgetsCreatePage> createState() => _BudgetsCreatePageState();
@@ -60,6 +64,25 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
       });
     } catch (e) {
       Logger().e('Erro ao carregar clientes: $e');
+    }
+  }
+
+  Future<void> _handleSave() async{
+    if (_globalKey.currentState!.validate()) {
+      final customer = customers.firstWhere(
+        (customer) => customer.name == selectedClient,
+        orElse: () => CustomerObject(name: ''),
+      );     
+
+      await widget._createController.saveBudget(
+        widget.object?.id ?? '',
+        customer,
+        DateTime.now(),
+        _observationsEC.text,
+        _valueEC.text,
+        false,
+      );
+      Navigator.of(context).pop();
     }
   }
 
@@ -144,7 +167,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                     OrganizameElevatedButton(
                       label: widget.object != null ? 'Atualizar' : 'Salvar',
                       onPressed: () {
-                        // _handleSave();
+                        _handleSave();
                       },
                       textColor: Color(0xFFDDFFCC),
                     ),

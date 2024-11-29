@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
 
@@ -21,23 +23,30 @@ class BudgetsObject {
     required this.status,
   });
 
-  factory BudgetsObject.fromMap(Map<String, dynamic> json) {
-    return BudgetsObject(
-      id: json['id'] as String,
-      customer: json['customer'] as CustomerObject,
-      date: json['date'] != null
-          ? DateTime.parse(json['date'])
-          : DateTime.now(),
-      observation: json['observation'] as String?,
-      value: json['value'] as String,
-      status: json['status'] as bool,
-    );
+  // metodo para converter de Map para BudgetsObject
+  factory BudgetsObject.fromMap(Map<String, dynamic> map) {
+    try {
+      return BudgetsObject(
+        id: map['id'] as String,
+        customer:
+            CustomerObject.fromMap(map['customer'] as Map<String, dynamic>),
+        date:
+            map['date'] != null ? DateTime.parse(map['date']) : DateTime.now(),
+        observation: map['observation'] as String?,
+        value: map['value'] as String,
+        status: map['status'] as bool,
+      );
+    } on Exception catch (e) {
+      Logger().e('Erro ao converter de Map para BudgetsObject: $e');
+      rethrow;
+    }
   }
 
+  // metodo para converter de BudgetsObject para Map
   Map<String, dynamic> toMap() => {
         'id': id,
-        'customer': customer,
-        'date': date.toIso8601String(),
+        'customer': customer.toMap(),
+        'date': Timestamp.fromDate(date),
         'observation': observation,
         'value': value,
         'status': status,
