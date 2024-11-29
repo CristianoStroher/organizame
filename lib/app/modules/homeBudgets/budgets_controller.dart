@@ -20,55 +20,58 @@ class BudgetsController extends DefautChangeNotifer {
   List<BudgetsObject> get filteredBugets => _filteredBudgets;
   bool get isStauts => loading; // Verifica se está carregando
   bool get hasBugets => _budgets.isNotEmpty; // Verifica se tem orçamentos
-  bool get hasFilteredBudgets => _filteredBudgets.isNotEmpty; 
+  bool get hasFilteredBudgets => _filteredBudgets.isNotEmpty;
 
-  
   BudgetsController({
     required CustomerController customerController,
     required BudgetsService service,
-  }) : _service = service,
-       _customerController = customerController;
-  
+  })  : _service = service,
+        _customerController = customerController;
 
   Future<bool> saveBudget(BudgetsObject budget) async {
-  try {
-    await _service.saveBudget(budget);
-    success();
-    notifyListeners();
-    return true;
-  } catch (e) {
-    setError('Erro ao salvar orçamento');
-    return false;
+    try {
+      await _service.saveBudget(budget);
+      success();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      setError('Erro ao salvar orçamento');
+      return false;
+    }
   }
-}
 
-Future<List<BudgetsObject>> getAllBudgets() {
+  Future<List<BudgetsObject>> getAllBudgets() {
     return _service.getAllBudgets();
   }
 
   Future<void> refreshVisits() async {
     try {
       showLoadingAndResetState();
-      // Logger().i('Atualizando lista de visitas');
       final newBudgets = await _service.getAllBudgets();
 
-      // Ordena a lista por data/hora
+      // Ordena pela data mais recente primeiro
       newBudgets.sort((a, b) {
-        final dateTimeA = DateTime(a.date.year, a.date.month, a.date.day);
-        final dateTimeB = DateTime(b.date.year, b.date.month, b.date.day);
-        return dateTimeB.compareTo(dateTimeA);
+        final dateTimeA = DateTime(
+          a.date.year,
+          a.date.month,
+          a.date.day,
+        );
+        final dateTimeB = DateTime(
+          b.date.year,
+          b.date.month,
+          b.date.day,
+        );
+        return dateTimeB.compareTo(dateTimeA); // Ordem decrescente
       });
 
       _budgets = newBudgets;
       _filteredBudgets = List.from(newBudgets);
-      // Logger().d('Lista atualizada: ${_technicalVisits.length} visitas');
       success();
     } catch (e) {
-      // Logger().e('Erro ao atualizar visitas: $e');
       setError('Erro ao atualizar lista');
     } finally {
       hideLoading();
-      notifyListeners(); // Garante notificação aos listeners
+      notifyListeners();
     }
   }
 
@@ -93,7 +96,7 @@ Future<List<BudgetsObject>> getAllBudgets() {
     notifyListeners();
   }
 
-Future<void> filterBudgets({
+  Future<void> filterBudgets({
     String? customerName,
     DateTime? startDate,
     DateTime? endDate,
@@ -148,7 +151,7 @@ Future<void> filterBudgets({
         final dateTimeA = DateTime(
           a.date.year,
           a.date.month,
-          a.date.day,         
+          a.date.day,
         );
 
         final dateTimeB = DateTime(
@@ -177,6 +180,6 @@ Future<void> filterBudgets({
       return _customerController.customersNotifier.value;
     } catch (e) {
       throw Exception('Erro ao buscar clientes: $e');
-    }  
-  }  
+    }
+  }
 }
