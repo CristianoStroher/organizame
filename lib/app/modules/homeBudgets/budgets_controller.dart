@@ -30,9 +30,12 @@ class BudgetsController extends DefautChangeNotifer {
        _customerController = customerController;
   
 
-  Future<List<BudgetsObject>> getAllBudgets() {
-    return FirebaseFirestore.instance.collection('budgets').get().then(
-        (value) => value.docs.map((e) => BudgetsObject.fromMap(e.data())).toList());
+  Future<void> saveBudget(BudgetsObject budget) {
+    return _service.saveBudget(budget);
+  }
+
+Future<List<BudgetsObject>> getAllBudgets() {
+    return _service.getAllBudgets();
   }
 
   Future<void> refreshVisits() async {
@@ -66,7 +69,7 @@ class BudgetsController extends DefautChangeNotifer {
     notifyListeners();
   }
 
-Future<void> filterVisits({
+Future<void> filterBudgets({
     String? customerName,
     DateTime? startDate,
     DateTime? endDate,

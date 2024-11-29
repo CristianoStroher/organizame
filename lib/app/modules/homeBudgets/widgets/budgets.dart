@@ -36,10 +36,10 @@ class Budgets extends StatelessWidget {
             ),
           ),
         ).then((value) async {
-          await context.read<HomeController>().loadAllTasks();
+          await context.read<BudgetsController>().getAllBudgets();
           await context
-              .read<HomeController>()
-              .findFilter(filter: TaskFilterEnum.today);
+              .read<BudgetsController>()
+              .filterBudgets();
         });
       },
       child: SizedBox(
@@ -65,6 +65,12 @@ class Budgets extends StatelessWidget {
               ),
               subtitle: Row(
                 children: [
+                  Text(
+        object.customer.name,
+        style: TextStyle(
+          fontFamily: context.titleDefaut.fontFamily,
+          color: context.primaryColor,
+        ),)
                   const SizedBox(height: 5),
                   Icon(
                     Icons.calendar_today,

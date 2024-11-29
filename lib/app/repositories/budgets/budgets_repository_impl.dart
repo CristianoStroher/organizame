@@ -36,8 +36,7 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
   @override
   Future<List<BudgetsObject>> getAllBudgets() async {
     try {
-      final QuerySnapshot querySnapshot =
-          await _firestore.collection(_budgets).get();
+      final QuerySnapshot querySnapshot = await _firestore.collection(_budgets).get();
 
       return querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;

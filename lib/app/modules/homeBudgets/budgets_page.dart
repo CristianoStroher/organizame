@@ -6,6 +6,7 @@ import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
 import 'package:organizame/app/core/widget/organizame_navigatorbar.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
+import 'package:organizame/app/modules/homeBudgets/widgets/budgets.dart';
 import 'package:organizame/app/modules/homeTasks/widgets/home_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
   @override
   void initState() {
        super.initState();
+       widget._controller.refreshVisits();
        /* widget.controller.initialize();    */    
     
     // Adiciona listener para atualizações
@@ -204,7 +206,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                   return;
                 }
 
-                controller.filterVisits(
+                controller.filterBudgets(
                   customerName: searchQuery.isNotEmpty ? searchQuery : null,
                   startDate: startDate,
                   endDate: endDate,
@@ -349,17 +351,19 @@ class _BudgetsPageState extends State<BudgetsPage> {
                     style: context.titleDefaut,
                   ),
                 ),
-                // Expanded(
-                //   child: ListView.builder(
-                //     padding: const EdgeInsets.symmetric(horizontal: 20),
-                //     itemCount: budgets.length,
-                //     itemBuilder: (context, index) {
-                //       final visit = visits[index];
-                //       return Container(
-                //         child: Text('budgets'));                   
-                //     },
-                //   ),
-                // ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: budgets.length,
+                    itemBuilder: (context, index) {
+                      final budget = budgets[index];
+                      return Budgets(
+                        controller: context.read<BudgetsController>(),
+                        object: budget,);
+                                         
+                    },
+                  ),
+                ),
               ],
             ),
           );
