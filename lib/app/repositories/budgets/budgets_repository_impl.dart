@@ -18,7 +18,7 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
 
   @override
   Future<void> saveBudget(String id, CustomerObject customer, DateTime date,
-      String? observation, double value, bool status) async {
+      String? observation, String value, bool status) async {
     try {
       await _firestore.collection(_budgets).add({
         'id': id,
@@ -49,7 +49,7 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
           date: (data['date'] as Timestamp)
               .toDate(), // convertendo o timestamp para DateTime
           observation: data['observation'] as String?,
-          value: (data['value'] as num).toDouble(),
+          value: data['value'] as String,
           status: data['status'] as bool,
         );
       }).toList();

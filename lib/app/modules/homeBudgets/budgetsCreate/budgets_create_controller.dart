@@ -14,7 +14,7 @@ class BudgetsCreateController extends DefautChangeNotifer {
   }) : _service = service;
 
   Future<void> saveBudget(String id, CustomerObject customer, DateTime date,
-      String? observation, double value, bool status) {
+      String? observation, String value, bool status) {
     return _service.saveBudget(id, customer, date, observation, value, status);
   }
 

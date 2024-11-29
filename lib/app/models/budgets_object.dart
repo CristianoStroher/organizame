@@ -9,7 +9,7 @@ class BudgetsObject {
   final CustomerObject customer;
   final DateTime date;
   final String? observation;
-  final double value;
+  final String value;
   final bool status;
 
   BudgetsObject({
@@ -29,7 +29,7 @@ class BudgetsObject {
           ? DateTime.parse(json['date'])
           : DateTime.now(),
       observation: json['observation'] as String?,
-      value: json['value'] as double,
+      value: json['value'] as String,
       status: json['status'] as bool,
     );
   }
@@ -48,7 +48,7 @@ class BudgetsObject {
     CustomerObject? customer,
     DateTime? date,
     String? observation,
-    double? value,
+    String? value,
     bool? status,
   }) {
     return BudgetsObject(
