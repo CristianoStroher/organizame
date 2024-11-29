@@ -31,15 +31,14 @@ class Budgets extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => BudgetsCreatePage(
-              controller: controller, createController: context.read(),
+              controller: controller,
+              createController: context.read(),
               object: object,
             ),
           ),
         ).then((value) async {
           await context.read<BudgetsController>().getAllBudgets();
-          await context
-              .read<BudgetsController>()
-              .filterBudgets();
+          await context.read<BudgetsController>().filterBudgets();
         });
       },
       child: SizedBox(
@@ -63,28 +62,42 @@ class Budgets extends StatelessWidget {
                   Logger().i('Tarefa finalizada: ${object.customer}');
                 },
               ),
-              subtitle: Row(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-        object.customer.name,
-        style: TextStyle(
-          fontFamily: context.titleDefaut.fontFamily,
-          color: context.primaryColor,
-        ),)
-                  const SizedBox(height: 5),
+                    object.customer.name,
+                    style: TextStyle(
+                      fontFamily: context.titleDefaut.fontFamily,
+                      color: context.primaryColor,
+                    ),
+                  ),
+                  Text(
+                    'R\$ ${object.value}',
+                    style: TextStyle(
+                      fontFamily: context.titleDefaut.fontFamily,
+                      color: context.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              subtitle: Row(
+                children: [
+                  const SizedBox(height: 10),
                   Icon(
                     Icons.calendar_today,
                     size: 16,
                     color: context.secondaryColor,
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 5),
                   Text(
                     dateFormatData.format(object.date),
                     style: TextStyle(
                       fontFamily: context.titleDefaut.fontFamily,
                       color: context.secondaryColor,
                     ),
-                  ),                  
+                  ),
                 ],
               ),
               trailing: IconButton(
@@ -128,7 +141,7 @@ class Budgets extends StatelessWidget {
                           child: Text(
                             'Excluir',
                             style: TextStyle(
-                                color: context.primaryColorLight , fontSize: 16),
+                                color: context.primaryColorLight, fontSize: 16),
                           ),
                         ),
                       ],
@@ -139,9 +152,9 @@ class Budgets extends StatelessWidget {
                     Loader.show(context);
                     try {
                       // final result = //await controller.deleteTask(object);
-                          // await context
-                          //     .read<HomeController>()
-                          //     .deleteTask(object);
+                      // await context
+                      //     .read<HomeController>()
+                      //     .deleteTask(object);
 
                       Loader.hide();
                       // if (result) {
