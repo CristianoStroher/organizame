@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/models/customer_object.dart';
-import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
 
 class BudgetsObject {
 
