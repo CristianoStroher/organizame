@@ -13,8 +13,8 @@ class BudgetsServiceImpl extends BudgetsService {
   }) : _budgetsRepository = budgetsRepository;
 
   @override
-  Future<void> saveBudget(String id, CustomerObject customer, DateTime date, String? observation, String value, bool status) {
-    return _budgetsRepository.saveBudget(id, customer, date, observation, value, status);
+  Future<void> saveBudget(BudgetsObject budget) {
+    return _budgetsRepository.saveBudget(budget);
   }
 
   @override

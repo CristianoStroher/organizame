@@ -13,14 +13,11 @@ class BudgetsCreateController extends DefautChangeNotifer {
     required BudgetsService service,
   }) : _service = service;
 
-  Future<void> saveBudget(String id, CustomerObject customer, DateTime date,
-      String? observation, String value, bool status) {
-    return _service.saveBudget(id, customer, date, observation, value, status);
+  Future<void> saveBudget(BudgetsObject budget) {
+    return _service.saveBudget(budget);
   }
 
-  Future<List<BudgetsObject>> getAllBudgets() {
-    return FirebaseFirestore.instance.collection('budgets').get().then(
-        (value) =>
-            value.docs.map((e) => BudgetsObject.fromMap(e.data())).toList());
+Future<List<BudgetsObject>> getAllBudgets() {
+    return _service.getAllBudgets();
   }
 }

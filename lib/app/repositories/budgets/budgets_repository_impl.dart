@@ -17,18 +17,17 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
   }) : _firestore = firestore;
 
   @override
-  Future<void> saveBudget(String id, CustomerObject customer, DateTime date,
-      String? observation, String value, bool status) async {
+  Future<void> saveBudget(BudgetsObject budget) async {
     try {
       await _firestore.collection(_budgets).add({
-        'id': id,
-        'customer': customer,
-        'date': date,
-        'observation': observation,
-        'value': value,
-        'status': status,
+        'customer': budget.customer.toMap(), // Converte customer para Map
+        'date': Timestamp.fromDate(budget.date), // Converte DateTime para Timestamp
+        'observation': budget.observation,
+        'value': budget.value,
+        'status': budget.status,
       });
-    } on Exception catch (e) {
+      Logger().i('Orçamento salvo com sucesso');
+    } catch (e) {
       Logger().e('Erro ao salvar o orçamento: $e');
       throw Exception('Erro ao salvar o orçamento: $e');
     }
@@ -42,19 +41,9 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
 
       return querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
-
-        return BudgetsObject(
-          id: doc.id,
-          customer: data['customer'] as CustomerObject,
-          date: (data['date'] as Timestamp)
-              .toDate(), // convertendo o timestamp para DateTime
-          observation: data['observation'] as String?,
-          value: data['value'] as String,
-          status: data['status'] as bool,
-        );
+        return BudgetsObject.fromFirestore(doc);
       }).toList();
-      Logger().i('Orçamentos buscados com sucesso');
-    } on Exception catch (e) {
+    } catch (e) {
       Logger().e('Erro ao buscar os orçamentos: $e');
       throw Exception('Erro ao buscar os orçamentos: $e');
     }

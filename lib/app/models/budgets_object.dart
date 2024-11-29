@@ -22,34 +22,44 @@ class BudgetsObject {
     required this.status,
   });
 
-  // metodo para converter de Map para BudgetsObject
-  factory BudgetsObject.fromMap(Map<String, dynamic> map) {
-    try {
-      return BudgetsObject(
-        id: map['id'] as String,
-        customer:
-            CustomerObject.fromMap(map['customer'] as Map<String, dynamic>),
-        date:
-            map['date'] != null ? DateTime.parse(map['date']) : DateTime.now(),
-        observation: map['observation'] as String?,
-        value: map['value'] as String,
-        status: map['status'] as bool,
-      );
-    } on Exception catch (e) {
-      Logger().e('Erro ao converter de Map para BudgetsObject: $e');
-      rethrow;
-    }
-  }
-
   // metodo para converter de BudgetsObject para Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'customer': customer.toMap(),
+        'customer': customer.toMap(), // Note a mudança aqui para usar toMap()
         'date': Timestamp.fromDate(date),
         'observation': observation,
         'value': value,
         'status': status,
-      };
+    };
+ 
+  // metodo para converter de Map para BudgetsObject
+  factory BudgetsObject.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return BudgetsObject(
+      id: doc.id,
+      customer: CustomerObject.fromMap(data['customer'] as Map<String, dynamic>),
+      date: (data['date'] as Timestamp).toDate(),
+      observation: data['observation'] as String?,
+      value: data['value'] as String,
+      status: data['status'] as bool,
+    );
+  }
+
+  factory BudgetsObject.fromMap(Map<String, dynamic> map) {
+    try {
+      return BudgetsObject(
+        id: map['id'] as String,
+        customer: CustomerObject.fromMap(map['customer'] as Map<String, dynamic>),
+        date: map['date'] is Timestamp 
+            ? (map['date'] as Timestamp).toDate()
+            : DateTime.parse(map['date']),
+        observation: map['observation'] as String?,
+        value: map['value'] as String,
+        status: map['status'] as bool,
+      );
+    } catch (e) {
+      throw Exception('Erro ao converter map para BudgetsObject: $e');
+    }
+  }
 
   BudgetsObject copyWith({
     String? id,

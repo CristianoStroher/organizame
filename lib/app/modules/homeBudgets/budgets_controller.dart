@@ -32,8 +32,7 @@ class BudgetsController extends DefautChangeNotifer {
 
   Future<List<BudgetsObject>> getAllBudgets() {
     return FirebaseFirestore.instance.collection('budgets').get().then(
-        (value) =>
-            value.docs.map((e) => BudgetsObject.fromMap(e.data())).toList());
+        (value) => value.docs.map((e) => BudgetsObject.fromMap(e.data())).toList());
   }
 
   Future<void> refreshVisits() async {

@@ -67,24 +67,32 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
     }
   }
 
-  Future<void> _handleSave() async{
-    if (_globalKey.currentState!.validate()) {
+
+Future<void> _handleSave() async {
+  if (_globalKey.currentState!.validate()) {
+    try {
       final customer = customers.firstWhere(
         (customer) => customer.name == selectedClient,
         orElse: () => CustomerObject(name: ''),
+      );
+
+      final budget = BudgetsObject(
+        id: widget.object?.id ?? '',
+        customer: customer,
+        date: DateTime.now(),
+        observation: _observationsEC.text,
+        value: _valueEC.text,
+        status: false
       );     
 
-      await widget._createController.saveBudget(
-        widget.object?.id ?? '',
-        customer,
-        DateTime.now(),
-        _observationsEC.text,
-        _valueEC.text,
-        false,
-      );
+      await widget._createController.saveBudget(budget);
       Navigator.of(context).pop();
+    } catch (e) {
+      Logger().e('Erro ao salvar orçamento: $e');
+      // Adicione tratamento de erro aqui
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
