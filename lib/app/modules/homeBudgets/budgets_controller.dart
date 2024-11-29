@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:organizame/app/core/notifier/defaut_change_notifer.dart';
 import 'package:organizame/app/models/budgets_object.dart';
+import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/services/budgets/budgets_service.dart';
 
 class BudgetsController extends DefautChangeNotifer {
@@ -135,6 +136,20 @@ Future<void> filterVisits({
     } finally {
       hideLoading();
       notifyListeners();
+    }
+  }
+
+  Future<List<CustomerObject>> getCustomers() async {
+    // Implemente a lógica para buscar os clientes do seu backend ou banco de dados
+    try {
+      // Exemplo de implementação:
+      // final response = await _repository.getCustomers();
+      // return response.map((data) => CustomerObject.fromJson(data)).toList();
+      
+      // Por enquanto, retorne uma lista vazia ou mock data
+      return [];
+    } catch (e) {
+      throw Exception('Erro ao buscar clientes: $e');
     }
   }
 

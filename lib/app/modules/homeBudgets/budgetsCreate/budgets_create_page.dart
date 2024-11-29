@@ -42,6 +42,26 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
   final _observationsEC = TextEditingController();
   final _valueEC = TextEditingController();
   String? selectedClient;
+  List<CustomerObject> customers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCustomers();
+  }
+
+  Future<void> _loadCustomers() async {
+    try {
+      // Assumindo que você tem um método no controller para buscar clientes
+      final customersList = await widget._controller.getCustomers();
+      setState(() {
+        customers = customersList;
+      });
+    } catch (e) {
+      // Tratamento de erro
+      print('Erro ao carregar clientes: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +113,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                       label: 'Cliente',
                       options: customers.map((customer) => customer.name).toList(),
                       selectedOptions: selectedClient,
-                      // onChanged: (newValue) => _updateClientData(newValue, customers),
+                      onChanged: (newValue) => _updateClientData(newValue, customers),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, selecione um cliente';
