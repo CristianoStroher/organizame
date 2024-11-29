@@ -20,6 +20,14 @@ class BudgetsServiceImpl extends BudgetsService {
   @override
   Future<List<BudgetsObject>> getAllBudgets() {
     return _budgetsRepository.getAllBudgets();
+
   }
+
+  @override
+Future<void> deleteBudget(String id) {
+  return _budgetsRepository.deleteBudget(id);
+}
+
+ 
 
 }

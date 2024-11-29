@@ -72,6 +72,22 @@ Future<List<BudgetsObject>> getAllBudgets() {
     }
   }
 
+  Future<bool> deleteBudget(BudgetsObject budget) async {
+    try {
+      showLoadingAndResetState();
+      await _service.deleteBudget(budget.id);
+      await refreshVisits();
+      success();
+      return true;
+    } catch (e) {
+      setError('Erro ao excluir orçamento');
+      return false;
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  }
+
   void clearFilters() {
     _filteredBudgets = List.from(_budgets);
     notifyListeners();

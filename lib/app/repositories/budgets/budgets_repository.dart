@@ -4,4 +4,5 @@ abstract class BudgetsRepository {
 
   Future<void> saveBudget(BudgetsObject budget);
   Future<List<BudgetsObject>> getAllBudgets();
+  Future<void> deleteBudget(String id);
 }

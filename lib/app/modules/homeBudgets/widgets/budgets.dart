@@ -53,8 +53,8 @@ class Budgets extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               leading: Checkbox(
                 checkColor: context.primaryColor,
-                activeColor: context.primaryColorLight,
-                fillColor: WidgetStateProperty.all(context.primaryColorLight),
+                activeColor: Color(0xFFDDFFCC),
+                fillColor: WidgetStateProperty.all(Color(0xFFDDFFCC)),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.status,
                 onChanged: (value) async {
@@ -106,16 +106,17 @@ class Budgets extends StatelessWidget {
                   final bool? confirmDelete = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text('Excluir tarefa', style: context.titleMedium),
+                      title:
+                          Text('Excluir orçamento', style: context.titleMedium),
                       content: Text(
-                        'Deseja excluir a tarefa ${object.customer}?',
+                        'Deseja excluir o orçamento de ${object.customer.name}?',
                         style: TextStyle(color: context.primaryColor),
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
                           style: TextButton.styleFrom(
-                            backgroundColor: context.primaryColorLight,
+                            backgroundColor: Color(0xFFDDFFCC),
                             side: BorderSide(
                                 color: context.primaryColor, width: 1),
                             padding: const EdgeInsets.symmetric(
@@ -141,7 +142,7 @@ class Budgets extends StatelessWidget {
                           child: Text(
                             'Excluir',
                             style: TextStyle(
-                                color: context.primaryColorLight, fontSize: 16),
+                                color: Color(0xFFDDFFCC), fontSize: 16),
                           ),
                         ),
                       ],
@@ -151,22 +152,16 @@ class Budgets extends StatelessWidget {
                   if (confirmDelete == true) {
                     Loader.show(context);
                     try {
-                      // final result = //await controller.deleteTask(object);
-                      // await context
-                      //     .read<HomeController>()
-                      //     .deleteTask(object);
-
+                      final result = await controller.deleteBudget(object);
                       Loader.hide();
-                      // if (result) {
-                      //   Messages.of(context)
-                      //       .showInfo('Tarefa excluída com sucesso');
-                      // } else {
-                      //   Messages.of(context)
-                      //       .showError('Erro ao excluir tarefa');
-                      // }
+                      if (result) {
+                        Messages.of(context).showInfo('Orçamento excluído com sucesso');
+                      } else {
+                        Messages.of(context).showError('Erro ao excluir orçamento');
+                      }
                     } catch (e) {
                       Loader.hide();
-                      Messages.of(context).showError('Erro ao excluir tarefa');
+                      Messages.of(context).showError('Erro ao excluir orçamento');
                     }
                   }
                 },

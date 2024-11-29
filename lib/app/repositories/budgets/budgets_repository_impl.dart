@@ -47,4 +47,15 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
       throw Exception('Erro ao buscar os orçamentos: $e');
     }
   }
+
+  @override
+  Future<void> deleteBudget(String id) async {
+    try {
+      await _firestore.collection(_budgets).doc(id).delete();
+      Logger().i('Orçamento deletado com sucesso');
+    } catch (e) {
+      Logger().e('Erro ao deletar o orçamento: $e');
+      throw Exception('Erro ao deletar o orçamento: $e');
+    }
+  }  
 }
