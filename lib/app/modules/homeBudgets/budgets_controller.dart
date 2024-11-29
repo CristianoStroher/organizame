@@ -30,9 +30,17 @@ class BudgetsController extends DefautChangeNotifer {
        _customerController = customerController;
   
 
-  Future<void> saveBudget(BudgetsObject budget) {
-    return _service.saveBudget(budget);
+  Future<bool> saveBudget(BudgetsObject budget) async {
+  try {
+    await _service.saveBudget(budget);
+    success();
+    notifyListeners();
+    return true;
+  } catch (e) {
+    setError('Erro ao salvar orçamento');
+    return false;
   }
+}
 
 Future<List<BudgetsObject>> getAllBudgets() {
     return _service.getAllBudgets();

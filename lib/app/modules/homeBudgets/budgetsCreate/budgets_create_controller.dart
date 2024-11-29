@@ -13,9 +13,17 @@ class BudgetsCreateController extends DefautChangeNotifer {
     required BudgetsService service,
   }) : _service = service;
 
-  Future<void> saveBudget(BudgetsObject budget) {
-    return _service.saveBudget(budget);
+  Future<bool> saveBudget(BudgetsObject budget) async {
+  try {
+    await _service.saveBudget(budget);
+    success();
+    notifyListeners();
+    return true;
+  } catch (e) {
+    setError('Erro ao salvar orçamento');
+    return false;
   }
+}
 
 Future<List<BudgetsObject>> getAllBudgets() {
     return _service.getAllBudgets();
