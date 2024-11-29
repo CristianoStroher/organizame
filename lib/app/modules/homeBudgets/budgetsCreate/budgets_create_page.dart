@@ -16,19 +16,21 @@ class BudgetsCreatePage extends StatefulWidget {
   final BudgetsController _controller;
   final BudgetsObject? object;
   final CustomerObject? initialClient; // Cliente inicial
-  final Function(CustomerObject?)? onClientSelected; // Função para atualizar o cliente selecionado
+  final Function(CustomerObject?)?onClientSelected; // Função para atualizar o cliente selecionado
   final phoneMaskFormatter = MaskTextInputFormatter(
     mask: '#.###,##',
     filter: {'#': RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
+  final CustomerObject? customer;
 
   BudgetsCreatePage(
       {super.key,
       required BudgetsController controller,
       this.object,
       this.initialClient,
-      this.onClientSelected})
+      this.onClientSelected,
+      this.customer})
       : _controller = controller;
 
   @override
@@ -37,8 +39,8 @@ class BudgetsCreatePage extends StatefulWidget {
 
 class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
   final _globalKey = GlobalKey<FormState>();
-  final observationsEC = TextEditingController();
-  final valueEC = TextEditingController();
+  final _observationsEC = TextEditingController();
+  final _valueEC = TextEditingController();
   String? selectedClient;
 
   @override
@@ -87,34 +89,33 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                             : 'EDITAR ORÇAMENTO',
                         style: context.titleDefaut),
                     const SizedBox(height: 10),
-                    // OrganizameDropdownfield(
-                    //   label: 'Cliente',
-                    //   options: customers.map((customer) => customer.name).toList(),
-                    //   selectedOptions: selectedClient,
-                    //   onChanged: (newValue) => _updateClientData(newValue, customers),
-                    //   validator: (value) {
-                    //     if (value == null || value.isEmpty) {
-                    //       return 'Por favor, selecione um cliente';
-                    //     }
-                    //     return null;
-                    //   },
-                    // ),
+                    OrganizameDropdownfield(
+                      label: 'Cliente',
+                      options: customers.map((customer) => customer.name).toList(),
+                      selectedOptions: selectedClient,
+                      // onChanged: (newValue) => _updateClientData(newValue, customers),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, selecione um cliente';
+                        }
+                        return null;
+                      },
+                    ),
                     const SizedBox(height: 20),
                     OrganizameTextformfield(
                       label: 'Valor',
                       enabled: true,
                       hintText: '0,00',
                       maskFormatter: widget.phoneMaskFormatter,
-                      controller: valueEC,
-                      validator: (value) =>
-                          Validatorless.required('Valor é obrigatório')(value),
-                    ),
+                      controller: _valueEC,
+                      validator: Validatorless.required('Nome é obrigatório'),
+                      ),
 
                     const SizedBox(height: 10),
                     SizedBox(
                       height: 120, // Ajusta a altura total
                       child: OrganizameTextField(
-                        controller: observationsEC,
+                        controller: _observationsEC,
                         label: 'Observações',
                         maxLines: 4,
                       ),
