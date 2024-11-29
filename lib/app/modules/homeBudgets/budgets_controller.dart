@@ -55,13 +55,19 @@ class BudgetsController extends DefautChangeNotifer {
           a.date.year,
           a.date.month,
           a.date.day,
+          a.date.hour,
+          a.date.minute,
+          a.date.second,
         );
         final dateTimeB = DateTime(
           b.date.year,
           b.date.month,
           b.date.day,
+          b.date.hour,
+          b.date.minute,
+          b.date.second,
         );
-        return dateTimeB.compareTo(dateTimeA); // Ordem decrescente
+        return dateTimeB.compareTo(dateTimeA);
       });
 
       _budgets = newBudgets;
@@ -152,12 +158,18 @@ class BudgetsController extends DefautChangeNotifer {
           a.date.year,
           a.date.month,
           a.date.day,
+          a.date.hour,
+          a.date.minute,
+          a.date.second,
         );
 
         final dateTimeB = DateTime(
           b.date.year,
           b.date.month,
           b.date.day,
+          b.date.hour,
+          b.date.minute,
+          b.date.second,
         );
 
         return dateTimeB.compareTo(dateTimeA);
