@@ -28,6 +28,7 @@ import 'package:organizame/app/repositories/user/user_repository.dart';
 import 'package:organizame/app/repositories/user/user_repository_impl.dart';
 import 'package:organizame/app/services/budgets/budgets_service.dart';
 import 'package:organizame/app/services/budgets/budgets_service_impl.dart';
+import 'package:organizame/app/services/customer/customer_service.dart';
 import 'package:organizame/app/services/enviroment/enviroment_service.dart';
 import 'package:organizame/app/services/enviroment/enviroment_service_impl.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
@@ -79,10 +80,9 @@ class AppModule extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LivingRoomController(controller: context.read())), //injetando o controller do módulo livingRoom
         ChangeNotifierProvider(create: (context) => ChildBedroomController(controller:context.read(),imagenService: context.read())), //injetando o controller do módulo childBedroom
         ChangeNotifierProvider(create: (context) => KitchenController(controller: context.read())), //injetando o controller do módulo kitchen
-        ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read(),)), //injetando o controller do módulo customer
+        ChangeNotifierProvider(create: (context) => CustomerController(customerService: context.read<CustomerService>(),)), //injetando o controller do módulo customer
         ChangeNotifierProvider(create: (context) => TechnicalVisitController(service: context.read<TechnicalVisitService>(), enviromentService: context.read<EnviromentService>(),)), //injetando o controller do módulo technicalVisit
-        ChangeNotifierProvider(create: (context) => BudgetsController(service: context.read(),)), //injetando o controller do módulo budgets
-        // ChangeNotifierProvider(create: (context) => BudgetsCreateController(service: context.read(),)), //injetando o controller do módulo budgets
+        ChangeNotifierProvider(create: (context) => BudgetsController(service: context.read(), customerController: context.read<CustomerController>())), //injetando o controller do módulo budgets
 
       ],      child: const AppWidget(),
     );

@@ -4,6 +4,7 @@ import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_page.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_page.dart';
+import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_create_page.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/widget/customer.dart';
 import 'package:organizame/app/repositories/budgets/budgets_repository.dart';
@@ -33,12 +34,18 @@ class BudgetsModule extends OrganizameModule {
 
             Provider<CustomerService>(create: (context) => CustomerServiceImpl(customerRepository: context.read()),),
             
+            ChangeNotifierProvider<CustomerController>(
+              create: (context) => CustomerController(
+                customerService: context.read<CustomerService>(),
+              ),
+            ),
+
             ChangeNotifierProvider<BudgetsController>(
-              create: (context) => BudgetsController(service: context.read<BudgetsService>()), ),
+              create: (context) => BudgetsController(service: context.read<BudgetsService>(), customerController: context.read<CustomerController>(),), ),
             
           ],
           routers: {
-            '/budgets': (context) => BudgetsPage(controller: context.read()),
+            '/budgets': (context) => BudgetsPage(controller: context.read(),),
             '/budgets/create': (context) => BudgetsCreatePage(controller: context.read()),
           },
         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
@@ -58,8 +59,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
         customers = customersList;
       });
     } catch (e) {
-      // Tratamento de erro
-      print('Erro ao carregar clientes: $e');
+      Logger().e('Erro ao carregar clientes: $e');
     }
   }
 
@@ -121,7 +121,7 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     OrganizameTextformfield(
                       label: 'Valor',
                       enabled: true,
