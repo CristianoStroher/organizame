@@ -12,7 +12,6 @@ import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
-import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class BudgetsCreatePage extends StatefulWidget {
@@ -20,24 +19,24 @@ class BudgetsCreatePage extends StatefulWidget {
   final BudgetsController _controller;
   final BudgetsObject? object;
   final CustomerObject? initialClient; // Cliente inicial
-  final Function(CustomerObject?)?onClientSelected; // Função para atualizar o cliente selecionado
+  final Function(CustomerObject?)?
+      onClientSelected; // Função para atualizar o cliente selecionado
   final phoneMaskFormatter = MaskTextInputFormatter(
-    mask: '#.###,##',
+    mask: '####,##',
     filter: {'#': RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
   final CustomerObject? customer;
 
-  BudgetsCreatePage(
-      {super.key,
-      required BudgetsController controller,
-      required BudgetsCreateController createController,
-      this.object,
-      this.initialClient,
-      this.onClientSelected,
-      this.customer,
-      })
-      : _controller = controller,
+  BudgetsCreatePage({
+    super.key,
+    required BudgetsController controller,
+    required BudgetsCreateController createController,
+    this.object,
+    this.initialClient,
+    this.onClientSelected,
+    this.customer,
+  })  : _controller = controller,
         _createController = createController;
 
   @override
@@ -60,13 +59,50 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
       _observationsEC.text = widget.object!.observation ?? '';
       selectedClient = widget.object!.customer.name;
     }
+    _valueEC.addListener(_formatValue);
+  }
+
+  void _formatValue() {
+    String value = _valueEC.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (value.isEmpty) {
+      value = '0';
+    }
+
+    // Garante que sempre teremos pelo menos 3 dígitos (para ter 2 casas decimais)
+    while (value.length < 3) {
+      value = '0$value';
+    }
+
+    // Separa a parte inteira das decimais
+    String integerPart = value.substring(0, value.length - 2);
+    String decimalPart = value.substring(value.length - 2);
+
+    // Remove zeros à esquerda da parte inteira, exceto se for zero
+    integerPart = integerPart.replaceAll(RegExp(r'^0+'), '');
+    if (integerPart.isEmpty) {
+      integerPart = '0';
+    }
+
+    // Formata o valor final
+    final formattedValue = '$integerPart,$decimalPart';
+
+    // Atualiza o texto apenas se for diferente para evitar loop infinito
+    if (_valueEC.text != formattedValue) {
+      _valueEC.value = TextEditingValue(
+        text: formattedValue,
+        selection: TextSelection.collapsed(offset: formattedValue.length),
+      );
+    }
   }
 
   @override
   Dispose() {
+    _valueEC.removeListener(_formatValue);
     _observationsEC.dispose();
     _valueEC.dispose();
     super.dispose();
+
   }
 
   Future<void> _loadCustomers() async {
@@ -81,37 +117,35 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
     }
   }
 
+  Future<void> _handleSave() async {
+    if (_globalKey.currentState!.validate()) {
+      try {
+        final customer = customers.firstWhere(
+          (customer) => customer.name == selectedClient,
+          orElse: () => CustomerObject(name: ''),
+        );
 
-Future<void> _handleSave() async {
-  if (_globalKey.currentState!.validate()) {
-    try {
-      final customer = customers.firstWhere(
-        (customer) => customer.name == selectedClient,
-        orElse: () => CustomerObject(name: ''),
-      );
+        final budget = BudgetsObject(
+            id: widget.object?.id ?? '',
+            customer: customer,
+            date: DateTime.now(),
+            observation: _observationsEC.text,
+            value: _valueEC.text,
+            status: false);
 
-      final budget = BudgetsObject(
-        id: widget.object?.id ?? '',
-        customer: customer,
-        date: DateTime.now(),
-        observation: _observationsEC.text,
-        value: _valueEC.text,
-        status: false
-      );     
-
-      if (widget.object != null) {
-        await widget._controller.updateBudget(budget);
-        Messages.of(context).showInfo('Orçamento atualizado com sucesso');
-      } else {
-        await widget._createController.saveBudget(budget);
-        Messages.of(context).showInfo('Orçamento salvo com sucesso');
+        if (widget.object != null) {
+          await widget._controller.updateBudget(budget);
+          Messages.of(context).showInfo('Orçamento atualizado com sucesso');
+        } else {
+          await widget._createController.saveBudget(budget);
+          Messages.of(context).showInfo('Orçamento salvo com sucesso');
+        }
+        Navigator.of(context).pop(true);
+      } catch (e) {
+        Messages.of(context).showError('Erro ao salvar orçamento');
       }
-      Navigator.of(context).pop(true);
-    } catch (e) {
-      Messages.of(context).showError('Erro ao salvar orçamento');
     }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +195,8 @@ Future<void> _handleSave() async {
                     const SizedBox(height: 10),
                     OrganizameDropdownfield(
                       label: 'Cliente',
-                      options: customers.map((customer) => customer.name).toList(),
+                      options:
+                          customers.map((customer) => customer.name).toList(),
                       selectedOptions: selectedClient,
                       onChanged: (newValue) =>
                           _updateClientData(newValue, customers),
@@ -182,7 +217,7 @@ Future<void> _handleSave() async {
                       hintText: '0,00',
                       maskFormatter: widget.phoneMaskFormatter,
                       controller: _valueEC,
-                     validator: Validatorless.multiple([
+                      validator: Validatorless.multiple([
                         Validatorless.required('Valor é obrigatório'),
                         (value) {
                           if (value == '0,00' || value == '') {
@@ -191,8 +226,7 @@ Future<void> _handleSave() async {
                           return null;
                         },
                       ]),
-                      ),
-
+                    ),
                     const SizedBox(height: 10),
                     SizedBox(
                       height: 120, // Ajusta a altura total
