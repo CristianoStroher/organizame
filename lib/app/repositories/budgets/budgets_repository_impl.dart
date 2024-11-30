@@ -57,5 +57,22 @@ class BudgetsRepositoryImpl extends BudgetsRepository {
       Logger().e('Erro ao deletar o orçamento: $e');
       throw Exception('Erro ao deletar o orçamento: $e');
     }
+  }
+
+  @override
+  Future<void> updateBudget(BudgetsObject budget) async {
+    try {
+      await _firestore.collection(_budgets).doc(budget.id).update({
+        'customer': budget.customer.toMap(),
+        'date': Timestamp.fromDate(budget.date),
+        'observation': budget.observation,
+        'value': budget.value,
+        'status': budget.status,
+      });
+      Logger().i('Orçamento atualizado com sucesso');
+    } catch (e) {
+      Logger().e('Erro ao atualizar o orçamento: $e');
+      throw Exception('Erro ao atualizar o orçamento: $e');
+    }
   }  
 }
