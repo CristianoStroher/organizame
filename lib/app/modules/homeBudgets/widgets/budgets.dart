@@ -1,16 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/budgets_object.dart';
-import 'package:organizame/app/models/task_filter_enum.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_page.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
-import 'package:organizame/app/modules/homeTasks/home_controller.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:pdf/widgets.dart' as pdfLib;
 
 class Budgets extends StatelessWidget {
   final BudgetsController controller;
@@ -28,18 +31,17 @@ class Budgets extends StatelessWidget {
     if (!context.mounted) return;
 
     final updatedBudget = BudgetsObject(
-      id: object.id,
-      customer: object.customer,
-      date: object.date,
-      observation: object.observation,
-      value: object.value,
-      status: value ?? false
-    );
-    
+        id: object.id,
+        customer: object.customer,
+        date: object.date,
+        observation: object.observation,
+        value: object.value,
+        status: value ?? false);
+
     try {
       Loader.show(context);
       await controller.updateBudget(updatedBudget);
-      
+
       if (context.mounted) {
         Loader.hide();
         if (value == true) {
@@ -55,6 +57,70 @@ class Budgets extends StatelessWidget {
       }
     }
   }
+
+  Future<void> _handleShare(BuildContext context) async {
+    try {
+      Loader.show(context);
+      
+      // Criar o documento PDF
+      final pdf = pdfLib.Document();
+      
+      pdf.addPage(
+        pdfLib.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (context) {
+            return pdfLib.Column(
+              crossAxisAlignment: pdfLib.CrossAxisAlignment.start,
+              children: [
+                pdfLib.Text(
+                  'OrganizaMe - Orçamento',
+                  style: pdfLib.TextStyle(
+                    fontSize: 24,
+                    fontWeight: pdfLib.FontWeight.bold,
+                  ),
+                ),
+                pdfLib.SizedBox(height: 20),
+                pdfLib.Text('Cliente: ${object.customer.name}'),
+                pdfLib.Text('Data: ${dateFormatData.format(object.date)}'),
+                pdfLib.Text('Valor: R\$ ${object.value}'),
+                if (object.observation?.isNotEmpty ?? false) ...[
+                  pdfLib.SizedBox(height: 10),
+                  pdfLib.Text('Observações:'),
+                  pdfLib.Text(object.observation!),
+                ],
+                pdfLib.SizedBox(height: 20),
+                pdfLib.Text(
+                  'Status: ${object.status ? "Finalizado" : "Em aberto"}',
+                  style: pdfLib.TextStyle(fontWeight: pdfLib.FontWeight.bold),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+
+      // Salvar PDF temporariamente
+      final output = await getTemporaryDirectory();
+      final file = File('${output.path}/orcamento_${object.customer.name}.pdf');
+      await file.writeAsBytes(await pdf.save());
+
+      if (context.mounted) {
+        Loader.hide();
+        // Compartilhar arquivo
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text: 'Orçamento - ${object.customer.name}',
+          subject: 'Orçamento OrganizaMe',
+        );
+      }
+    } catch (e) {
+      Loader.hide();
+      if (context.mounted) {
+        Messages.of(context).showError('Erro ao gerar PDF do orçamento');
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +138,7 @@ class Budgets extends StatelessWidget {
                 fillColor: MaterialStateProperty.all(Color(0xFFDDFFCC)),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.status,
-                 onChanged: (value) => _handleStatusChange(context, value),
+                onChanged: (value) => _handleStatusChange(context, value),
               ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,9 +169,19 @@ class Budgets extends StatelessWidget {
                       )),
                 ],
               ),
-              trailing: IconButton(
-                icon: Icon(Icons.delete, color: context.secondaryColor),
-                onPressed: () => _handleDelete(context),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.share, color: context.secondaryColor),
+                    onPressed: () => _handleShare(context),
+                    tooltip: 'Compartilhar orçamento',
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, color: context.secondaryColor),
+                    onPressed: () => _handleDelete(context),
+                  ),
+                ],
               ),
             ),
             Divider(color: Colors.grey[300], thickness: 1.5, height: 0),
@@ -116,11 +192,13 @@ class Budgets extends StatelessWidget {
   }
 
   Future<void> _handleEdit(BuildContext context) async {
-    final budgetsController = Provider.of<BudgetsController>(context, listen: false);
-    final createController = Provider.of<BudgetsCreateController>(context, listen: false);
-    
+    final budgetsController =
+        Provider.of<BudgetsController>(context, listen: false);
+    final createController =
+        Provider.of<BudgetsCreateController>(context, listen: false);
+
     if (!context.mounted) return;
-    
+
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -139,7 +217,7 @@ class Budgets extends StatelessWidget {
 
   Future<void> _handleDelete(BuildContext context) async {
     if (!context.mounted) return;
-    
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
