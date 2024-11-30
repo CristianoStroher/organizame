@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_dropdownfield.dart';
 import 'package:organizame/app/core/widget/organizame_elevatebutton.dart';
@@ -86,6 +87,7 @@ Future<void> _handleSave() async {
       );     
 
       await widget._createController.saveBudget(budget);
+      Messages.of(context).showInfo('Orçamento salvo com sucesso');
       Navigator.of(context).pop(true);
     } catch (e) {
       Logger().e('Erro ao salvar orçamento: $e');
