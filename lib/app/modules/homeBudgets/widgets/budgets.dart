@@ -27,162 +27,135 @@ class Budgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        final result = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BudgetsCreatePage(
-              controller: controller,
-              createController: context.read<BudgetsCreateController>(),
-              object: object,
-            ),
-          ),
-        ).then((value) async {
-          await context.read<BudgetsController>().getAllBudgets();
-          await context.read<BudgetsController>().filterBudgets();
-        });
-
-        if (result == true && context.mounted) {
-          await controller.refreshVisits();
-        }
-
-
-
-      },
+      onTap: () => _handleEdit(context),
       child: SizedBox(
         child: Column(
           children: [
-            Divider(
-              color: Colors.grey[300], // Linha cinza acima
-              thickness: 1.5,
-              height: 0,
-            ),
+            Divider(color: Colors.grey[300], thickness: 1.5, height: 0),
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Checkbox(
                 checkColor: context.primaryColor,
                 activeColor: Color(0xFFDDFFCC),
-                fillColor: WidgetStateProperty.all(Color(0xFFDDFFCC)),
+                fillColor: MaterialStateProperty.all(Color(0xFFDDFFCC)),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.status,
                 onChanged: (value) async {
-                  // await context.read<HomeController>().finishTask(object);
-                  Logger().i('Tarefa finalizada: ${object.customer}');
+                  final updatedBudget = BudgetsObject(
+                    id: object.id,
+                    customer: object.customer,
+                    date: object.date,
+                    observation: object.observation,
+                    value: object.value,
+                    status: value ?? false
+                  );
+                  await controller.updateBudget(updatedBudget);
                 },
               ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    object.customer.name,
-                    style: TextStyle(
-                      fontFamily: context.titleDefaut.fontFamily,
-                      color: context.primaryColor,
-                    ),
-                  ),
-                  Text(
-                    'R\$ ${object.value}',
-                    style: TextStyle(
-                      fontFamily: context.titleDefaut.fontFamily,
-                      color: context.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text(object.customer.name,
+                      style: TextStyle(
+                        fontFamily: context.titleDefaut.fontFamily,
+                        color: context.primaryColor,
+                      )),
+                  Text('R\$ ${object.value}',
+                      style: TextStyle(
+                        fontFamily: context.titleDefaut.fontFamily,
+                        color: context.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      )),
                 ],
               ),
               subtitle: Row(
                 children: [
                   const SizedBox(height: 10),
-                  Icon(
-                    Icons.calendar_today,
-                    size: 16,
-                    color: context.secondaryColor,
-                  ),
+                  Icon(Icons.calendar_today,
+                      size: 16, color: context.secondaryColor),
                   const SizedBox(width: 5),
-                  Text(
-                    dateFormatData.format(object.date),
-                    style: TextStyle(
-                      fontFamily: context.titleDefaut.fontFamily,
-                      color: context.secondaryColor,
-                    ),
-                  ),
+                  Text(dateFormatData.format(object.date),
+                      style: TextStyle(
+                        fontFamily: context.titleDefaut.fontFamily,
+                        color: context.secondaryColor,
+                      )),
                 ],
               ),
               trailing: IconButton(
                 icon: Icon(Icons.delete, color: context.secondaryColor),
-                onPressed: () async {
-                  final bool? confirmDelete = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title:
-                          Text('Excluir orçamento', style: context.titleMedium),
-                      content: Text(
-                        'Deseja excluir o orçamento de ${object.customer.name}?',
-                        style: TextStyle(color: context.primaryColor),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          style: TextButton.styleFrom(
-                            backgroundColor: Color(0xFFDDFFCC),
-                            side: BorderSide(
-                                color: context.primaryColor, width: 1),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                          child: Text('Cancelar', style: context.titleDefaut),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          style: TextButton.styleFrom(
-                            backgroundColor: context.primaryColor,
-                            side: BorderSide(
-                                color: context.primaryColor, width: 1),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                          child: Text(
-                            'Excluir',
-                            style: TextStyle(
-                                color: Color(0xFFDDFFCC), fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-
-                  if (confirmDelete == true) {
-                    Loader.show(context);
-                    try {
-                      final result = await controller.deleteBudget(object);
-                      Loader.hide();
-                      if (result) {
-                        Messages.of(context).showInfo('Orçamento excluído com sucesso');
-                      } else {
-                        Messages.of(context).showError('Erro ao excluir orçamento');
-                      }
-                    } catch (e) {
-                      Loader.hide();
-                      Messages.of(context).showError('Erro ao excluir orçamento');
-                    }
-                  }
-                },
+                onPressed: () => _handleDelete(context),
               ),
             ),
-            Divider(
-              color: Colors.grey[300], // Linha cinza abaixo
-              thickness: 1.5,
-              height: 0,
-            ),
+            Divider(color: Colors.grey[300], thickness: 1.5, height: 0),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _handleEdit(BuildContext context) async {
+    final budgetsController = Provider.of<BudgetsController>(context, listen: false);
+    final createController = Provider.of<BudgetsCreateController>(context, listen: false);
+    
+    if (!context.mounted) return;
+    
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BudgetsCreatePage(
+          controller: budgetsController,
+          createController: createController,
+          object: object,
+        ),
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      await budgetsController.refreshVisits();
+    }
+  }
+
+  Future<void> _handleDelete(BuildContext context) async {
+    if (!context.mounted) return;
+    
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Excluir orçamento', style: context.titleMedium),
+        content: Text('Deseja excluir o orçamento de ${object.customer.name}?',
+            style: TextStyle(color: context.primaryColor)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            style: TextButton.styleFrom(
+              backgroundColor: Color(0xFFDDFFCC),
+              side: BorderSide(color: context.primaryColor, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            child: Text('Cancelar', style: context.titleDefaut),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              backgroundColor: context.primaryColor,
+              side: BorderSide(color: context.primaryColor, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            child: Text('Excluir',
+                style: TextStyle(color: Color(0xFFDDFFCC), fontSize: 16)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      await controller.deleteBudget(object);
+    }
   }
 }

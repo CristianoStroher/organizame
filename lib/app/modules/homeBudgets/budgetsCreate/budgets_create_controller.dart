@@ -18,17 +18,25 @@ class BudgetsCreateController extends DefautChangeNotifer {
     showLoadingAndResetState();
     await _service.saveBudget(budget);
     success();
-    notifyListeners();
     return true;
   } catch (e) {
     setError('Erro ao salvar orçamento');
     return false;
   }finally {
     hideLoading();
+    notifyListeners();
   }
 }
 
-Future<List<BudgetsObject>> getAllBudgets() {
-    return _service.getAllBudgets();
+Future<List<BudgetsObject>> getAllBudgets() async {
+    try {
+      showLoadingAndResetState();
+      final budgets = await _service.getAllBudgets();
+      success();
+      return budgets;
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
   }
 }
