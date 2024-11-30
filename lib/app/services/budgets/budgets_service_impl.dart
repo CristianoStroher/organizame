@@ -28,6 +28,11 @@ Future<void> deleteBudget(String id) {
   return _budgetsRepository.deleteBudget(id);
 }
 
+@override
+  Future<void> updateBudget(BudgetsObject budget) {
+    return _budgetsRepository.updateBudget(budget);
+  }
+
  
 
 }

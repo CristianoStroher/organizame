@@ -200,4 +200,21 @@ class BudgetsController extends DefautChangeNotifer {
       throw Exception('Erro ao buscar clientes: $e');
     }
   }
+
+  Future<bool> updateBudget(BudgetsObject budget) async {
+  try {
+    showLoadingAndResetState();
+    await _service.updateBudget(budget);
+    success();
+    await refreshVisits();
+    return true;
+  } catch (e) {
+    setError('Erro ao atualizar orçamento');
+    return false;
+  } finally {
+    hideLoading();
+    notifyListeners();
+  }
+}
+
 }
