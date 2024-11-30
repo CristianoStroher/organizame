@@ -12,6 +12,7 @@ import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/models/customer_object.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class BudgetsCreatePage extends StatefulWidget {
@@ -59,6 +60,13 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
       _observationsEC.text = widget.object!.observation ?? '';
       selectedClient = widget.object!.customer.name;
     }
+  }
+
+  @override
+  Dispose() {
+    _observationsEC.dispose();
+    _valueEC.dispose();
+    super.dispose();
   }
 
   Future<void> _loadCustomers() async {

@@ -27,8 +27,8 @@ class Budgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final result = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => BudgetsCreatePage(
@@ -41,6 +41,13 @@ class Budgets extends StatelessWidget {
           await context.read<BudgetsController>().getAllBudgets();
           await context.read<BudgetsController>().filterBudgets();
         });
+
+        if (result == true && context.mounted) {
+          await controller.refreshVisits();
+        }
+
+
+
       },
       child: SizedBox(
         child: Column(
