@@ -30,18 +30,24 @@ class BudgetsController extends DefautChangeNotifer {
 
   Future<bool> saveBudget(BudgetsObject budget) async {
     try {
+      showLoadingAndResetState();
       await _service.saveBudget(budget);
       success();
-      notifyListeners();
+      await refreshVisits();
       return true;
     } catch (e) {
       setError('Erro ao salvar orçamento');
       return false;
+    } finally {
+      hideLoading();
+      notifyListeners();
     }
   }
 
   Future<List<BudgetsObject>> getAllBudgets() {
+    showLoadingAndResetState();
     return _service.getAllBudgets();
+    hideLoading();
   }
 
   Future<void> refreshVisits() async {

@@ -86,7 +86,7 @@ Future<void> _handleSave() async {
       );     
 
       await widget._createController.saveBudget(budget);
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     } catch (e) {
       Logger().e('Erro ao salvar orçamento: $e');
       // Adicione tratamento de erro aqui
