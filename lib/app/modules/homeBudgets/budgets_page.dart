@@ -12,12 +12,11 @@ import 'package:provider/provider.dart';
 
 class BudgetsPage extends StatefulWidget {
   final BudgetsController _controller;
-  
 
   const BudgetsPage({
     super.key,
-    required  BudgetsController controller,
-    }) : _controller = controller;
+    required BudgetsController controller,
+  }) : _controller = controller;
 
   @override
   State<BudgetsPage> createState() => _BudgetsPageState();
@@ -26,45 +25,50 @@ class BudgetsPage extends StatefulWidget {
 class _BudgetsPageState extends State<BudgetsPage> {
   int index = 2;
   final TextEditingController _searchController = TextEditingController();
+  bool _showingCompleted = false;
 
   @override
   void initState() {
-       super.initState();
-       widget._controller.refreshVisits();
-       /* widget.controller.initialize();    */    
-    
-    // Adiciona listener para atualizações
-      widget._controller.addListener(_handleControllerUpdate);
-    }
-  
-  // Atualiza a UI quando o controller notificar mudanças
+    super.initState();
+    widget._controller.refreshVisits();
+    widget._controller.addListener(_handleControllerUpdate);
+  }
+
   void _handleControllerUpdate() {
     if (mounted) {
       setState(() {});
     }
   }
-  
+
   @override
   void dispose() {
     _searchController.dispose();
     widget._controller.removeListener(_handleControllerUpdate);
     super.dispose();
-    
   }
-
 
   Future<void> _goToTaskPage(BuildContext context) async {
     final controller = context.read<BudgetsController>();
-    // controller.currentVisit = null;
     final result = await Navigator.of(context).pushNamed('/budgets/create');
     if (result == true && mounted) {
-        await controller.refreshVisits();
-        setState(() {});
-      
+      await controller.refreshVisits();
+      setState(() {});
     }
   }
 
-  void _showFilterDialog(BuildContext context) {
+  void _toggleCompletedBudgets() {
+    setState(() {
+      _showingCompleted = !_showingCompleted;
+    });
+    widget._controller.filterBudgets(showCompleted: _showingCompleted);
+    Messages.of(context).showInfo(
+      _showingCompleted 
+        ? 'Mostrando orçamentos finalizados' 
+        : 'Mostrando orçamentos em aberto'
+    );
+  }
+
+  void _showSearchDialog(BuildContext context) {
     final controller = context.read<BudgetsController>();
     DateTime? startDate;
     DateTime? endDate;
@@ -73,25 +77,23 @@ class _BudgetsPageState extends State<BudgetsPage> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: Text('Filtrar visitas', style: context.titleMedium),
+          title: Text('Buscar Orçamentos', style: context.titleMedium),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Campo de busca por nome
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
-                  hintText: 'Nome do cliente (opcional)',
+                  hintText: 'Nome do cliente',
                   hintStyle: TextStyle(color: context.secondaryColor),
                   prefixIcon: Icon(Icons.search, color: context.secondaryColor),
                 ),
               ),
               const SizedBox(height: 16),
-              // Seleção de data inicial
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Data inicial (opcional)',
+                  'De',
                   style: TextStyle(color: context.primaryColor),
                 ),
                 subtitle: Row(
@@ -111,25 +113,23 @@ class _BudgetsPageState extends State<BudgetsPage> {
                       ),
                   ],
                 ),
-                trailing:
-                    Icon(Icons.calendar_today, color: context.secondaryColor),
+                trailing: Icon(Icons.calendar_today, color: context.secondaryColor),
                 onTap: () async {
                   final picked = await showDatePicker(
                     context: context,
                     initialDate: startDate ?? DateTime.now(),
                     firstDate: DateTime(2020),
-                    lastDate: DateTime(2025),
+                    lastDate: DateTime.now(),
                   );
                   if (picked != null) {
                     setState(() => startDate = picked);
                   }
                 },
               ),
-              // Seleção de data final
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Data final (opcional)',
+                  'Até',
                   style: TextStyle(color: context.primaryColor),
                 ),
                 subtitle: Row(
@@ -149,14 +149,13 @@ class _BudgetsPageState extends State<BudgetsPage> {
                       ),
                   ],
                 ),
-                trailing:
-                    Icon(Icons.calendar_today, color: context.secondaryColor),
+                trailing: Icon(Icons.calendar_today, color: context.secondaryColor),
                 onTap: () async {
                   final picked = await showDatePicker(
                     context: context,
                     initialDate: endDate ?? DateTime.now(),
                     firstDate: DateTime(2020),
-                    lastDate: DateTime(2025),
+                    lastDate: DateTime.now(),
                   );
                   if (picked != null) {
                     setState(() => endDate = picked);
@@ -169,21 +168,17 @@ class _BudgetsPageState extends State<BudgetsPage> {
             TextButton(
               onPressed: () {
                 _searchController.clear();
-                controller.clearFilters();
                 Navigator.pop(context);
-                Messages.of(context).showInfo('Filtros removidos');
               },
               style: TextButton.styleFrom(
                 backgroundColor: Color(0xFFDDFFCC),
                 side: BorderSide(color: context.primaryColor, width: 1),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
-              child:
-                  Text('Limpar', style: TextStyle(color: context.primaryColor)),
+              child: Text('Cancelar', style: context.titleDefaut),
             ),
             TextButton(
               onPressed: () {
@@ -192,17 +187,8 @@ class _BudgetsPageState extends State<BudgetsPage> {
                 if (startDate != null &&
                     endDate != null &&
                     endDate!.isBefore(startDate!)) {
-                  Messages.of(context).showError(
-                      'Data final deve ser posterior à data inicial');
-                  return;
-                }
-
-                // Verifica se pelo menos um filtro foi selecionado
-                if (searchQuery.isEmpty &&
-                    startDate == null &&
-                    endDate == null) {
                   Messages.of(context)
-                      .showError('Selecione pelo menos um filtro');
+                      .showError('Data final deve ser posterior à data inicial');
                   return;
                 }
 
@@ -210,45 +196,23 @@ class _BudgetsPageState extends State<BudgetsPage> {
                   customerName: searchQuery.isNotEmpty ? searchQuery : null,
                   startDate: startDate,
                   endDate: endDate,
+                  showCompleted: _showingCompleted,
                 );
 
-                // Mensagem personalizada baseada nos filtros aplicados
-                String mensagem = 'Filtrado por: ';
-                List<String> filtros = [];
-
-                if (searchQuery.isNotEmpty) {
-                  filtros.add('nome "$searchQuery"');
-                }
-                if (startDate != null || endDate != null) {
-                  String periodo = '';
-                  if (startDate != null && endDate != null) {
-                    periodo =
-                        'período ${DateFormat('dd/MM').format(startDate!)} a ${DateFormat('dd/MM').format(endDate!)}';
-                  } else if (startDate != null) {
-                    periodo =
-                        'a partir de ${DateFormat('dd/MM').format(startDate!)}';
-                  } else {
-                    periodo = 'até ${DateFormat('dd/MM').format(endDate!)}';
-                  }
-                  filtros.add(periodo);
-                }
-
-                mensagem += filtros.join(' e ');
-
                 Navigator.pop(context);
-                Messages.of(context).showInfo(mensagem);
               },
               style: TextButton.styleFrom(
                 backgroundColor: context.primaryColor,
                 side: BorderSide(color: context.primaryColor, width: 1),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
-              child:
-                  Text('Filtrar', style: TextStyle(color: Color(0xFFDDFFCC))),
+              child: Text(
+                'Buscar',
+                style: TextStyle(color: Color(0xFFDDFFCC), fontSize: 16),
+              ),
             ),
           ],
         ),
@@ -271,11 +235,35 @@ class _BudgetsPageState extends State<BudgetsPage> {
           part2Color: context.secondaryColor,
         ),
         actions: [
-          IconButton(
-            icon: Icon(OrganizameIcons.filter,
-                size: 20, color: context.primaryColor),
-            onPressed: () => _showFilterDialog(context),
-            tooltip: 'Filtrar por cliente',
+          PopupMenuButton(
+            icon: Icon(
+              OrganizameIcons.filter,
+              size: 20,
+              color: context.primaryColor
+            ),
+            itemBuilder: (context) => [
+              PopupMenuItem<bool>(
+                value: true,
+                child: Text(
+                  '${_showingCompleted ? 'Ocultar' : 'Mostrar'} orçamentos finalizados',
+                  style: TextStyle(color: context.primaryColor),
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'search',
+                child: Text(
+                  'Buscar orçamentos',
+                  style: TextStyle(color: context.primaryColor),
+                ),
+              ),
+            ],
+            onSelected: (value) {
+              if (value == true) {
+                _toggleCompletedBudgets();
+              } else if (value == 'search') {
+                _showSearchDialog(context);
+              }
+            },
           ),
         ],
       ),
@@ -297,8 +285,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
             );
           }
           
-          
-          final budgets =  controller.filteredBugets;// busca função buscar da controller
+          final budgets = controller.filteredBugets;
 
           if (budgets.isEmpty) {
             return Center(
@@ -314,7 +301,9 @@ class _BudgetsPageState extends State<BudgetsPage> {
                   Text(
                     controller.bugets.isEmpty
                         ? 'Nenhum orçamento cadastrado'
-                        : 'Nenhum orçamento encontrado com este filtro',
+                        : _showingCompleted
+                            ? 'Nenhum orçamento finalizado'
+                            : 'Nenhum orçamento em aberto',
                     style: TextStyle(
                       color: context.primaryColor,
                       fontSize: 16,
@@ -326,10 +315,11 @@ class _BudgetsPageState extends State<BudgetsPage> {
                       child: TextButton(
                         onPressed: () {
                           context.read<BudgetsController>().clearFilters();
-                          Messages.of(context).showInfo('Filtro removido');
+                          setState(() => _showingCompleted = false);
+                          Messages.of(context).showInfo('Filtros removidos');
                         },
                         child: Text(
-                          'Mostrar todas as visitas',
+                          'Mostrar todos os orçamentos',
                           style: TextStyle(color: context.primaryColor),
                         ),
                       ),
@@ -347,7 +337,9 @@ class _BudgetsPageState extends State<BudgetsPage> {
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    'ORÇAMENTOS (${budgets.length})',
+                    _showingCompleted
+                      ? 'ORÇAMENTOS FINALIZADOS (${budgets.length})'
+                      : 'ORÇAMENTOS EM ABERTO (${budgets.length})',
                     style: context.titleDefaut,
                   ),
                 ),
@@ -359,8 +351,8 @@ class _BudgetsPageState extends State<BudgetsPage> {
                       final budget = budgets[index];
                       return Budgets(
                         controller: context.read<BudgetsController>(),
-                        object: budget,);
-                                         
+                        object: budget,
+                      );
                     },
                   ),
                 ),

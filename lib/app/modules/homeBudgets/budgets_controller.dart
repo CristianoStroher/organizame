@@ -108,88 +108,6 @@ class BudgetsController extends DefautChangeNotifer {
     notifyListeners();
   }
 
-  Future<void> filterBudgets({
-    String? customerName,
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
-    try {
-      showLoadingAndResetState();
-
-      if (customerName == null && startDate == null && endDate == null) {
-        _filteredBudgets = List.from(_budgets);
-        success();
-        notifyListeners();
-        return;
-      }
-
-      _filteredBudgets = _budgets.where((budgets) {
-        bool matchesName = true;
-        bool matchesDate = true;
-
-        // Filtro por nome
-        if (customerName != null && customerName.length >= 3) {
-          matchesName = budgets.customer.name
-              .toLowerCase()
-              .contains(customerName.toLowerCase());
-        }
-
-        // Filtro por período
-        if (startDate != null || endDate != null) {
-          final visitDate = DateTime(
-            budgets.date.year,
-            budgets.date.month,
-            budgets.date.day,
-          );
-
-          if (startDate != null && endDate != null) {
-            matchesDate = visitDate.isAtSameMomentAs(startDate) ||
-                visitDate.isAtSameMomentAs(endDate) ||
-                (visitDate.isAfter(startDate) && visitDate.isBefore(endDate));
-          } else if (startDate != null) {
-            matchesDate = visitDate.isAtSameMomentAs(startDate) ||
-                visitDate.isAfter(startDate);
-          } else if (endDate != null) {
-            matchesDate = visitDate.isAtSameMomentAs(endDate) ||
-                visitDate.isBefore(endDate);
-          }
-        }
-
-        return matchesName && matchesDate;
-      }).toList();
-
-      // Ordenar por data/hora
-      _filteredBudgets.sort((a, b) {
-        final dateTimeA = DateTime(
-          a.date.year,
-          a.date.month,
-          a.date.day,
-          a.date.hour,
-          a.date.minute,
-          a.date.second,
-        );
-
-        final dateTimeB = DateTime(
-          b.date.year,
-          b.date.month,
-          b.date.day,
-          b.date.hour,
-          b.date.minute,
-          b.date.second,
-        );
-
-        return dateTimeB.compareTo(dateTimeA);
-      });
-      success();
-    } catch (e) {
-      setError('Erro ao filtrar visitas técnicas');
-      _filteredBudgets = List.from(_budgets);
-    } finally {
-      hideLoading();
-      notifyListeners();
-    }
-  }
-
   Future<List<CustomerObject>> getCustomers() async {
     try {
       // Usando o método do CustomerController
@@ -216,5 +134,56 @@ class BudgetsController extends DefautChangeNotifer {
     notifyListeners();
   }
 }
+
+Future<void> filterBudgets({
+    String? customerName,
+    DateTime? startDate,
+    DateTime? endDate,
+    bool showCompleted = false  // Default alterado para false
+  }) async {
+    try {
+      showLoadingAndResetState();
+
+      _filteredBudgets = _budgets.where((budget) {
+        // Primeiro filtra por status
+        if (!showCompleted && budget.status) {
+          return false;
+        }
+
+        // Depois aplica os outros filtros
+        if (customerName != null && customerName.length >= 3) {
+          if (!budget.customer.name.toLowerCase().contains(customerName.toLowerCase())) {
+            return false;
+          }
+        }
+
+        if (startDate != null || endDate != null) {
+          final budgetDate = DateTime(
+            budget.date.year,
+            budget.date.month,
+            budget.date.day,
+          );
+
+          if (startDate != null && budgetDate.isBefore(startDate)) {
+            return false;
+          }
+          if (endDate != null && budgetDate.isAfter(endDate)) {
+            return false;
+          }
+        }
+
+        return true;
+      }).toList();
+
+      _filteredBudgets.sort((a, b) => b.date.compareTo(a.date));
+      success();
+    } catch (e) {
+      setError('Erro ao filtrar orçamentos');
+      _filteredBudgets = List.from(_budgets);
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  }
 
 }

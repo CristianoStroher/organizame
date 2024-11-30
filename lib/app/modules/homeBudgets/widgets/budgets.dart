@@ -24,6 +24,38 @@ class Budgets extends StatelessWidget {
     required this.controller,
   });
 
+  Future<void> _handleStatusChange(BuildContext context, bool? value) async {
+    if (!context.mounted) return;
+
+    final updatedBudget = BudgetsObject(
+      id: object.id,
+      customer: object.customer,
+      date: object.date,
+      observation: object.observation,
+      value: object.value,
+      status: value ?? false
+    );
+    
+    try {
+      Loader.show(context);
+      await controller.updateBudget(updatedBudget);
+      
+      if (context.mounted) {
+        Loader.hide();
+        if (value == true) {
+          Messages.of(context).showInfo('Orçamento finalizado com sucesso');
+          // Atualiza a lista apenas com os não finalizados
+          await controller.filterBudgets(showCompleted: false);
+        }
+      }
+    } catch (e) {
+      Loader.hide();
+      if (context.mounted) {
+        Messages.of(context).showError('Erro ao atualizar status do orçamento');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -40,17 +72,7 @@ class Budgets extends StatelessWidget {
                 fillColor: MaterialStateProperty.all(Color(0xFFDDFFCC)),
                 side: BorderSide(color: context.primaryColor, width: 1),
                 value: object.status,
-                onChanged: (value) async {
-                  final updatedBudget = BudgetsObject(
-                    id: object.id,
-                    customer: object.customer,
-                    date: object.date,
-                    observation: object.observation,
-                    value: object.value,
-                    status: value ?? false
-                  );
-                  await controller.updateBudget(updatedBudget);
-                },
+                 onChanged: (value) => _handleStatusChange(context, value),
               ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
