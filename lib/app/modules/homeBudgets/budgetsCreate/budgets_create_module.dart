@@ -10,18 +10,18 @@ import 'package:provider/provider.dart';
 class BudgetsCreateModule extends OrganizameModule {
   BudgetsCreateModule()
       : super(
-          bindings: [
+          // bindings: [
 
-            Provider<BudgetsRepository>(create: (context) => BudgetsRepositoryImpl(firestore: context.read()),),
+            // Provider<BudgetsRepository>(create: (context) => BudgetsRepositoryImpl(firestore: context.read()),),
 
-            // Service
-            Provider<BudgetsService>(create: (context) => BudgetsServiceImpl(budgetsRepository: context.read()),),
+            // // Service
+            // Provider<BudgetsService>(create: (context) => BudgetsServiceImpl(budgetsRepository: context.read()),),
 
-            ChangeNotifierProvider<BudgetsCreateController>(
-              create: (context) => BudgetsCreateController(
-                  service: context.read<BudgetsServiceImpl>()),
-            ),
-          ],
+            // ChangeNotifierProvider<BudgetsCreateController>(
+            //   create: (context) => BudgetsCreateController(
+            //       service: context.read<BudgetsServiceImpl>()),
+            // ),
+          // ],
           routers: {
             '/budgets/create': (context) => BudgetsCreatePage(controller: context.read(), createController: context.read()),
           },

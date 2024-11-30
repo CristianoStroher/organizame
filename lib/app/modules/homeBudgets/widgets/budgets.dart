@@ -6,6 +6,7 @@ import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/models/budgets_object.dart';
 import 'package:organizame/app/models/task_filter_enum.dart';
+import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_page.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 import 'package:organizame/app/modules/homeTasks/home_controller.dart';
@@ -32,7 +33,7 @@ class Budgets extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => BudgetsCreatePage(
               controller: controller,
-              createController: context.read(),
+              createController: context.read<BudgetsCreateController>(),
               object: object,
             ),
           ),

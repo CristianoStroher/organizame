@@ -54,6 +54,11 @@ class _BudgetsCreatePageState extends State<BudgetsCreatePage> {
   void initState() {
     super.initState();
     _loadCustomers();
+    if (widget.object != null) {
+      _valueEC.text = widget.object!.value;
+      _observationsEC.text = widget.object!.observation ?? '';
+      selectedClient = widget.object!.customer.name;
+    }
   }
 
   Future<void> _loadCustomers() async {
@@ -86,12 +91,16 @@ Future<void> _handleSave() async {
         status: false
       );     
 
-      await widget._createController.saveBudget(budget);
-      Messages.of(context).showInfo('Orçamento salvo com sucesso');
+      if (widget.object != null) {
+        await widget._controller.updateBudget(budget);
+        Messages.of(context).showInfo('Orçamento atualizado com sucesso');
+      } else {
+        await widget._createController.saveBudget(budget);
+        Messages.of(context).showInfo('Orçamento salvo com sucesso');
+      }
       Navigator.of(context).pop(true);
     } catch (e) {
-      Logger().e('Erro ao salvar orçamento: $e');
-      // Adicione tratamento de erro aqui
+      Messages.of(context).showError('Erro ao salvar orçamento');
     }
   }
 }
