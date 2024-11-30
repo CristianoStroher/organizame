@@ -61,10 +61,10 @@ class Budgets extends StatelessWidget {
   Future<void> _handleShare(BuildContext context) async {
     try {
       Loader.show(context);
-      
+
       // Criar o documento PDF
       final pdf = pdfLib.Document();
-      
+
       pdf.addPage(
         pdfLib.Page(
           pageFormat: PdfPageFormat.a4,
@@ -121,7 +121,6 @@ class Budgets extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -143,11 +142,17 @@ class Budgets extends StatelessWidget {
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(object.customer.name,
-                      style: TextStyle(
-                        fontFamily: context.titleDefaut.fontFamily,
-                        color: context.primaryColor,
-                      )),
+                  Text(
+                    object.customer.name.length > 20
+                        ? '${object.customer.name.substring(0, 20)}...'
+                        : object.customer.name,
+                    style: TextStyle(
+                      fontFamily: context.titleDefaut.fontFamily,
+                      color: context.primaryColor,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    maxLines: 1,
+                  ),
                   Text('R\$ ${object.value}',
                       style: TextStyle(
                         fontFamily: context.titleDefaut.fontFamily,
