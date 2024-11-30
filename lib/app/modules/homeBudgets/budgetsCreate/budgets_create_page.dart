@@ -146,13 +146,17 @@ Future<void> _handleSave() async {
                       label: 'Cliente',
                       options: customers.map((customer) => customer.name).toList(),
                       selectedOptions: selectedClient,
-                      onChanged: (newValue) => _updateClientData(newValue, customers),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor, selecione um cliente';
-                        }
-                        return null;
-                      },
+                      onChanged: (newValue) =>
+                          _updateClientData(newValue, customers),
+                      validator: Validatorless.multiple([
+                        Validatorless.required('Cliente é obrigatório'),
+                        (value) {
+                          if (value?.isEmpty ?? true) {
+                            return 'Selecione um cliente';
+                          }
+                          return null;
+                        },
+                      ]),
                     ),
                     const SizedBox(height: 10),
                     OrganizameTextformfield(
@@ -161,7 +165,15 @@ Future<void> _handleSave() async {
                       hintText: '0,00',
                       maskFormatter: widget.phoneMaskFormatter,
                       controller: _valueEC,
-                      validator: Validatorless.required('Nome é obrigatório'),
+                     validator: Validatorless.multiple([
+                        Validatorless.required('Valor é obrigatório'),
+                        (value) {
+                          if (value == '0,00' || value == '') {
+                            return 'Insira um valor válido';
+                          }
+                          return null;
+                        },
+                      ]),
                       ),
 
                     const SizedBox(height: 10),
