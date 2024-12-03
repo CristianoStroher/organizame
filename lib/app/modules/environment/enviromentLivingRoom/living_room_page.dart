@@ -12,7 +12,6 @@ import 'package:organizame/app/core/widget/organizame_textformfield.dart';
 import 'package:organizame/app/models/enviroment_itens_enum.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_room_controller.dart';
-import 'package:organizame/app/modules/homeTecnical/tecnical_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 
 class LivingRoomPage extends StatefulWidget {
@@ -287,12 +286,12 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
                 OrganizameCheckboxlist(
                   capitalizeFirstLetter: true,
                   options: [
-                    EnviromentItensEnum.acessorios.displayName,
-                    EnviromentItensEnum.calcados.displayName,
-                    EnviromentItensEnum.maquiagem.displayName,
-                    EnviromentItensEnum.roupas.displayName,
-                    EnviromentItensEnum.roupasDeCama.displayName,
-                    EnviromentItensEnum.outros.displayName,
+                    EnviromentItensEnum.acessorios.name,
+                    EnviromentItensEnum.calcados.name,
+                    EnviromentItensEnum.maquiagem.name,
+                    EnviromentItensEnum.roupas.name,
+                    EnviromentItensEnum.roupasDeCama.name,
+                    EnviromentItensEnum.outros.name,
                   ],
                   color: const Color(0xFFFAFFC5),
                   initialValues: {
@@ -317,7 +316,11 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                OrganizameTextField(label: 'Observações', maxLines: 4),
+                OrganizameTextField(
+                  label: 'Observações',
+                  maxLines: 4,
+                  controller: _observationController,
+                ),
                 const SizedBox(height: 20),
                 Text('IMAGENS', style: context.titleDefaut),
                 const SizedBox(height: 20),
