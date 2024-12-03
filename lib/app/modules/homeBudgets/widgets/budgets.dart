@@ -46,8 +46,8 @@ class Budgets extends StatelessWidget {
         Loader.hide();
         if (newStatus == true) {
           Messages.of(context).showInfo('Orçamento finalizado com sucesso');
-          // Atualiza a lista apenas com os não finalizados
-          await controller.filterBudgets(showCompleted: false);
+          // Recarrega a lista mantendo todos os orçamentos visíveis
+          await controller.refreshVisits();
         }
       }
     } catch (e) {
@@ -137,8 +137,10 @@ class Budgets extends StatelessWidget {
                       ? Icons.handshake // aperto de mão quando FECHADO
                       : Icons.gavel, // martelo quando em ABERTO
                   color: object.status
-                      ? const Color(0xFF2E7D32) // verde escuro para aperto de mão quando FECHADO
-                      : context.primaryColor, // cor padrão para o martelo quando ABERTO
+                      ? const Color(
+                          0xFF2E7D32) // verde escuro para aperto de mão quando FECHADO
+                      : context
+                          .primaryColor, // cor padrão para o martelo quando ABERTO
                   size: 28,
                 ),
                 tooltip:

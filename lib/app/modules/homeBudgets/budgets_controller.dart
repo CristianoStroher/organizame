@@ -77,6 +77,7 @@ class BudgetsController extends DefautChangeNotifer {
       });
 
       _budgets = newBudgets;
+      // Mantém todos os orçamentos visíveis por padrão
       _filteredBudgets = List.from(newBudgets);
       success();
     } catch (e) {
@@ -120,39 +121,41 @@ class BudgetsController extends DefautChangeNotifer {
   }
 
   Future<bool> updateBudget(BudgetsObject budget) async {
-  try {
-    showLoadingAndResetState();
-    await _service.updateBudget(budget);
-    success();
-    await refreshVisits();
-    return true;
-  } catch (e) {
-    setError('Erro ao atualizar orçamento');
-    return false;
-  } finally {
-    hideLoading();
-    notifyListeners();
+    try {
+      showLoadingAndResetState();
+      await _service.updateBudget(budget);
+      success();
+      await refreshVisits();
+      return true;
+    } catch (e) {
+      setError('Erro ao atualizar orçamento');
+      return false;
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
   }
-}
 
-Future<void> filterBudgets({
-    String? customerName,
-    DateTime? startDate,
-    DateTime? endDate,
-    bool showCompleted = false  // Default alterado para false
-  }) async {
+  Future<void> filterBudgets(
+      {String? customerName,
+      DateTime? startDate,
+      DateTime? endDate,
+      bool? showCompleted // Tornar opcional
+      }) async {
     try {
       showLoadingAndResetState();
 
       _filteredBudgets = _budgets.where((budget) {
-        // Primeiro filtra por status
-        if (!showCompleted && budget.status) {
+        // Só aplica o filtro de status se showCompleted for fornecido
+        if (showCompleted != null && !showCompleted && budget.status) {
           return false;
         }
 
-        // Depois aplica os outros filtros
+        // Aplica os outros filtros
         if (customerName != null && customerName.length >= 3) {
-          if (!budget.customer.name.toLowerCase().contains(customerName.toLowerCase())) {
+          if (!budget.customer.name
+              .toLowerCase()
+              .contains(customerName.toLowerCase())) {
             return false;
           }
         }
@@ -185,5 +188,4 @@ Future<void> filterBudgets({
       notifyListeners();
     }
   }
-
 }
