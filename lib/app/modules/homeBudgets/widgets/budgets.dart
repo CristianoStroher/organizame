@@ -27,7 +27,7 @@ class Budgets extends StatelessWidget {
     required this.controller,
   });
 
-  Future<void> _handleStatusChange(BuildContext context, bool? value) async {
+  Future<void> _handleStatusChange(BuildContext context, bool newStatus) async {
     if (!context.mounted) return;
 
     final updatedBudget = BudgetsObject(
@@ -36,7 +36,7 @@ class Budgets extends StatelessWidget {
         date: object.date,
         observation: object.observation,
         value: object.value,
-        status: value ?? false);
+        status: newStatus);
 
     try {
       Loader.show(context);
@@ -44,7 +44,7 @@ class Budgets extends StatelessWidget {
 
       if (context.mounted) {
         Loader.hide();
-        if (value == true) {
+        if (newStatus == true) {
           Messages.of(context).showInfo('Orçamento finalizado com sucesso');
           // Atualiza a lista apenas com os não finalizados
           await controller.filterBudgets(showCompleted: false);
@@ -131,13 +131,20 @@ class Budgets extends StatelessWidget {
             Divider(color: Colors.grey[300], thickness: 1.5, height: 0),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Checkbox(
-                checkColor: context.primaryColor,
-                activeColor: Color(0xFFDDFFCC),
-                fillColor: MaterialStateProperty.all(Color(0xFFDDFFCC)),
-                side: BorderSide(color: context.primaryColor, width: 1),
-                value: object.status,
-                onChanged: (value) => _handleStatusChange(context, value),
+              leading: IconButton(
+                icon: Icon(
+                  object.status
+                      ? Icons.gavel // martelo quando FECHADO
+                      : Icons.handshake, // aperto de mão quando em ABERTO
+                  color: object.status
+                      ? context.primaryColor // cor padrão para o martelo
+                      : const Color(
+                          0xFF2E7D32), // verde escuro para o aperto de mão
+                  size: 28,
+                ),
+                tooltip:
+                    object.status ? 'Orçamento fechado' : 'Orçamento em aberto',
+                onPressed: () => _handleStatusChange(context, !object.status),
               ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
