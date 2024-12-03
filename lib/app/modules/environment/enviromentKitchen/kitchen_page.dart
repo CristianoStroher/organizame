@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
@@ -12,10 +13,15 @@ import 'package:organizame/app/models/enviroment_itens_enum.dart';
 import 'package:organizame/app/models/enviroment_object.dart';
 import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
+import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository.dart';
+import 'package:organizame/app/services/enviromentImages/enviroment_images_service.dart';
+import 'package:organizame/app/services/enviromentImages/enviroment_images_service_impl.dart';
+import 'package:provider/provider.dart';
 
 class KitchenPage extends StatefulWidget {
   final TechnicalVisitController controller;
   final EnviromentObject? environment;
+  
 
   const KitchenPage({
     super.key,
@@ -29,6 +35,7 @@ class KitchenPage extends StatefulWidget {
 
 class _KitchenPageState extends State<KitchenPage> {
   late final KitchenController controller; // Controller da página
+  late final EnviromentImagesService _imagesService;
   String? _selectedDifficulty; // Armazena a dificuldade selecionada
 
   final _formkey = GlobalKey<FormState>();
@@ -36,13 +43,21 @@ class _KitchenPageState extends State<KitchenPage> {
   final _descriptionController = TextEditingController();
   final _observationController = TextEditingController();
   final Map<EnviromentItensEnum, bool> _selectedItens = {};
+  List<XFile>? imagem; // Armazena a imagem capturada
 
   @override
   void initState() {
     super.initState();
+    _imagesService = EnviromentImagesServiceImpl(
+      repository: context.read<EnviromentImagesRepository>(),
+    );
     widget.controller.ensureCurrentVisit();
-    controller = KitchenController(controller: widget.controller);
 
+    controller = KitchenController(
+      controller: widget.controller,
+      imagenService: _imagesService,
+    );
+    
     if (widget.environment != null) {
       _initializeWithExistingEnvironment();
     } else {
@@ -51,13 +66,28 @@ class _KitchenPageState extends State<KitchenPage> {
   }
 
   void _initializeWithExistingEnvironment() {
-    _metragemController.text = widget.environment!.metragem ?? '';
-    _descriptionController.text = widget.environment!.descroiption ?? '';
-    _observationController.text = widget.environment!.observation ?? '';
-    _selectedDifficulty = widget.environment!.difficulty;
+    
+    if (widget.environment != null) {
+      _metragemController.text = widget.environment!.metragem ?? '';
+      _descriptionController.text = widget.environment!.descroiption ?? '';
+      _observationController.text = widget.environment!.observation ?? '';
+      _selectedDifficulty = widget.environment!.difficulty;
+    
+      controller.setCurrentEnvironment(widget.environment!);
 
-    final itens = widget.environment!.itens;
-    if (itens != null) {
+    // Se existirem imagens, adiciona à lista de imagens do controller
+      if (widget.environment!.imagens != null) {
+        widget.environment!.imagens!.forEach((imagem) {
+          Logger().d('Imagem carregada: ${imagem.filePath}');
+          // Adiciona à lista de imagens do controller se ainda não existir
+          if (!controller.listaImagens.any((img) => img.id == imagem.id)) {
+            controller.addImageToList(imagem);
+          }
+        });
+      }
+
+    final itens = widget.environment!.itens ?? {};
+   
       _selectedItens[EnviromentItensEnum.alimentos] = itens[EnviromentItensEnum.alimentos.name] ?? false;
       _selectedItens[EnviromentItensEnum.bebidas] = itens[EnviromentItensEnum.bebidas.name] ?? false;
       _selectedItens[EnviromentItensEnum.eletrodomesticos] = itens[EnviromentItensEnum.eletrodomesticos.name] ?? false;
@@ -124,6 +154,7 @@ class _KitchenPageState extends State<KitchenPage> {
     });
   }
 
+  //? Função para salvar ou atualizar o ambiente
   Future<void> _handleSaveOrUpdate() async {
     if (_formkey.currentState!.validate()) {
       try {
@@ -322,17 +353,17 @@ class _KitchenPageState extends State<KitchenPage> {
                 OrganizameCheckboxlist(
                   capitalizeFirstLetter: true,
                   options: [
-                    EnviromentItensEnum.alimentos.displayName,
-                    EnviromentItensEnum.bebidas.displayName,
-                    EnviromentItensEnum.eletrodomesticos.displayName,
-                    EnviromentItensEnum.itensDeMesa.displayName,
-                    EnviromentItensEnum.loucas.displayName,
-                    EnviromentItensEnum.panelas.displayName,
-                    EnviromentItensEnum.panosDePrato.displayName,
-                    EnviromentItensEnum.produtosDeLimpeza.displayName,
-                    EnviromentItensEnum.utensilios.displayName,
-                    EnviromentItensEnum.utensiliosDeLimpeza.displayName,
-                    EnviromentItensEnum.outros.displayName,
+                    EnviromentItensEnum.alimentos.name,
+                    EnviromentItensEnum.bebidas.name,
+                    EnviromentItensEnum.eletrodomesticos.name,
+                    EnviromentItensEnum.itensDeMesa.name,
+                    EnviromentItensEnum.loucas.name,
+                    EnviromentItensEnum.panelas.name,
+                    EnviromentItensEnum.panosDePrato.name,
+                    EnviromentItensEnum.produtosDeLimpeza.name,
+                    EnviromentItensEnum.utensilios.name,
+                    EnviromentItensEnum.utensiliosDeLimpeza.name,
+                    EnviromentItensEnum.outros.name,
                   ],                    
                   color: const Color(0xFFFAFFC5),
                   initialValues: {
@@ -367,7 +398,8 @@ class _KitchenPageState extends State<KitchenPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                OrganizameTextField(label: 'Observações', maxLines: 4),
+                OrganizameTextField(label: 'Observações', maxLines: 4,
+                controller: _observationController,),
                 const SizedBox(height: 20),
                 Text('IMAGENS', style: context.titleDefaut),
                 const SizedBox(height: 20),

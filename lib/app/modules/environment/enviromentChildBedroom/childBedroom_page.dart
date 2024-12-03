@@ -98,16 +98,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
       final itens = widget.environment!.itens ?? {};
       Logger().d("Itens do ambiente: $itens");
 
-      _selectedItens[EnviromentItensEnum.roupas] =
-          itens[EnviromentItensEnum.roupas.name] ?? false;
-      _selectedItens[EnviromentItensEnum.calcados] =
-          itens[EnviromentItensEnum.calcados.name] ?? false;
-      _selectedItens[EnviromentItensEnum.brinquedos] =
-          itens[EnviromentItensEnum.brinquedos.name] ?? false;
-      _selectedItens[EnviromentItensEnum.roupasDeCama] =
-          itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
-      _selectedItens[EnviromentItensEnum.outros] =
-          itens[EnviromentItensEnum.outros.name] ?? false;
+      _selectedItens[EnviromentItensEnum.roupas] = itens[EnviromentItensEnum.roupas.name] ?? false;
+      _selectedItens[EnviromentItensEnum.calcados] = itens[EnviromentItensEnum.calcados.name] ?? false;
+      _selectedItens[EnviromentItensEnum.brinquedos] = itens[EnviromentItensEnum.brinquedos.name] ?? false;
+      _selectedItens[EnviromentItensEnum.roupasDeCama] = itens[EnviromentItensEnum.roupasDeCama.name] ?? false;
+      _selectedItens[EnviromentItensEnum.outros] = itens[EnviromentItensEnum.outros.name] ?? false;
     }
   }
 
@@ -135,16 +130,11 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
 // Função para converter o mapa de itens para o formato correto
   Map<String, bool> convertSelectedItensToMap() {
     return {
-      EnviromentItensEnum.roupas.name:
-          ensureBoolValue(_selectedItens[EnviromentItensEnum.roupas]),
-      EnviromentItensEnum.calcados.name:
-          ensureBoolValue(_selectedItens[EnviromentItensEnum.calcados]),
-      EnviromentItensEnum.brinquedos.name:
-          ensureBoolValue(_selectedItens[EnviromentItensEnum.brinquedos]),
-      EnviromentItensEnum.roupasDeCama.name:
-          ensureBoolValue(_selectedItens[EnviromentItensEnum.roupasDeCama]),
-      EnviromentItensEnum.outros.name:
-          ensureBoolValue(_selectedItens[EnviromentItensEnum.outros]),
+      EnviromentItensEnum.roupas.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.roupas]),
+      EnviromentItensEnum.calcados.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.calcados]),
+      EnviromentItensEnum.brinquedos.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.brinquedos]),
+      EnviromentItensEnum.roupasDeCama.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.roupasDeCama]),
+      EnviromentItensEnum.outros.name: ensureBoolValue(_selectedItens[EnviromentItensEnum.outros]),
     };
   }
 
@@ -240,7 +230,7 @@ class _ChildBedroomPageState extends State<ChildBedroomPage> {
         difficulty: _selectedDifficulty,
         observation: _observationController.text,
         selectedItens: itensMap,
-        listaImagens: controller.listaImagens,
+        listaImagens: controller.listaImagens, // Lista de imagens
         
       );
 

@@ -1,4 +1,3 @@
-
 import 'package:organizame/app/core/modules/organizame_module.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
@@ -22,7 +21,7 @@ class ChildBedroomModule extends OrganizameModule {
                 firestore: context.read(),
               ),
             ),
-                        // Service
+            // Service
             Provider<TechnicalVisitService>(
               create: (context) => TechnicalVisitServiceImpl(
                 repository: context.read<TechnicalVisitRepository>(),
@@ -36,22 +35,19 @@ class ChildBedroomModule extends OrganizameModule {
               ),
             ),
 
-             Provider<EnviromentImagesService>(
-              create: (context) => EnviromentImagesServiceImpl(repository: context.read()),
-              ),
-            
-                        // Service
+            Provider<EnviromentImagesService>(
+              create: (context) =>
+                  EnviromentImagesServiceImpl(repository: context.read()),
+            ),
+
+            // Service
             Provider<EnviromentImagesRepository>(
               create: (context) => EnviromentImagesRepositoryImpl(),
             ),
-           
           ],
-          
           routers: {
-            '/childBedroom': (context) => ChildBedroomPage(controller: context.read<TechnicalVisitController>()),
-                  
-                
+            '/childBedroom': (context) => ChildBedroomPage(
+                controller: context.read<TechnicalVisitController>()),
           },
         );
-  
 }
