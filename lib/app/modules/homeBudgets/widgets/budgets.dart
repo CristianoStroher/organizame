@@ -134,12 +134,11 @@ class Budgets extends StatelessWidget {
               leading: IconButton(
                 icon: Icon(
                   object.status
-                      ? Icons.gavel // martelo quando FECHADO
-                      : Icons.handshake, // aperto de mão quando em ABERTO
+                      ? Icons.handshake // aperto de mão quando FECHADO
+                      : Icons.gavel, // martelo quando em ABERTO
                   color: object.status
-                      ? context.primaryColor // cor padrão para o martelo
-                      : const Color(
-                          0xFF2E7D32), // verde escuro para o aperto de mão
+                      ? const Color(0xFF2E7D32) // verde escuro para aperto de mão quando FECHADO
+                      : context.primaryColor, // cor padrão para o martelo quando ABERTO
                   size: 28,
                 ),
                 tooltip:

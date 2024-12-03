@@ -338,8 +338,8 @@ class _BudgetsPageState extends State<BudgetsPage> {
                   padding: const EdgeInsets.all(20),
                   child: Text(
                     _showingCompleted
-                      ? 'ORÇAMENTOS FINALIZADOS (${budgets.length})'
-                      : 'ORÇAMENTOS EM ABERTO (${budgets.length})',
+                      ? 'ORÇAMENTOS (${budgets.length})'
+                      : 'ORÇAMENTOS (${budgets.length})',
                     style: context.titleDefaut,
                   ),
                 ),
