@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/core/ui/messages.dart';
 import 'package:organizame/app/core/ui/theme_extensions.dart';
 import 'package:organizame/app/core/widget/organizame_logo_movie.dart';
-import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/child_bedroom_page.dart';
 import 'package:organizame/app/modules/environment/enviromentKitchen/kitchen_page.dart';
 import 'package:organizame/app/modules/environment/enviromentLivingRoom/living_room_page.dart';
 import 'package:organizame/app/modules/environment/widgets/enviroment_card.dart';

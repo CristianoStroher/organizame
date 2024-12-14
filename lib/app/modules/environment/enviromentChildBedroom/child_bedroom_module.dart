@@ -1,5 +1,5 @@
 import 'package:organizame/app/core/modules/organizame_module.dart';
-import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_page.dart';
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/child_bedroom_page.dart';
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository.dart';
 import 'package:organizame/app/repositories/enviromentImages/enviroment_images_repository_impl.dart';

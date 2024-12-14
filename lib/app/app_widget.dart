@@ -5,7 +5,7 @@ import 'package:organizame/app/core/database/sqlite_adm_connection.dart';
 import 'package:organizame/app/core/navigator/organizame_navigator.dart';
 import 'package:organizame/app/core/ui/desing_ui.dart';
 import 'package:organizame/app/modules/auth/auth_module.dart';
-import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_module.dart';
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/child_bedroom_module.dart';
 import 'package:organizame/app/modules/environment/enviroment_module.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_module.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_module.dart';

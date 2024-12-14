@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:organizame/app/app_widget.dart';
 import 'package:organizame/app/core/validators/login_validators.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
-import 'package:organizame/app/modules/environment/enviromentChildBedroom/childBedroom_controller.dart';
+import 'package:organizame/app/modules/environment/enviromentChildBedroom/child_bedroom_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 import 'package:organizame/app/modules/homeTasks/home_controller.dart';
