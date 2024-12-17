@@ -99,8 +99,7 @@ class _GenericEnvironmentPageState extends State<GenericEnvironmentPage> {
     if (_formkey.currentState!.validate()) {
       try {
         final environmentData = EnviromentObject(
-          id: widget.environment?.id ??
-              DateTime.now().millisecondsSinceEpoch.toString(), // Corrigido
+          id: widget.environment?.id ?? DateTime.now().millisecondsSinceEpoch.toString(), // Corrigido
           name: widget.title,
           descroiption: _descriptionController.text,
           metragem: _metragemController.text,
@@ -122,7 +121,8 @@ class _GenericEnvironmentPageState extends State<GenericEnvironmentPage> {
                 ? 'Ambiente atualizado com sucesso!'
                 : 'Ambiente criado com sucesso!',
           );
-          Navigator.of(context).pop(true);
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
           await widget.controller.refreshVisits();
         }
       } catch (e) {
