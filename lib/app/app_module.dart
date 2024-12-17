@@ -31,6 +31,8 @@ import 'package:organizame/app/services/budgets/budgets_service_impl.dart';
 import 'package:organizame/app/services/customer/customer_service.dart';
 import 'package:organizame/app/services/enviroment/enviroment_service.dart';
 import 'package:organizame/app/services/enviroment/enviroment_service_impl.dart';
+import 'package:organizame/app/services/enviromentImages/enviroment_images_service.dart';
+import 'package:organizame/app/services/enviromentImages/enviroment_images_service_impl.dart';
 import 'package:organizame/app/services/tasks/tasks_service.dart';
 import 'package:organizame/app/services/tasks/tasks_service_impl.dart';
 import 'package:organizame/app/services/technicalVisit/technical_visit_service.dart';
@@ -72,6 +74,7 @@ class AppModule extends StatelessWidget {
         Provider<TechnicalVisitService>(create: (context) => TechnicalVisitServiceImpl(repository: context.read<TechnicalVisitRepository>(),),),
         Provider<EnviromentService>(create: (context) => EnviromentServiceImpl(repository: context.read<EnviromentRepository>()),), //injetando o serviço de ambiente
         Provider<BudgetsService>(create: (context) => BudgetsServiceImpl(budgetsRepository: context.read()),), //injetando o serviço de orçamentos
+        Provider<EnviromentImagesService>(create: (context) => EnviromentImagesServiceImpl(repository: context.read()),), //injetando o serviço de imagens
 
         ChangeNotifierProvider(create: (context) => AuthProvider(firebaseAuth: context.read(), userService: context.read(),)..loadListener(), lazy: false,),//injetando o provider de autenticação
         ChangeNotifierProvider<TaskController>(create: (context) => TaskController(tasksService: context.read(),),), //injetando o controller do módulo task
