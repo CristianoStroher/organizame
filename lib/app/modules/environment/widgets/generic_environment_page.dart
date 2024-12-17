@@ -121,8 +121,12 @@ class _GenericEnvironmentPageState extends State<GenericEnvironmentPage> {
                 ? 'Ambiente atualizado com sucesso!'
                 : 'Ambiente criado com sucesso!',
           );
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
+          if (widget.environment != null) {
+            Navigator.of(context).pop();
+          } else {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          }
           await widget.controller.refreshVisits();
         }
       } catch (e) {
