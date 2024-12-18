@@ -133,6 +133,8 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
                   TechnicalvisitList(),
                   const SizedBox(height: 20),
                   OrganizameElevatedButton(
+                    // colocar logica para liberar o botao de autualizar somente quando alterar
+                    // a data hora e cliente. ambiente nao precisa.
                     onPressed: () => _saveVisitTechnical(context),
                     label: widget.technicalVisit != null ? 'Atualizar' : 'Salvar',
                     textColor: const Color(0xFFFAFFC5),
@@ -213,5 +215,6 @@ class _TechnicalvisitCreatePageState extends State<TechnicalvisitCreatePage> {
         Messages.of(context).showError('Erro ao salvar visita técnica');
       }
     }
-  }
+  } 
+
 }
