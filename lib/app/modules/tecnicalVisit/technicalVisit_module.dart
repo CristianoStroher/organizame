@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organizame/app/core/modules/organizame_module.dart';
 import 'package:organizame/app/models/technicalVisit_object.dart';
+import 'package:organizame/app/modules/environment/widgets/generic_environment_page.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_controller.dart';
 import 'package:organizame/app/modules/tecnicalVisit/customer/customer_create_page.dart';
 import 'package:organizame/app/modules/environment/enviroment_controller.dart';
@@ -79,7 +80,12 @@ class TechnicalvisitModule extends OrganizameModule {
             ),
 
             ChangeNotifierProvider(
-              create: (context) => EnviromentController(),
+              create: (context) => EnviromentController(
+                controller: context.read<TechnicalVisitController>(),
+                imagenService: context.read(),
+                enviromentService: context.read(),
+
+              ),
             ),
 
 

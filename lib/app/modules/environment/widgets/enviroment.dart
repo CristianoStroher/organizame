@@ -36,7 +36,7 @@ class Enviroment extends StatelessWidget {
           id: environmentId,
           name: enviromentName,
           difficulty: enviromentDifficulty,
-          descroiption: enviromentDifficulty,
+          description: enviromentDifficulty,
         );
       },
     );

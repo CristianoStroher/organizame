@@ -21,6 +21,7 @@ class ChildBedroomController extends DefautChangeNotifer {
   //? List.unmodifiable garante que a lista não pode ser modificada externamente
   List<ImagensObject> get listaImagens => List.unmodifiable(_listaImagens);
 
+  //? Getter que permite acesso somente-leitura ao ambiente atual
   EnviromentObject? get currentEnvironment => _currentEnvironment;
 
   ChildBedroomController({
@@ -31,7 +32,8 @@ class ChildBedroomController extends DefautChangeNotifer {
     _initializeEnvironment();
   }
 
-  //? Método para inicializar o ambiente
+  //? Método para inicializar o ambiente onde o usuário está trabalhando
+  //  Se o ambiente não existir, um novo é criado
   Future<void> _initializeEnvironment() async {
     try {
       await _controller.ensureCurrentVisit(); // Wait for this
@@ -44,7 +46,7 @@ class ChildBedroomController extends DefautChangeNotifer {
         _currentEnvironment = EnviromentObject(
           id: newId,
           name: 'QUARTO CRIANÇA',
-          descroiption: '',
+          description: '',
           itens: {},
           imagens: [],
         );
@@ -107,7 +109,7 @@ class ChildBedroomController extends DefautChangeNotifer {
       final environment = EnviromentObject(
         id: environmentId, // Usar o ID existente
         name: 'QUARTO DE CRIANÇA',
-        descroiption: description,
+        description: description,
         metragem: metragem,
         difficulty: difficulty,
         observation: observation,

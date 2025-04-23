@@ -70,7 +70,7 @@ class _GenericEnvironmentPageState extends State<GenericEnvironmentPage> {
   void _initializeWithExistingEnvironment() {
     if (widget.environment != null) {
       _metragemController.text = widget.environment!.metragem ?? '';
-      _descriptionController.text = widget.environment!.descroiption;
+      _descriptionController.text = widget.environment!.description;
       _observationController.text = widget.environment!.observation ?? '';
       _selectedDifficulty = widget.environment!.difficulty;
 
@@ -101,7 +101,7 @@ class _GenericEnvironmentPageState extends State<GenericEnvironmentPage> {
         final environmentData = EnviromentObject(
           id: widget.environment?.id ?? DateTime.now().millisecondsSinceEpoch.toString(), // Corrigido
           name: widget.title,
-          descroiption: _descriptionController.text,
+          description: _descriptionController.text,
           metragem: _metragemController.text,
           difficulty: _selectedDifficulty,
           observation: _observationController.text,

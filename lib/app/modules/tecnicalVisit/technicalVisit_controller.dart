@@ -225,6 +225,7 @@ class TechnicalVisitController extends DefautChangeNotifer {
     notifyListeners();
   }
 
+  // Método para garantir que a visita atual está carregada
   Future<void> ensureCurrentVisit() async {
     if (currentVisit == null && _currentVisitId != null) {
       currentVisit = await findVisitById(_currentVisitId!);

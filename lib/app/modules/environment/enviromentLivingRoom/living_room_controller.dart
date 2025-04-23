@@ -24,7 +24,7 @@ class LivingRoomController extends DefautChangeNotifer {
       final environment = EnviromentObject(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: 'Quarto de Casal',
-        descroiption: description,
+        description: description,
         metragem: metragem,
         difficulty: difficulty,
         observation: observation,

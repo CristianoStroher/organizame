@@ -5,7 +5,7 @@ import 'package:organizame/app/models/enviroment_itens_enum.dart';
 class EnviromentObject {
   final String id;
   final String name;
-  final String descroiption;
+  final String description;
   final String? metragem;
   final String? difficulty;
   final String? observation;
@@ -15,7 +15,7 @@ class EnviromentObject {
   EnviromentObject({
     required this.id,
     required this.name,
-    required this.descroiption,
+    required this.description,
     this.metragem,
     this.difficulty,
     this.observation,
@@ -29,7 +29,7 @@ class EnviromentObject {
       return EnviromentObject(
         id: map['id'] as String,
         name: (map['name'] as String).toUpperCase(),
-        descroiption: map['description'] as String,
+        description: map['description'] as String,
         metragem: map['metragem'] as String?,
         difficulty: map['difficulty'] as String?,
         observation: map['observation'] as String?,
@@ -57,7 +57,7 @@ class EnviromentObject {
     return {
       'id': id,
       'name': name,
-      'description': descroiption,
+      'description': description,
       'metragem': metragem,
       'difficulty': difficulty,
       'observation': observation,
@@ -69,7 +69,7 @@ class EnviromentObject {
   EnviromentObject copyWith({
     String? id,
     String? name,
-    String? descroiption,
+    String? description,
     String? metragem,
     String? difficulty,
     String? observation,
@@ -79,7 +79,7 @@ class EnviromentObject {
     return EnviromentObject(
       id: id ?? this.id,
       name: name ?? this.name,
-      descroiption: descroiption ?? this.descroiption,
+      description: description ?? this.description,
       metragem: metragem ?? this.metragem,
       difficulty: difficulty ?? this.difficulty, // Corrigido
       observation: observation ?? this.observation, // Corrigido
@@ -90,7 +90,7 @@ class EnviromentObject {
 
   // metodo para verificar se o ambiente é valido
   bool isValid() {
-    return id.isNotEmpty && name.isNotEmpty && descroiption.isNotEmpty;
+    return id.isNotEmpty && name.isNotEmpty && description.isNotEmpty;
   }
 
   // Helper methods para pegar itens
@@ -148,7 +148,7 @@ class EnviromentObject {
 
   @override
   String toString() {
-    return 'EnviromentObject(id: $id, nome: $name, descricao: $descroiption, '
+    return 'EnviromentObject(id: $id, nome: $name, descricao: $description, '
            'metragem: $metragem, dificuldade: $difficulty, '
            'observacao: $observation, itens: $itens,'
            'imagens: ${imagens?.length ?? 0} imagens)';

@@ -69,7 +69,7 @@ class _KitchenPageState extends State<KitchenPage> {
     
     if (widget.environment != null) {
       _metragemController.text = widget.environment!.metragem ?? '';
-      _descriptionController.text = widget.environment!.descroiption ?? '';
+      _descriptionController.text = widget.environment!.description ?? '';
       _observationController.text = widget.environment!.observation ?? '';
       _selectedDifficulty = widget.environment!.difficulty;
     
@@ -199,7 +199,7 @@ class _KitchenPageState extends State<KitchenPage> {
       final updatedEnvironment = EnviromentObject(
         id: widget.environment!.id,
         name: 'COZINHA',
-        descroiption: _descriptionController.text,
+        description: _descriptionController.text,
         metragem: _metragemController.text,
         difficulty: _selectedDifficulty,
         observation: _observationController.text,

@@ -84,7 +84,7 @@ class _TechnicalvisitListState extends State<TechnicalvisitList> {
                     return Enviroment(
                       enviromentName: environment.name,
                       enviromentDifficulty: environment.difficulty ?? '',
-                      enviromentDescription: environment.descroiption ?? '',
+                      enviromentDescription: environment.description ?? '',
                       controller: controller,
                       environmentId: environment.id,
                     );

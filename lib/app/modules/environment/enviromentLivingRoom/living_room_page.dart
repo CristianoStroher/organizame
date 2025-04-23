@@ -53,7 +53,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
 
   void _initializeWithExistingEnvironment() {
     _metragemController.text = widget.enviroment!.metragem ?? '';
-    _descriptionController.text = widget.enviroment!.descroiption ?? '';
+    _descriptionController.text = widget.enviroment!.description ?? '';
     _observationController.text = widget.enviroment!.observation ?? '';
     _selectedDifficulty = widget.enviroment!.difficulty;
 
@@ -149,7 +149,7 @@ class _LivingRoomPageState extends State<LivingRoomPage> {
     final updatedEnvironment = EnviromentObject(
       id: widget.enviroment!.id,
       name: 'QUARTO DE CASAL',
-      descroiption: _descriptionController.text,
+      description: _descriptionController.text,
       metragem: _metragemController.text,
       difficulty: _selectedDifficulty,
       observation: _observationController.text,

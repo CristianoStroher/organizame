@@ -11,10 +11,11 @@ import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.d
 import 'package:organizame/app/services/enviromentImages/enviroment_images_service.dart';
 
 class KitchenController extends DefautChangeNotifer {
-  final TechnicalVisitController _controller;
-  final EnviromentImagesService _imagenService;
-  final List<ImagensObject> _listaImagens = [];
-  EnviromentObject? _currentEnvironment;
+  final TechnicalVisitController _controller; //? Controller da visita técnica
+  final EnviromentImagesService _imagenService; //? Serviço de imagens do ambiente
+
+  final List<ImagensObject> _listaImagens = []; //? Lista de imagens do ambiente
+  EnviromentObject? _currentEnvironment; //? Ambiente atual
 
   List<ImagensObject> get listaImagens => List.unmodifiable(_listaImagens);
   EnviromentObject? get currentEnvironment => _currentEnvironment;
@@ -30,7 +31,7 @@ class KitchenController extends DefautChangeNotifer {
   //? Método para inicializar o ambiente
   Future<void> _initializeEnvironment() async {
     try {
-      await _controller.ensureCurrentVisit(); // Wait for this
+      await _controller.ensureCurrentVisit(); // Garante que a visita está selecionada
       _currentEnvironment = _controller.currentEnvironment;
 
       if (_currentEnvironment == null) {
@@ -40,7 +41,7 @@ class KitchenController extends DefautChangeNotifer {
         _currentEnvironment = EnviromentObject(
           id: newId,
           name: 'COZINHA',
-          descroiption: '',
+          description: '',
           itens: {},
           imagens: [],
         );
@@ -103,7 +104,7 @@ class KitchenController extends DefautChangeNotifer {
       final environment = EnviromentObject(
         id: environmentId, // Usar o ID existente
         name: 'COZINHA',
-        descroiption: description,
+        description: description,
         metragem: metragem,
         difficulty: difficulty,
         observation: observation,
