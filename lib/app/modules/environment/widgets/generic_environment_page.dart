@@ -94,7 +94,7 @@ class _GenericEnvironmentPageState extends State<GenericEnvironmentPage> {
     }
     return result;
   }
-
+  // Método para converter os itens selecionados em um mapa
   Future<void> _handleSaveOrUpdate() async {
     if (_formkey.currentState!.validate()) {
       try {

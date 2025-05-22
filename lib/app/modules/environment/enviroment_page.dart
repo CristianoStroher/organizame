@@ -9,6 +9,8 @@ import 'package:organizame/app/modules/environment/widgets/enviroment_card.dart'
 import 'package:organizame/app/modules/tecnicalVisit/technicalVisit_controller.dart';
 import 'package:provider/provider.dart'; // Certifique-se de importar o EnviromentCard corretamente
 
+// pagina para selecionar o ambiente
+
 class EnviromentPage extends StatefulWidget {
   final TechnicalVisitController technicalVisitController;
   const EnviromentPage({

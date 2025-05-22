@@ -6,6 +6,7 @@ import 'package:organizame/app/app_widget.dart';
 import 'package:organizame/app/core/validators/login_validators.dart';
 import 'package:organizame/app/core/database/sqlite_connection_factory.dart';
 import 'package:organizame/app/modules/environment/enviromentChildBedroom/child_bedroom_controller.dart';
+import 'package:organizame/app/modules/environment/enviroment_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgetsCreate/budgets_create_controller.dart';
 import 'package:organizame/app/modules/homeBudgets/budgets_controller.dart';
 import 'package:organizame/app/modules/homeTasks/home_controller.dart';
@@ -87,6 +88,7 @@ class AppModule extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TechnicalVisitController(service: context.read<TechnicalVisitService>(), enviromentService: context.read<EnviromentService>(),)), //injetando o controller do módulo technicalVisit
         ChangeNotifierProvider(create: (context) => BudgetsController(service: context.read<BudgetsService>(), customerController: context.read<CustomerController>()),), //injetando o controller do módulo budgets
         ChangeNotifierProvider(create: (context) => BudgetsCreateController(service: context.read<BudgetsService>(),)), //injetando o controller do módulo budgetsCreate
+        ChangeNotifierProvider(create: (context) => EnviromentController(controller: TechnicalVisitController(service: context.read<TechnicalVisitService>(), enviromentService: context.read()), imagenService: context.read(), enviromentService: context.read()),), //injetando o controller do módulo customer
 
       ],      child: const AppWidget(),
     );
